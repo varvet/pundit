@@ -1,8 +1,8 @@
 # Pundit
 
-Pundit isn't really a library, as much as a set of helpers which simplify
-writing authorization systems for Ruby on Rails according to a pattern of using
-pure Ruby classes and object oriented design patterns.
+Pundit provides a set of helpers which simplify writing authorization systems
+for Ruby on Rails according to a pattern of using pure Ruby classes and object
+oriented design patterns.
 
 ## Installation
 
