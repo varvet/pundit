@@ -87,6 +87,18 @@ and the given record. It then infers from the action name, that it should call
 raise "not authorized" unless PostPolicy.new(current_user, @post).create?
 ```
 
+You can pass a second arguent to `authorize` if the name of the permission you
+want to check doesn't match the action name. For example:
+
+``` ruby
+def publish
+  @post = Post.find(params[:id])
+  authorize @post, :update?
+  @post.publish!
+  redirect_to @post
+end
+```
+
 You can easily get a hold of an instance of the policy through the `policy`
 method in both the view and controller. This is especially useful for
 conditionally showing links or buttons in the view:
