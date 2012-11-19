@@ -10,6 +10,15 @@ pure Ruby classes and object oriented design patterns.
 gem "pundit"
 ```
 
+Include Pundit in your application controller:
+
+``` ruby
+class ApplicationController < ActionController::Base
+  include Pundit
+  protect_from_forgery
+end
+```
+
 Optionally, you can run the generator, which will set up an application policy
 with some useful default for you:
 
