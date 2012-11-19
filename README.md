@@ -1,8 +1,8 @@
 # Pundit
 
-Pundit provides a set of helpers which simplify writing authorization systems
-for Ruby on Rails according to a pattern of using pure Ruby classes and object
-oriented design patterns.
+Pundit provides a set of helpers which guide you in leveraging regular Ruby
+classes and object oriented design patterns to build a simple, robust and
+scaleable authorization system.
 
 ## Installation
 
