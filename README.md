@@ -172,7 +172,7 @@ You can, and are encouraged to, use this method in views:
 <% end %>
 ```
 
-## Conclusion
+## Just plain old Ruby
 
 As you can see, Pundit doesn't do anything you couldn't have easily done
 yourself.  It's a very small library, it just provides a few neat helpers.
@@ -180,14 +180,12 @@ Together these give you the power of building a well structured, fully working
 authorization system without using any special DSLs or funky syntax or
 anything.
 
-## Just plain old Ruby
-
 Remember that all of the policy and scope classes are just plain Ruby classes,
 which means you can use the same mechanisms you always use to DRY things up.
 Encapsulate a set of permissions into a module and include them in multiple
 policies. Use `alias_method` to make some permissions behave the same as
 others. Inherit from a base set of permissions. Use metaprogramming if you
-really have to. The options are endless.
+really have to.
 
 ## Generator
 
@@ -209,10 +207,11 @@ might be a good idea to raise an exception if somehow an unauthenticated user
 got through. This way you can fail more gracefully.
 
 ``` ruby
-class ApplicationPolicy < Pundit::Policy
+class ApplicationPolicy
   def initialize(user, record)
     raise Pundit::NotAuthorized, "must be logged in" unless user
-    super
+    @user = user
+    @record = record
   end
 end
 ```
