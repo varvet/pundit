@@ -1,5 +1,56 @@
 require "pundit/version"
+require "pundit/policy_finder"
 
 module Pundit
-  # Your code goes here...
+  class NotAuthorizedError < StandardError; end
+  class NotDefinedError < StandardError; end
+
+  extend ActiveSupport::Concern
+
+  class << self
+    def policy_scope(user, scope)
+      policy = PolicyFinder.new(scope).scope
+      policy.new(user, scope).resolve if policy
+    end
+
+    def policy_scope!(user, scope)
+      PolicyFinder.new(scope).scope!.new(user, scope).resolve
+    end
+
+    def policy(user, record)
+      scope = PolicyFinder.new(record).policy
+      scope.new(user, record) if scope
+    end
+
+    def policy!(user, record)
+      PolicyFinder.new(record).policy!.new(user, record)
+    end
+  end
+
+  included do
+    if respond_to?(:helper_method)
+      helper_method :policy_scope
+      helper_method :policy
+    end
+  end
+
+  def verify_authorized
+    raise NotAuthorizedError unless @_policy_authorized
+  end
+
+  def authorize(record, query=nil)
+    query ||= params[:action].to_s + "?"
+    @_policy_authorized = true
+    unless policy(record).public_send(query)
+      raise NotAuthorizedError, "not allowed to #{query} this #{record}"
+    end
+  end
+
+  def policy_scope(scope)
+    Pundit.policy_scope!(current_user, scope)
+  end
+
+  def policy(record)
+    Pundit.policy!(current_user, record)
+  end
 end
