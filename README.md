@@ -1,5 +1,7 @@
 # Pundit
 
+[![Build Status](https://secure.travis-ci.org/elabs/pundit.png?branch=master)](https://travis-ci.org/elabs/pundit)
+
 Pundit provides a set of helpers which guide you in leveraging regular Ruby
 classes and object oriented design patterns to build a simple, robust and
 scaleable authorization system.
