@@ -189,6 +189,14 @@ policies. Use `alias_method` to make some permissions behave the same as
 others. Inherit from a base set of permissions. Use metaprogramming if you
 really have to. The options are endless.
 
+## Generator
+
+Use the supplied generator to generate policies:
+
+``` sh
+rails g pundit:policy post
+```
+
 ## Closed systems
 
 In many applications, only logged in users are really able to do anything. If
