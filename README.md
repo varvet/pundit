@@ -20,7 +20,7 @@ end
 ```
 
 Optionally, you can run the generator, which will set up an application policy
-with some useful default for you:
+with some useful defaults for you:
 
 ``` sh
 rails g pundit:install
