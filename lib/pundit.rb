@@ -1,5 +1,8 @@
 require "pundit/version"
 require "pundit/policy_finder"
+require "active_support/concern"
+require "active_support/core_ext/string/inflections"
+require "active_support/core_ext/object/blank"
 
 module Pundit
   class NotAuthorizedError < StandardError; end
@@ -44,6 +47,7 @@ module Pundit
     unless policy(record).public_send(query)
       raise NotAuthorizedError, "not allowed to #{query} this #{record}"
     end
+    true
   end
 
   def policy_scope(scope)
