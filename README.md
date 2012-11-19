@@ -10,6 +10,13 @@ pure Ruby classes and object oriented design patterns.
 gem "pundit"
 ```
 
+Optionally, you can run the generator, which will set up an application policy
+with some useful default for you:
+
+``` sh
+rails g pundit:install
+```
+
 ## Policies
 
 Pundit is focused around the notion of policy classes. We suggest that you put
@@ -173,74 +180,6 @@ Together these give you the power of building a well structured, fully working
 authorization system without using any special DSLs or funky syntax or
 anything.
 
-## The base classes
-
-Pundit ships with base classes for both scopes and policies. It's important
-that you understand that these don't do *anything* special. They are just
-regular Ruby classes, and you're free not to use them if you don't want to.
-That said, they provide a good set of defaults and starting points for working
-with Pundit.
-
-### Pundit::Policy
-
-This class provides a constructor function, in which the first argument is
-called `user` and the second argument is called `record`. Our above example
-could have been written like this:
-
-``` ruby
-class PostPolicy < Pundit::Policy
-  def create?
-    user.admin? or not record.published?
-  end
-end
-```
-
-The abstraction of always calling the second argument `record`, allows us to do
-a neat trick. The `Pundit::Policy` class has an instance method called `scope`,
-which as you might guess, return an instance of the corresponding scope class.
-
-We use this to provide a default for the `show?` permission, which just checks
-whether the record can be found in the scope. This way, any record which is not
-found in the scope will be automatically denied access on the show page as
-well.
-
-This allows gives you the same power you get in more advanced authorization
-systems, like [cancan](https://github.com/ryanb/cancan), whereby you can define
-your permissions just once, through the scope, and they will work for both
-finding collections of records and for displaying individual records.
-
-`Pundit::Policy` also implements `new?` and `edit?` as aliases to `create?` and
-`update?` respectively, so simply implementing `update?` will also define
-`edit?` at the same time.
-
-We encourage you to create an `ApplicationPolicy` from which all your other
-policies inherit. It's up to you whether you want your application policy to
-inherit from `Pundit::Policy`. This way you can define your own rules for
-defaults.
-
-### Pundit::Scope
-
-This class really doesn't do anything. It just provides a constructor. It's
-mostly there for symmetry. You could have used it like this:
-
-``` ruby
-class PostPolicy < Pundit::Policy
-  class Scope < Pundit::Scope
-    def resolve
-      if user.admin?
-        scope
-      else
-        scope.where(:published => true)
-      end
-    end
-  end
-
-  def create?
-    user.admin? or not post.published?
-  end
-end
-```
-
 ## Just plain old Ruby
 
 Remember that all of the policy and scope classes are just plain Ruby classes,
@@ -269,3 +208,25 @@ class ApplicationPolicy < Pundit::Policy
   end
 end
 ```
+
+## Manually retrieving policies and scopes
+
+Sometimes you want to retrieve a policy for a record outside the controller or
+view. For example when you delegate permissions from one policy to another.
+
+You can easily retrieve policies and scopes like this:
+
+``` ruby
+Pundit.policy!(user, post)
+Pundit.policy(user, post)
+
+Pundit.policy_scope!(user, Post)
+Pundit.policy_scope(user, Post)
+```
+
+The bang methods will raise an exception if the policy does not exist, whereas
+those without the bang will return nil.
+
+# License
+
+Licensed under the MIT license, see the separate LICENSE.txt file.
