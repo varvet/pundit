@@ -34,12 +34,21 @@ class Comment; extend ActiveModel::Naming; end
 
 class Article; end
 
+class BlogPolicy < Struct.new(:user, :blog); end
+class Blog; end
+class ArtificialBlog < Blog
+  def self.policy_class
+    BlogPolicy
+  end
+end
+
 describe Pundit do
   let(:user) { stub }
   let(:post) { Post.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
   let(:controller) { stub(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
+  let(:artificial_blog) { ArtificialBlog.new }
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
@@ -74,6 +83,18 @@ describe Pundit do
       policy = Pundit.policy(user, post)
       policy.user.should == user
       policy.post.should == post
+    end
+
+    it "returns an instantiated policy given a plain model instance with policy_class class method set" do
+      policy = Pundit.policy(user, artificial_blog)
+      policy.user.should == user
+      policy.blog.should == artificial_blog
+    end
+
+    it "returns an instantiated policy given a plain model class with policy_class class method set" do
+      policy = Pundit.policy(user, ArtificialBlog)
+      policy.user.should == user
+      policy.blog.should == ArtificialBlog
     end
 
     it "returns an instantiated policy given an active model instance" do

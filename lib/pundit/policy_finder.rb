@@ -7,7 +7,11 @@ module Pundit
     end
 
     def name
-      if object.respond_to?(:model_name)
+      if object.respond_to?(:policy_class)
+        object.policy_class.name.gsub(/Policy$/, '')
+      elsif object.class.respond_to?(:policy_class)
+        object.class.policy_class.name.gsub(/Policy$/, '')
+      elsif object.respond_to?(:model_name)
         object.model_name.to_s
       elsif object.class.respond_to?(:model_name)
         object.class.model_name.to_s
