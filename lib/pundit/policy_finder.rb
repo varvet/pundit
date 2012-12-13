@@ -7,6 +7,7 @@ module Pundit
     end
 
     def scope
+      return nil if policy.nil?
       policy::Scope
     rescue NameError
       nil
