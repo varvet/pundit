@@ -34,12 +34,34 @@ class Comment; extend ActiveModel::Naming; end
 
 class Article; end
 
+class BlogPolicy < Struct.new(:user, :blog); end
+class Blog; end
+class ArtificialBlog < Blog
+  def self.policy_class
+    BlogPolicy
+  end
+end
+class ArticleTag
+  def self.policy_class
+    Struct.new(:user, :tag) do
+      def show?
+        true
+      end
+      def destroy?
+        false
+      end
+    end
+  end
+end
+
 describe Pundit do
   let(:user) { stub }
   let(:post) { Post.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
   let(:controller) { stub(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
+  let(:artificial_blog) { ArtificialBlog.new }
+  let(:article_tag) { ArticleTag.new }
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
@@ -66,6 +88,10 @@ describe Pundit do
 
     it "throws an exception if the given policy scope can't be found" do
       expect { Pundit.policy_scope!(user, Article) }.to raise_error(Pundit::NotDefinedError)
+    end
+
+    it "throws an exception if the given policy scope can't be found" do
+      expect { Pundit.policy_scope!(user, ArticleTag) }.to raise_error(Pundit::NotDefinedError)
     end
   end
 
@@ -97,6 +123,32 @@ describe Pundit do
     it "returns nil if the given policy can't be found" do
       Pundit.policy(user, article).should be_nil
       Pundit.policy(user, Article).should be_nil
+    end
+
+    describe "with .policy_class set on the model" do
+      it "returns an instantiated policy given a plain model instance" do
+        policy = Pundit.policy(user, artificial_blog)
+        policy.user.should == user
+        policy.blog.should == artificial_blog
+      end
+
+      it "returns an instantiated policy given a plain model class" do
+        policy = Pundit.policy(user, ArtificialBlog)
+        policy.user.should == user
+        policy.blog.should == ArtificialBlog
+      end
+
+      it "returns an instantiated policy given a plain model instance providing an anonymous class" do
+        policy = Pundit.policy(user, article_tag)
+        policy.user.should == user
+        policy.tag.should == article_tag
+      end
+
+      it "returns an instantiated policy given a plain model class providing an anonymous class" do
+        policy = Pundit.policy(user, ArticleTag)
+        policy.user.should == user
+        policy.tag.should == ArticleTag
+      end
     end
   end
 
@@ -150,6 +202,11 @@ describe Pundit do
     it "can be given a different permission to check" do
       controller.authorize(post, :show?).should be_true
       expect { controller.authorize(post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    it "works with anonymous class policies" do
+      controller.authorize(article_tag, :show?).should be_true
+      expect { controller.authorize(article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
     it "raises an error when the permission check fails" do
