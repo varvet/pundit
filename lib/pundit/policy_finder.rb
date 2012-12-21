@@ -19,9 +19,13 @@ module Pundit
     end
 
     def scope
-      scope_name.constantize
-    rescue NameError
-      nil
+      policy_ancestor_names.reduce(nil) do |memo, pan|
+        begin
+          memo || "#{pan}::Scope".constantize
+        rescue NameError
+          nil
+        end
+      end
     end
 
     def policy
@@ -44,6 +48,14 @@ module Pundit
 
     def policy_name
       "#{name}Policy"
+    end
+
+    def policy_ancestor_names
+      if policy.present?
+        policy.ancestors.map(&:name).select{ |s| s =~ /Policy$/ }
+      else
+        [policy_name]
+      end
     end
   end
 end

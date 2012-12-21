@@ -32,11 +32,16 @@ class CommentPolicy::Scope < Struct.new(:user, :scope)
 end
 class Comment; extend ActiveModel::Naming; end
 
+# for testing that we can find an inherited scope
+class SpecialPostPolicy < PostPolicy; end
+class SpecialPost < Post; end
+
 class Article; end
 
 describe Pundit do
   let(:user) { stub }
   let(:post) { Post.new(user) }
+  let(:special_post) { SpecialPost.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
   let(:controller) { stub(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
@@ -44,6 +49,10 @@ describe Pundit do
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
       Pundit.policy_scope(user, Post).should == :published
+    end
+    
+    it "returns an instantiated inherited policy scope" do
+      Pundit.policy_scope(user, SpecialPost).should == :published
     end
 
     it "returns an instantiated policy scope given an active model class" do
@@ -58,6 +67,10 @@ describe Pundit do
   describe ".policy_scope!" do
     it "returns an instantiated policy scope given a plain model class" do
       Pundit.policy_scope!(user, Post).should == :published
+    end
+
+    it "returns an inherited instantiated policy scope" do
+      Pundit.policy_scope!(user, SpecialPost).should == :published
     end
 
     it "returns an instantiated policy scope given an active model class" do
@@ -88,6 +101,12 @@ describe Pundit do
       policy.post.should == Post
     end
 
+    it "returns an instantiated policy given a plain model class" do
+      policy = Pundit.policy(user, SpecialPost)
+      policy.user.should == user
+      policy.post.should == SpecialPost
+    end
+
     it "returns an instantiated policy given an active model class" do
       policy = Pundit.policy(user, Comment)
       policy.user.should == user
@@ -107,6 +126,12 @@ describe Pundit do
       policy.post.should == post
     end
 
+    it "returns an instantiated policy given an inherited plain model instance" do
+      policy = Pundit.policy!(user, special_post)
+      policy.user.should == user
+      policy.post.should == special_post
+    end
+
     it "returns an instantiated policy given an active model instance" do
       policy = Pundit.policy!(user, comment)
       policy.user.should == user
@@ -117,6 +142,12 @@ describe Pundit do
       policy = Pundit.policy!(user, Post)
       policy.user.should == user
       policy.post.should == Post
+    end
+
+    it "returns an instantiated policy given a plain model class" do
+      policy = Pundit.policy!(user, SpecialPost)
+      policy.user.should == user
+      policy.post.should == SpecialPost
     end
 
     it "returns an instantiated policy given an active model class" do
@@ -172,6 +203,10 @@ describe Pundit do
   describe ".policy_scope" do
     it "returns an instantiated policy scope" do
       controller.policy_scope(Post).should == :published
+    end
+
+    it "returns an instantiated inherited policy scope" do
+      controller.policy_scope(SpecialPost).should == :published
     end
 
     it "throws an exception if the given policy can't be found" do
