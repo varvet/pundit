@@ -11,18 +11,20 @@ module Pundit
   extend ActiveSupport::Concern
 
   class << self
-    def policy_scope(user, scope)
-      policy = PolicyFinder.new(scope).scope
-      policy.new(user, scope).resolve if policy
+    def policy_scope(user, *args)
+      args = Array(args)
+      scope = PolicyFinder.new(args.first).scope
+      scope.new(user, *args).resolve if scope
     end
 
-    def policy_scope!(user, scope)
-      PolicyFinder.new(scope).scope!.new(user, scope).resolve
+    def policy_scope!(user, *args)
+      args = Array(args)
+      PolicyFinder.new(args.first).scope!.new(user, *args).resolve
     end
 
     def policy(user, record)
-      scope = PolicyFinder.new(record).policy
-      scope.new(user, record) if scope
+      policy = PolicyFinder.new(record).policy
+      policy.new(user, record) if policy
     end
 
     def policy!(user, record)

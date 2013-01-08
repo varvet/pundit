@@ -35,7 +35,17 @@ class Comment; extend ActiveModel::Naming; end
 class Article; end
 
 class BlogPolicy < Struct.new(:user, :blog); end
-class Blog; end
+class BlogPolicy::Scope < Struct.new(:user, :scope, :active_only)
+  def resolve
+    return scope.active if active_only
+    scope
+  end
+end
+class Blog < Struct.new(:user)
+  def self.active
+    :active
+  end
+end
 class ArtificialBlog < Blog
   def self.policy_class
     BlogPolicy
@@ -74,6 +84,11 @@ describe Pundit do
 
     it "returns nil if the given policy scope can't be found" do
       Pundit.policy_scope(user, Article).should be_nil
+    end
+
+    it "returns an instantiated policy scope with extra arguments passed" do
+      Pundit.policy_scope(user, Blog).should == Blog
+      Pundit.policy_scope(user, Blog, true).should == :active
     end
   end
 
