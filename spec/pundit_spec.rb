@@ -51,6 +51,7 @@ class ArtificialBlog < Blog
     BlogPolicy
   end
 end
+
 class ArticleTag
   def self.policy_class
     Struct.new(:user, :tag) do
@@ -63,6 +64,9 @@ class ArticleTag
     end
   end
 end
+
+class BlogContributor; end
+class BlogContributorPolicy < Struct.new(:user, :contributor, :restrict); end
 
 describe Pundit do
   let(:user) { stub }
@@ -86,7 +90,7 @@ describe Pundit do
       Pundit.policy_scope(user, Article).should be_nil
     end
 
-    it "returns an instantiated policy scope with extra arguments passed" do
+    it "returns an instantiated policy scope when extra arguments are passed" do
       Pundit.policy_scope(user, Blog).should == Blog
       Pundit.policy_scope(user, Blog, true).should == :active
     end
@@ -99,6 +103,11 @@ describe Pundit do
 
     it "returns an instantiated policy scope given an active model class" do
       Pundit.policy_scope!(user, Comment).should == Comment
+    end
+
+    it "returns an instantiated policy scope with extra arguments passed" do
+      Pundit.policy_scope!(user, Blog).should == Blog
+      Pundit.policy_scope!(user, Blog, true).should == :active
     end
 
     it "throws an exception if the given policy scope can't be found" do
@@ -133,6 +142,13 @@ describe Pundit do
       policy = Pundit.policy(user, Comment)
       policy.user.should == user
       policy.comment.should == Comment
+    end
+
+    it "returns an instantiated policy given a plain model class when extra arguments are passed" do
+      policy = Pundit.policy(user, BlogContributor, :true)
+      policy.user.should == user
+      policy.contributor.should == BlogContributor
+      policy.restrict.should be_true
     end
 
     it "returns nil if the given policy can't be found" do
@@ -190,6 +206,13 @@ describe Pundit do
       policy = Pundit.policy!(user, Comment)
       policy.user.should == user
       policy.comment.should == Comment
+    end
+
+    it "returns an instantiated policy given a plain model class when extra arguments are passed" do
+      policy = Pundit.policy!(user, BlogContributor, :true)
+      policy.user.should == user
+      policy.contributor.should == BlogContributor
+      policy.restrict.should be_true
     end
 
     it "throws an exception if the given policy can't be found" do
