@@ -50,11 +50,11 @@ module Pundit
     true
   end
 
-  def policy_scope(scope)
-    Pundit.policy_scope!(current_user, scope)
+  def policy_scope(scope, *args)
+    Pundit.policy_scope!(current_user, scope, *args)
   end
 
-  def policy(record)
-    Pundit.policy!(current_user, record)
+  def policy(record, *args)
+    Pundit.policy!(current_user, record, *args)
   end
 end

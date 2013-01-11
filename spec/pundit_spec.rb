@@ -76,6 +76,7 @@ describe Pundit do
   let(:controller) { stub(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
+  let(:blog_contributor) { BlogContributor.new }
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
@@ -209,7 +210,7 @@ describe Pundit do
     end
 
     it "returns an instantiated policy given a plain model class when extra arguments are passed" do
-      policy = Pundit.policy!(user, BlogContributor, :true)
+      policy = Pundit.policy!(user, BlogContributor, true)
       policy.user.should == user
       policy.contributor.should == BlogContributor
       policy.restrict.should be_true
@@ -262,11 +263,22 @@ describe Pundit do
     it "throws an exception if the given policy can't be found" do
       expect { controller.policy(article) }.to raise_error(Pundit::NotDefinedError)
     end
+
+    it "returns an instantiated policy when extra arguments are passed" do
+      policy = controller.policy(blog_contributor, true)
+      policy.user.should == user
+      policy.contributor.should == blog_contributor
+      policy.restrict.should be_true
+    end
   end
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope" do
       controller.policy_scope(Post).should == :published
+    end
+
+    it "returns an instantiated policy scope when extra arguments are passed" do
+      controller.policy_scope(Blog, true).should == :active
     end
 
     it "throws an exception if the given policy can't be found" do
