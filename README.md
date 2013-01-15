@@ -195,6 +195,19 @@ You can, and are encouraged to, use this method in views:
 <% end %>
 ```
 
+## Manually specifying policy classes
+
+Sometimes you might want to explicitly declare which policy to use for a given
+class, instead of letting Pundit infer it. This can be done like so:
+
+``` ruby
+class Post
+  def self.policy_class
+    PostablePolicyClass
+  end
+end
+```
+
 ## Just plain old Ruby
 
 As you can see, Pundit doesn't do anything you couldn't have easily done
