@@ -32,15 +32,30 @@ class CommentPolicy::Scope < Struct.new(:user, :scope)
 end
 class Comment; extend ActiveModel::Naming; end
 
+# for testing that we can find an inherited scope
+class SpecialPostPolicy < PostPolicy; end
+class SpecialPost < Post; end
+
 class Article; end
 
 class BlogPolicy < Struct.new(:user, :blog); end
-class Blog; end
+class BlogPolicy::Scope < Struct.new(:user, :scope, :active_only)
+  def resolve
+    return scope.active if active_only
+    scope
+  end
+end
+class Blog < Struct.new(:user)
+  def self.active
+    :active
+  end
+end
 class ArtificialBlog < Blog
   def self.policy_class
     BlogPolicy
   end
 end
+
 class ArticleTag
   def self.policy_class
     Struct.new(:user, :tag) do
@@ -54,18 +69,27 @@ class ArticleTag
   end
 end
 
+class BlogContributor; end
+class BlogContributorPolicy < Struct.new(:user, :contributor, :restrict); end
+
 describe Pundit do
   let(:user) { stub }
   let(:post) { Post.new(user) }
+  let(:special_post) { SpecialPost.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
   let(:controller) { stub(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
+  let(:blog_contributor) { BlogContributor.new }
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
       Pundit.policy_scope(user, Post).should == :published
+    end
+    
+    it "returns an instantiated inherited policy scope" do
+      Pundit.policy_scope(user, SpecialPost).should == :published
     end
 
     it "returns an instantiated policy scope given an active model class" do
@@ -75,6 +99,11 @@ describe Pundit do
     it "returns nil if the given policy scope can't be found" do
       Pundit.policy_scope(user, Article).should be_nil
     end
+
+    it "returns an instantiated policy scope when extra arguments are passed" do
+      Pundit.policy_scope(user, Blog).should == Blog
+      Pundit.policy_scope(user, Blog, true).should == :active
+    end
   end
 
   describe ".policy_scope!" do
@@ -82,8 +111,17 @@ describe Pundit do
       Pundit.policy_scope!(user, Post).should == :published
     end
 
+    it "returns an inherited instantiated policy scope" do
+      Pundit.policy_scope!(user, SpecialPost).should == :published
+    end
+
     it "returns an instantiated policy scope given an active model class" do
       Pundit.policy_scope!(user, Comment).should == Comment
+    end
+
+    it "returns an instantiated policy scope with extra arguments passed" do
+      Pundit.policy_scope!(user, Blog).should == Blog
+      Pundit.policy_scope!(user, Blog, true).should == :active
     end
 
     it "throws an exception if the given policy scope can't be found" do
@@ -114,10 +152,23 @@ describe Pundit do
       policy.post.should == Post
     end
 
+    it "returns an instantiated policy given a plain model class" do
+      policy = Pundit.policy(user, SpecialPost)
+      policy.user.should == user
+      policy.post.should == SpecialPost
+    end
+
     it "returns an instantiated policy given an active model class" do
       policy = Pundit.policy(user, Comment)
       policy.user.should == user
       policy.comment.should == Comment
+    end
+
+    it "returns an instantiated policy given a plain model class when extra arguments are passed" do
+      policy = Pundit.policy(user, BlogContributor, :true)
+      policy.user.should == user
+      policy.contributor.should == BlogContributor
+      policy.restrict.should be_true
     end
 
     it "returns nil if the given policy can't be found" do
@@ -159,6 +210,12 @@ describe Pundit do
       policy.post.should == post
     end
 
+    it "returns an instantiated policy given an inherited plain model instance" do
+      policy = Pundit.policy!(user, special_post)
+      policy.user.should == user
+      policy.post.should == special_post
+    end
+
     it "returns an instantiated policy given an active model instance" do
       policy = Pundit.policy!(user, comment)
       policy.user.should == user
@@ -171,10 +228,23 @@ describe Pundit do
       policy.post.should == Post
     end
 
+    it "returns an instantiated policy given a plain model class" do
+      policy = Pundit.policy!(user, SpecialPost)
+      policy.user.should == user
+      policy.post.should == SpecialPost
+    end
+
     it "returns an instantiated policy given an active model class" do
       policy = Pundit.policy!(user, Comment)
       policy.user.should == user
       policy.comment.should == Comment
+    end
+
+    it "returns an instantiated policy given a plain model class when extra arguments are passed" do
+      policy = Pundit.policy!(user, BlogContributor, true)
+      policy.user.should == user
+      policy.contributor.should == BlogContributor
+      policy.restrict.should be_true
     end
 
     it "throws an exception if the given policy can't be found" do
@@ -224,11 +294,26 @@ describe Pundit do
     it "throws an exception if the given policy can't be found" do
       expect { controller.policy(article) }.to raise_error(Pundit::NotDefinedError)
     end
+
+    it "returns an instantiated policy when extra arguments are passed" do
+      policy = controller.policy(blog_contributor, true)
+      policy.user.should == user
+      policy.contributor.should == blog_contributor
+      policy.restrict.should be_true
+    end
   end
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope" do
       controller.policy_scope(Post).should == :published
+    end
+
+    it "returns an instantiated inherited policy scope" do
+      controller.policy_scope(SpecialPost).should == :published
+    end
+
+    it "returns an instantiated policy scope when extra arguments are passed" do
+      controller.policy_scope(Blog, true).should == :active
     end
 
     it "throws an exception if the given policy can't be found" do

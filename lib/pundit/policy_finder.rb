@@ -7,21 +7,21 @@ module Pundit
     end
 
     def scope
-      policy::Scope if policy
-    rescue NameError
-      nil
+      begin
+        policy.const_get(:Scope) if policy
+      rescue
+        raise NotDefinedError, "unable to find scope for #{object}"
+      end
     end
 
     def policy
       klass = find
-      klass = klass.constantize if klass.is_a?(String)
+      klass = klass.safe_constantize if klass.is_a?(String)
       klass
-    rescue NameError
-      nil
     end
 
     def scope!
-      scope or raise NotDefinedError, "unable to find scope #{find}::Scope for #{object}"
+      scope or raise NotDefinedError, "unable to find scope for #{object}"
     end
 
     def policy!
