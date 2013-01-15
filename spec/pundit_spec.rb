@@ -310,6 +310,7 @@ describe Pundit do
 
     it "returns an instantiated inherited policy scope" do
       controller.policy_scope(SpecialPost).should == :published
+    end
 
     it "returns an instantiated policy scope when extra arguments are passed" do
       controller.policy_scope(Blog, true).should == :active
