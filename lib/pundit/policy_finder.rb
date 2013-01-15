@@ -6,24 +6,18 @@ module Pundit
       @object = object
     end
 
-    def name
-      if object.respond_to?(:model_name)
-        object.model_name.to_s
-      elsif object.class.respond_to?(:model_name)
-        object.class.model_name.to_s
-      elsif object.is_a?(Class)
-        object.to_s
-      else
-        object.class.to_s
+    def scope
+      begin
+        policy.const_get(:Scope) if policy
+      rescue
+        raise NotDefinedError, "unable to find scope for #{object}"
       end
     end
 
-    def scope
-      policy.const_get(:Scope) if policy
-    end
-
     def policy
-      policy_name.safe_constantize
+      klass = find
+      klass = klass.safe_constantize if klass.is_a?(String)
+      klass
     end
 
     def scope!
@@ -31,11 +25,28 @@ module Pundit
     end
 
     def policy!
-      policy or raise NotDefinedError, "unable to find policy #{policy_name} for #{object}"
+      policy or raise NotDefinedError, "unable to find policy #{find} for #{object}"
     end
 
-    def policy_name
-      "#{name}Policy"
+  private
+
+    def find
+      if object.respond_to?(:policy_class)
+        object.policy_class
+      elsif object.class.respond_to?(:policy_class)
+        object.class.policy_class
+      else
+        klass = if object.respond_to?(:model_name)
+          object.model_name
+        elsif object.class.respond_to?(:model_name)
+          object.class.model_name
+        elsif object.is_a?(Class)
+          object
+        else
+          object.class
+        end
+        "#{klass}Policy"
+      end
     end
   end
 end
