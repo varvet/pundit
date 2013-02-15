@@ -1,5 +1,4 @@
 require "pundit/version"
-require "pundit/policy_finder"
 require "active_support/concern"
 require "active_support/core_ext/string/inflections"
 require "active_support/core_ext/object/blank"
@@ -9,26 +8,6 @@ module Pundit
   class NotDefinedError < StandardError; end
 
   extend ActiveSupport::Concern
-
-  class << self
-    def policy_scope(user, scope)
-      policy = PolicyFinder.new(scope).scope
-      policy.new(user, scope).resolve if policy
-    end
-
-    def policy_scope!(user, scope)
-      PolicyFinder.new(scope).scope!.new(user, scope).resolve
-    end
-
-    def policy(user, record)
-      scope = PolicyFinder.new(record).policy
-      scope.new(user, record) if scope
-    end
-
-    def policy!(user, record)
-      PolicyFinder.new(record).policy!.new(user, record)
-    end
-  end
 
   included do
     if respond_to?(:helper_method)
@@ -50,11 +29,47 @@ module Pundit
     true
   end
 
-  def policy_scope(scope)
-    Pundit.policy_scope!(current_user, scope)
+  def policy_scope(scope = collection)
+    policy(scope).resolve
   end
 
-  def policy(record)
-    Pundit.policy!(current_user, record)
+  def policy(target = resource)
+    policy_class!(target).new(current_user, target)
+  end
+
+  def policy_class!(target = resource)
+    policy_class(target) or raise NotDefinedError, "unable to find policy for #{target}"
+  end
+
+  def policy_class(target = resource)
+    policy_class_name(target).safe_constantize || 'ResourcePolicy'.safe_constantize || 'ApplicationPolicy'.safe_constantize
+  end
+
+  protected
+
+  def policy_class_name(target)
+    "#{policy_qualifier(target)}Policy"
+  end
+
+  def policy_qualifier(target)
+    mq = model_qualifier(target)
+    (policy_map.stringify_keys[mq.underscore].to_s.camelize if respond_to?(:policy_map)) || mq
+  end
+
+  def model_qualifier(target)
+    case
+
+    when target.respond_to?(:model_name)
+      target.model_name.to_s
+
+    when target.class.respond_to?(:model_name)
+      target.class.model_name.to_s
+
+    when target.is_a?(Class)
+      target.to_s
+
+    else
+      target.class.to_s
+    end
   end
 end

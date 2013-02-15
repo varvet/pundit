@@ -1,6 +1,7 @@
 require "pundit"
 require "pry"
 require "active_model/naming"
+require "action_controller"
 
 class PostPolicy < Struct.new(:user, :post)
   def update?
@@ -12,10 +13,9 @@ class PostPolicy < Struct.new(:user, :post)
   def show?
     true
   end
-end
-class PostPolicy::Scope < Struct.new(:user, :scope)
+
   def resolve
-    scope.published
+    post.published
   end
 end
 class Post < Struct.new(:user)
@@ -24,143 +24,33 @@ class Post < Struct.new(:user)
   end
 end
 
-class CommentPolicy < Struct.new(:user, :comment); end
-class CommentPolicy::Scope < Struct.new(:user, :scope)
+class CommentPolicy < Struct.new(:user, :comment)
   def resolve
-    scope
+    comment
   end
 end
 class Comment; extend ActiveModel::Naming; end
 
-# for testing that we can find an inherited scope
-class SpecialPostPolicy < PostPolicy; end
-class SpecialPost < Post; end
-
 class Article; end
+
+# for testing that we can find a mapped Policy
+class SpecialPost < Post; end
+class SpecialPostsController < ActionController::Base
+  include Pundit
+  def current_user
+  end
+  protected
+  def policy_map
+    { :special_post => :post}
+  end
+end
 
 describe Pundit do
   let(:user) { stub }
   let(:post) { Post.new(user) }
-  let(:special_post) { SpecialPost.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
   let(:controller) { stub(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
-
-  describe ".policy_scope" do
-    it "returns an instantiated policy scope given a plain model class" do
-      Pundit.policy_scope(user, Post).should == :published
-    end
-    
-    it "returns an instantiated inherited policy scope" do
-      Pundit.policy_scope(user, SpecialPost).should == :published
-    end
-
-    it "returns an instantiated policy scope given an active model class" do
-      Pundit.policy_scope(user, Comment).should == Comment
-    end
-
-    it "returns nil if the given policy scope can't be found" do
-      Pundit.policy_scope(user, Article).should be_nil
-    end
-  end
-
-  describe ".policy_scope!" do
-    it "returns an instantiated policy scope given a plain model class" do
-      Pundit.policy_scope!(user, Post).should == :published
-    end
-
-    it "returns an inherited instantiated policy scope" do
-      Pundit.policy_scope!(user, SpecialPost).should == :published
-    end
-
-    it "returns an instantiated policy scope given an active model class" do
-      Pundit.policy_scope!(user, Comment).should == Comment
-    end
-
-    it "throws an exception if the given policy scope can't be found" do
-      expect { Pundit.policy_scope!(user, Article) }.to raise_error(Pundit::NotDefinedError)
-    end
-  end
-
-  describe ".policy" do
-    it "returns an instantiated policy given a plain model instance" do
-      policy = Pundit.policy(user, post)
-      policy.user.should == user
-      policy.post.should == post
-    end
-
-    it "returns an instantiated policy given an active model instance" do
-      policy = Pundit.policy(user, comment)
-      policy.user.should == user
-      policy.comment.should == comment
-    end
-
-    it "returns an instantiated policy given a plain model class" do
-      policy = Pundit.policy(user, Post)
-      policy.user.should == user
-      policy.post.should == Post
-    end
-
-    it "returns an instantiated policy given a plain model class" do
-      policy = Pundit.policy(user, SpecialPost)
-      policy.user.should == user
-      policy.post.should == SpecialPost
-    end
-
-    it "returns an instantiated policy given an active model class" do
-      policy = Pundit.policy(user, Comment)
-      policy.user.should == user
-      policy.comment.should == Comment
-    end
-
-    it "returns nil if the given policy can't be found" do
-      Pundit.policy(user, article).should be_nil
-      Pundit.policy(user, Article).should be_nil
-    end
-  end
-
-  describe ".policy!" do
-    it "returns an instantiated policy given a plain model instance" do
-      policy = Pundit.policy!(user, post)
-      policy.user.should == user
-      policy.post.should == post
-    end
-
-    it "returns an instantiated policy given an inherited plain model instance" do
-      policy = Pundit.policy!(user, special_post)
-      policy.user.should == user
-      policy.post.should == special_post
-    end
-
-    it "returns an instantiated policy given an active model instance" do
-      policy = Pundit.policy!(user, comment)
-      policy.user.should == user
-      policy.comment.should == comment
-    end
-
-    it "returns an instantiated policy given a plain model class" do
-      policy = Pundit.policy!(user, Post)
-      policy.user.should == user
-      policy.post.should == Post
-    end
-
-    it "returns an instantiated policy given a plain model class" do
-      policy = Pundit.policy!(user, SpecialPost)
-      policy.user.should == user
-      policy.post.should == SpecialPost
-    end
-
-    it "returns an instantiated policy given an active model class" do
-      policy = Pundit.policy!(user, Comment)
-      policy.user.should == user
-      policy.comment.should == Comment
-    end
-
-    it "throws an exception if the given policy can't be found" do
-      expect { Pundit.policy!(user, article) }.to raise_error(Pundit::NotDefinedError)
-      expect { Pundit.policy!(user, Article) }.to raise_error(Pundit::NotDefinedError)
-    end
-  end
 
   describe "#verify_authorized" do
     it "does nothing when authorized" do
@@ -205,12 +95,17 @@ describe Pundit do
       controller.policy_scope(Post).should == :published
     end
 
-    it "returns an instantiated inherited policy scope" do
-      controller.policy_scope(SpecialPost).should == :published
-    end
-
     it "throws an exception if the given policy can't be found" do
       expect { controller.policy_scope(Article) }.to raise_error(Pundit::NotDefinedError)
     end
+  end
+end
+
+describe SpecialPostsController do
+  let(:user) { stub }
+  let(:special_post) { SpecialPost.new(user) }
+
+  it "returns an instantiated policy scope from a mapped policy" do
+    subject.policy_scope(SpecialPost).should == :published
   end
 end
