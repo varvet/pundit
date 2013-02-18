@@ -2,6 +2,7 @@ require "pundit/version"
 require "active_support/concern"
 require "active_support/core_ext/string/inflections"
 require "active_support/core_ext/object/blank"
+require 'pundit/engine' if defined?(Rails)
 
 module Pundit
   class NotAuthorizedError < StandardError; end
@@ -34,18 +35,22 @@ module Pundit
   end
 
   def policy(target = resource)
-    policy_class!(target).new(current_user, target)
+    policy_class!(target).new(self, target)
   end
+
+  protected
 
   def policy_class!(target = resource)
     policy_class(target) or raise NotDefinedError, "unable to find policy for #{target}"
   end
 
   def policy_class(target = resource)
-    policy_class_name(target).safe_constantize || 'ResourcePolicy'.safe_constantize || 'ApplicationPolicy'.safe_constantize
+    policy_class_name(target).safe_constantize || 'ResourcePolicy'.safe_constantize || 'ApplicationPolicy'.safe_constantize || default_policy_class
   end
 
-  protected
+  def default_policy_class
+    Pundit::ClosedPolicy
+  end
 
   def policy_class_name(target)
     "#{policy_qualifier(target)}Policy"
@@ -53,7 +58,12 @@ module Pundit
 
   def policy_qualifier(target)
     mq = model_qualifier(target)
-    (policy_map.stringify_keys[mq.underscore].to_s.camelize if respond_to?(:policy_map)) || mq
+    
+    if respond_to?(:policy_map) and _mapped_qualifier = policy_map.stringify_keys[mq.underscore]
+      _mapped_qualifier.to_s.camelize
+    else
+      mq
+    end
   end
 
   def model_qualifier(target)
