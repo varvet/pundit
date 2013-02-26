@@ -98,7 +98,7 @@ and the given record. It then infers from the action name, that it should call
 raise "not authorized" unless PostPolicy.new(current_user, @post).create?
 ```
 
-You can pass a second arguent to `authorize` if the name of the permission you
+You can pass a second argument to `authorize` if the name of the permission you
 want to check doesn't match the action name. For example:
 
 ``` ruby
