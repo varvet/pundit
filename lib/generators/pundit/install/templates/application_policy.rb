@@ -7,7 +7,7 @@ class ApplicationPolicy
   end
 
   def index?
-    scope.exists?
+    false
   end
 
   def show?
