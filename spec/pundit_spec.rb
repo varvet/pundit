@@ -59,7 +59,7 @@ describe Pundit do
   let(:post) { Post.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
-  let(:controller) { stub(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
+  let(:controller) { stub(:current_user => user, :action_name => "update").tap { |c| c.extend(Pundit) } }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
 

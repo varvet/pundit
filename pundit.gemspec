@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = Pundit::VERSION
   gem.authors       = ["Jonas Nicklas", "Elabs AB"]
   gem.email         = ["jonas.nicklas@gmail.com", "dev@elabs.se"]
-  gem.description   = %q{Object oriented authorization for Rails applications}
-  gem.summary       = %q{OO authorization for Rails}
+  gem.description   = %q{Object oriented authorization for Rails and Padrino applications}
+  gem.summary       = %q{OO authorization for Rails and Padrino}
   gem.homepage      = "http://github.com/elabs/pundit"
 
   gem.files         = `git ls-files`.split($/)
@@ -17,9 +17,11 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency "rails", ">=3.0.0"
+  gem.add_dependency "activesupport"
+
   gem.add_development_dependency "rspec", "~>2.0"
   gem.add_development_dependency "pry"
   gem.add_development_dependency "rake"
   gem.add_development_dependency "yard"
+  gem.add_development_dependency "activemodel"
 end

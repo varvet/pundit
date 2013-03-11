@@ -270,6 +270,19 @@ Pundit.policy_scope(user, Post)
 The bang methods will raise an exception if the policy does not exist, whereas
 those without the bang will return nil.
 
+## Padrino
+
+Include Pundit in your Padrino application:
+
+``` ruby
+require "padrino/pundit"
+
+class MyApp < Padrino::Application
+  # you must provide a current_user helper method
+  register Padrino::Pundit
+end
+```
+
 # License
 
 Licensed under the MIT license, see the separate LICENSE.txt file.
