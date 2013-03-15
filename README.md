@@ -270,6 +270,25 @@ Pundit.policy_scope(user, Post)
 The bang methods will raise an exception if the policy does not exist, whereas
 those without the bang will return nil.
 
+## Manually setting an error message
+
+If you want to customize that error message when you handle `NotAuthorizedError`
+exception messages just make sure your policy class responds to `error_message`
+
+``` ruby
+class ApplicationPolicy
+  def initialize(user, record)
+    raise Pundit::NotAuthorizedError, 'must provide access token' if user.nil?
+    @user   = user
+    @record = record
+  end
+
+  def error_message
+    @error_message ||= "User doesn't have access to perform this action"
+  end
+end
+```
+
 # License
 
 Licensed under the MIT license, see the separate LICENSE.txt file.
