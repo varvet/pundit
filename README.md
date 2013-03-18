@@ -289,6 +289,46 @@ class ApplicationPolicy
 end
 ```
 
+## Passing more context information to your Scope classes
+
+Sometimes the `current_user` and the `scope` are not enough to determine
+read access in a scope. If you find yourself in that situation you just
+need to pass any amount extra parameters to your `policy_scope` call.
+
+``` ruby
+class Blog < ApplicationController::Base
+  def index
+    @person = Person.find(params[:person_id])
+    @blogs  = policy_scope(Blog, @person).page(params[:page])
+  end
+end
+```
+
+In your Policy class:
+
+``` ruby
+class BlogPolicy
+  class Scope 
+    def initialize(user,scope,person)
+      @user   = user
+      @scope  = scope
+      @person = person 
+      @scope  = @scope.where(:user_id => @person.id)
+    end
+
+    def resolve
+      if @user.is_admin? || @person.id == @user.id
+        @scope
+      else
+        # raise or modify your scope, whatever suits you
+        raise Pundit::NotAuthorizedError, ApplicationPolicy::DEFAULT_ERROR_MESSAGE
+      end
+    end
+  end
+end
+```
+
+
 # License
 
 Licensed under the MIT license, see the separate LICENSE.txt file.
