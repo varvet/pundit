@@ -273,7 +273,7 @@ those without the bang will return nil.
 ## Manually setting an error message
 
 If you want to customize that error message when you handle `NotAuthorizedError`
-exception messages just make sure your policy class responds to `error_message`
+exception messages just make sure your policy class responds to `error_message(query)`
 
 ``` ruby
 class ApplicationPolicy
@@ -283,7 +283,7 @@ class ApplicationPolicy
     @record = record
   end
 
-  def error_message
+  def error_message(query)
     @error_message ||= "User doesn't have access to perform this action"
   end
 end
