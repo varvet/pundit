@@ -22,10 +22,25 @@ class Post < Struct.new(:user)
   def self.published
     :published
   end
+
+  def self.permitted_attributes
+    [:attr]
+  end
+end
+
+class PostPolicy::PermittedAttributes < Struct.new(:user, :scope)
+  def resolve
+    scope.permitted_attributes
+  end
 end
 
 class CommentPolicy < Struct.new(:user, :comment); end
 class CommentPolicy::Scope < Struct.new(:user, :scope)
+  def resolve
+    scope
+  end
+end
+class CommentPolicy::PermittedAttributes < Struct.new(:user, :scope)
   def resolve
     scope
   end
@@ -63,6 +78,20 @@ describe Pundit do
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
 
+  describe ".policy_attributes" do
+    it "returns an instantiated policy attributes given a plain model class" do
+      Pundit.policy_attributes(user, Post).should == [:attr]
+    end
+
+    it "reutnrs and instantiated policy attributes given an active model class" do
+      Pundit.policy_attributes(user, Comment).should == Comment
+    end
+
+    it "reutrns nil of the given policy attributes can't be found" do
+      Pundit.policy_attributes(user, Article).should be_nil
+    end
+  end
+
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
       Pundit.policy_scope(user, Post).should == :published
@@ -74,6 +103,24 @@ describe Pundit do
 
     it "returns nil if the given policy scope can't be found" do
       Pundit.policy_scope(user, Article).should be_nil
+    end
+  end
+
+  describe ".policy_attributes!" do
+    it "returns an instantiated policy attributes given a plain model class" do
+      Pundit.policy_attributes!(user, Post).should == [:attr]
+    end
+
+    it "reutnrs and instantiated policy attributes given an active model class" do
+      Pundit.policy_attributes!(user, Comment).should == Comment
+    end
+
+    it "throws an exception if the given policy attributes can't be found" do
+      expect { Pundit.policy_attributes!(user, Article) }.to raise_error(Pundit::NotDefinedError)
+    end
+
+    it "throws an exception if the given policy attributes can't be found" do
+      expect { Pundit.policy_attributes!(user, ArticleTag) }.to raise_error(Pundit::NotDefinedError)
     end
   end
 

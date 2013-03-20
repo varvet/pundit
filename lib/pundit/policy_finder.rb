@@ -12,6 +12,12 @@ module Pundit
       nil
     end
 
+    def permitted_attributes
+      policy::PermittedAttributes if policy
+    rescue NameError
+      nil
+    end
+
     def policy
       klass = find
       klass = klass.constantize if klass.is_a?(String)
@@ -22,6 +28,10 @@ module Pundit
 
     def scope!
       scope or raise NotDefinedError, "unable to find scope #{find}::Scope for #{object}"
+    end
+
+    def permitted_attributes!
+      permitted_attributes or raise NotDefinedError, "unable to find params #{find}::PermittedAttributes for #{object}"
     end
 
     def policy!

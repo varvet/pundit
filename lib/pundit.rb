@@ -11,6 +11,15 @@ module Pundit
   extend ActiveSupport::Concern
 
   class << self
+    def policy_attributes(user, scope)
+      policy = PolicyFinder.new(scope).permitted_attributes
+      policy.new(user, scope).resolve if policy
+    end
+
+    def policy_attributes!(user, scope)
+      PolicyFinder.new(scope).permitted_attributes!.new(user, scope).resolve
+    end
+
     def policy_scope(user, scope)
       policy = PolicyFinder.new(scope).scope
       policy.new(user, scope).resolve if policy
@@ -33,6 +42,7 @@ module Pundit
   included do
     if respond_to?(:helper_method)
       helper_method :policy_scope
+      helper_method :policy_attributes
       helper_method :policy
     end
   end
