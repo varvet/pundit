@@ -83,11 +83,11 @@ describe Pundit do
       Pundit.policy_attributes(user, Post).should == [:attr]
     end
 
-    it "reutnrs and instantiated policy attributes given an active model class" do
+    it "returns and instantiated policy attributes given an active model class" do
       Pundit.policy_attributes(user, Comment).should == Comment
     end
 
-    it "reutrns nil of the given policy attributes can't be found" do
+    it "returns nil of the given policy attributes can't be found" do
       Pundit.policy_attributes(user, Article).should be_nil
     end
   end
@@ -111,7 +111,7 @@ describe Pundit do
       Pundit.policy_attributes!(user, Post).should == [:attr]
     end
 
-    it "reutnrs and instantiated policy attributes given an active model class" do
+    it "returns and instantiated policy attributes given an active model class" do
       Pundit.policy_attributes!(user, Comment).should == Comment
     end
 
