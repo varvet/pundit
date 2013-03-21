@@ -39,8 +39,6 @@ module Pundit
       protected :policy
       protected :verify_authorized
       protected :authorize
-      private :policy_scope!
-      private :policy!
     end
   end
 
