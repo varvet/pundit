@@ -44,6 +44,9 @@ module Pundit
       helper_method :policy_scope
       helper_method :policy_attributes
       helper_method :policy
+
+      protected :policy_attributes
+      private :policy_attributes!
     end
   end
 
