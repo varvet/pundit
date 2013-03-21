@@ -46,7 +46,10 @@ module Pundit
       helper_method :policy
 
       protected :policy_attributes
+<<<<<<< HEAD
       private :policy_attributes!
+=======
+>>>>>>> Added proper policy_attributes method for controller
     end
   end
 
@@ -61,6 +64,10 @@ module Pundit
       raise NotAuthorizedError, "not allowed to #{query} this #{record}"
     end
     true
+  end
+
+  def policy_attributes(scope)
+    Pundit.policy_attributes!(current_user, scope)
   end
 
   def policy_scope(scope)
