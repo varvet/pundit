@@ -46,10 +46,6 @@ module Pundit
       helper_method :policy
 
       protected :policy_attributes
-<<<<<<< HEAD
-      private :policy_attributes!
-=======
->>>>>>> Added proper policy_attributes method for controller
     end
   end
 
