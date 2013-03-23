@@ -9,7 +9,7 @@ module Padrino
 
     module Adapter
       def action_name
-        action
+        request.action.to_s
       end
     end
   end
