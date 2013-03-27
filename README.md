@@ -270,6 +270,37 @@ Pundit.policy_scope(user, Post)
 The bang methods will raise an exception if the policy does not exist, whereas
 those without the bang will return nil.
 
+## RSpec
+
+Pundit includes a mini-DSL for writing expressive tests for your policies in RSpec.
+Require `pundit/rspec` in your `spec_helper.rb`:
+
+``` ruby
+require "pundit/rspec"
+```
+
+Then put your policy specs in `spec/policies`, and make them look somewhat like this:
+
+``` ruby
+describe PostPolicy do
+  subject { PostPolicy }
+
+  permissions :create? do
+    it "denies access if post is published" do
+      should_not permit(User.new(:admin => false), Post.new(:published => true))
+    end
+
+    it "grants access if post is published and user is an admin" do
+      should permit(User.new(:admin => true), Post.new(:published => true))
+    end
+
+    it "grands access if post is unpublished" do
+      should permit(User.new(:admin => false), Post.new(:published => false))
+    end
+  end
+end
+```
+
 # License
 
 Licensed under the MIT license, see the separate LICENSE.txt file.
