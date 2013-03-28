@@ -35,6 +35,10 @@ module Pundit
       helper_method :policy_scope
       helper_method :policy
     end
+    if respond_to?(:hide_action)
+      hide_action :authorize
+      hide_action :verify_authorized
+    end
   end
 
   def verify_authorized
