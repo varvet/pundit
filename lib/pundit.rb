@@ -34,6 +34,8 @@ module Pundit
     if respond_to?(:helper_method)
       helper_method :policy_scope
       helper_method :policy
+      helper_method :verify_authorized
+      helper_method :authorize
     end
   end
 
