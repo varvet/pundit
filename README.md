@@ -294,7 +294,7 @@ describe PostPolicy do
       should permit(User.new(:admin => true), Post.new(:published => true))
     end
 
-    it "grands access if post is unpublished" do
+    it "grants access if post is unpublished" do
       should permit(User.new(:admin => false), Post.new(:published => false))
     end
   end
