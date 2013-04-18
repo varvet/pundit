@@ -133,6 +133,18 @@ class ApplicationController < ActionController::Base
 end
 ```
 
+Likewise, pundit also adds `verify_policy_scoped` to your controller.  This
+will raise an exception in the vein of `verify_authorized`.  However it tracks
+if `policy_scoped` is used instead of `authorize`.  This is mostly useful for
+controller actions like `index` which find collections with a scope and don't
+authorize individual instances.
+
+``` ruby
+class ApplicationController < ActionController::Base
+  after_filter :verify_policy_scoped, :only => :index
+end
+```
+
 ## Scopes
 
 Often, you will want to have some kind of view listing records which a
