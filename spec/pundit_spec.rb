@@ -194,6 +194,17 @@ describe Pundit do
     end
   end
 
+  describe "#verify_policy_scoped" do
+    it "does nothing when policy_scope is used" do
+      controller.policy_scope(Post)
+      controller.verify_policy_scoped
+    end
+
+    it "raises an exception when policy_scope is not used" do
+      expect { controller.verify_policy_scoped }.to raise_error(Pundit::NotAuthorizedError)
+    end
+  end
+
   describe "#authorize" do
     it "infers the policy name and authorized based on it" do
       controller.authorize(post).should be_true

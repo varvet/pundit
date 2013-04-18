@@ -38,11 +38,16 @@ module Pundit
     if respond_to?(:hide_action)
       hide_action :authorize
       hide_action :verify_authorized
+      hide_action :verify_policy_scoped
     end
   end
 
   def verify_authorized
     raise NotAuthorizedError unless @_policy_authorized
+  end
+
+  def verify_policy_scoped
+    raise NotAuthorizedError unless @_policy_scoped
   end
 
   def authorize(record, query=nil)
@@ -55,6 +60,7 @@ module Pundit
   end
 
   def policy_scope(scope)
+    @_policy_scoped = true
     Pundit.policy_scope!(current_user, scope)
   end
 
