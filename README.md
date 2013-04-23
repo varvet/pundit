@@ -277,7 +277,7 @@ controllers and display some nice error page or an informative API response. Pun
 allows you to customize the error messages if authorization fails.
 
 ``` ruby
-authorize Post, :destroy?, "sorry, we support freedom of speech"
+authorize @post, :destroy?, "sorry, we support freedom of speech"
 ```
 
 ## RSpec
