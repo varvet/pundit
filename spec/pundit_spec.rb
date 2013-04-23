@@ -54,11 +54,20 @@ class ArticleTag
   end
 end
 
+class MessagePolicy < Struct.new(:user, :message)
+  def destroy?; false; end
+  def error_message(scope)
+    @error_message ||= "error message set from within the policy"
+  end
+end
+class Message; end
+
 describe Pundit do
   let(:user) { stub }
   let(:post) { Post.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
+  let(:message) { Message.new }
   let(:controller) { stub(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
@@ -216,6 +225,10 @@ describe Pundit do
     it "raises an error with a custom error message" do
       custom_message = "custom error message"
       expect { controller.authorize(post, :destroy?, custom_message) }.to raise_error(Pundit::NotAuthorizedError,custom_message)
+    end
+
+    it "raises an error with a custom error message defined in the policy" do
+      expect { controller.authorize(message, :destroy?) }.to raise_error(Pundit::NotAuthorizedError,MessagePolicy.new.error_message('destroy'))
     end
 
   end

@@ -280,6 +280,17 @@ allows you to customize the error messages if authorization fails.
 authorize @post, :destroy?, "sorry, we support freedom of speech"
 ```
 
+You can also provide a custom error message from within a policy, just declare a
+method called `error_message` that accepts a `query parameter and you're good to go.
+
+``` ruby
+class MessagePolicy < ApplicationPolicy
+  def error_message(query)
+    @error_message ||= "whoa there, I don't think you're allowed to #{query} this #{record}"
+  end
+end
+```
+
 ## RSpec
 
 Pundit includes a mini-DSL for writing expressive tests for your policies in RSpec.
