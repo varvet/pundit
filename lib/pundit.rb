@@ -45,11 +45,13 @@ module Pundit
     raise NotAuthorizedError unless @_policy_authorized
   end
 
-  def authorize(record, query=nil)
-    query ||= params[:action].to_s + "?"
+  def authorize(record, query = nil, message = nil)
+    policy = policy(record)
+    query   ||= params[:action].to_s + "?"
+    message ||= policy.respond_to?(:error_message) ? policy.error_message(query) : "not allowed to #{query} this #{record}"
     @_policy_authorized = true
-    unless policy(record).public_send(query)
-      raise NotAuthorizedError, "not allowed to #{query} this #{record}"
+    unless policy.public_send(query)
+      raise NotAuthorizedError, message
     end
     true
   end
