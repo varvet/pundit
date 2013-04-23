@@ -270,6 +270,16 @@ Pundit.policy_scope(user, Post)
 The bang methods will raise an exception if the policy does not exist, whereas
 those without the bang will return nil.
 
+## Custom error messages
+
+In rails you probably want to use `rescue_from Pundit::NotAuthorizedError` in your
+controllers and display some nice error page or an informative API response. Pundit
+allows you to customize the error messages if authorization fails.
+
+``` ruby
+authorize Post, :destroy?, "sorry, we support freedom of speech"
+``
+
 ## RSpec
 
 Pundit includes a mini-DSL for writing expressive tests for your policies in RSpec.
