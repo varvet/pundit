@@ -3,6 +3,9 @@ require "pry"
 require "active_model/naming"
 
 class PostPolicy < Struct.new(:user, :post)
+
+  include Pundit::Serializer
+
   def update?
     post.user == user
   end
@@ -11,6 +14,9 @@ class PostPolicy < Struct.new(:user, :post)
   end
   def show?
     true
+  end
+  def not_a_query
+    false
   end
 end
 class PostPolicy::Scope < Struct.new(:user, :scope)
@@ -21,6 +27,11 @@ end
 class Post < Struct.new(:user)
   def self.published
     :published
+  end
+end
+class FeaturedPostPolicy < PostPolicy
+  def create?
+    false
   end
 end
 
@@ -235,4 +246,34 @@ describe Pundit do
       expect { controller.policy_scope(Article) }.to raise_error(Pundit::NotDefinedError)
     end
   end
+
+  describe Pundit::Serializer do
+
+    describe "#to_h" do
+      let(:subject) { PostPolicy.new(user,post).to_h }
+
+      it "has queries as keys without the question mark" do
+        subject.keys.should eq [:destroy, :show, :update]
+      end
+
+      it "has the values of the corresponding query results" do
+        subject.values.should eq [false, true, true]
+      end
+
+    end
+
+    describe "#serialize_queries" do
+
+      it "returns the methods defined in the policy" do
+        PostPolicy.new(user,post).serialize_queries.should eq [:destroy?, :show?, :update?]
+      end
+
+      it "when inherited it has query keys from parent policies" do
+        FeaturedPostPolicy.new(user,post).serialize_queries.should eq [:create?, :destroy?, :show?, :update?]
+      end
+
+    end
+
+  end
+
 end
