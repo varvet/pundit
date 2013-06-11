@@ -14,7 +14,7 @@ module Pundit
 
     def policy
       klass = find
-      klass = klass.constantize if klass.is_a?(String)
+      klass = (Object.respond_to?(:constantize) ? klass.constantize : class_from_string(klass)) if klass.is_a?(String)
       klass
     rescue NameError
       nil
@@ -48,5 +48,14 @@ module Pundit
         "#{klass}Policy"
       end
     end
+
+    unless Object.respond_to?(:constantize)
+      def class_from_string(str)
+        str.split('::').inject(Object) do |mod, class_name|
+          mod.const_get(class_name)
+        end
+      end
+    end
+    
   end
 end
