@@ -1,14 +1,17 @@
 require "pundit/version"
 require "pundit/policy_finder"
-require "active_support/concern"
-require "active_support/core_ext/string/inflections"
-require "active_support/core_ext/object/blank"
+require "active_support/version"
+if ActiveSupport::VERSION::MAJOR >= 3
+  require "active_support/concern"
+  require "active_support/core_ext/string/inflections"
+  require "active_support/core_ext/object/blank"
+end
 
 module Pundit
   class NotAuthorizedError < StandardError; end
   class NotDefinedError < StandardError; end
 
-  extend ActiveSupport::Concern
+  extend ActiveSupport::Concern if ActiveSupport::VERSION::MAJOR >= 3
 
   class << self
     def policy_scope(user, scope)
@@ -30,14 +33,29 @@ module Pundit
     end
   end
 
-  included do
-    if respond_to?(:helper_method)
-      helper_method :policy_scope
-      helper_method :policy
+  if ActiveSupport::VERSION::MAJOR >= 3
+    included do
+      if respond_to?(:helper_method)
+        helper_method :policy_scope
+        helper_method :policy
+      end
+      if respond_to?(:hide_action)
+        hide_action :authorize
+        hide_action :verify_authorized
+      end
     end
-    if respond_to?(:hide_action)
-      hide_action :authorize
-      hide_action :verify_authorized
+  else
+    def self.included(base)
+      base.class_eval do
+        if respond_to?(:helper_method)
+          helper_method :policy_scope
+          helper_method :policy
+        end
+        if respond_to?(:hide_action)
+          hide_action :authorize
+          hide_action :verify_authorized
+        end
+      end
     end
   end
 
