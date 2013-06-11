@@ -3,6 +3,7 @@ require "pundit/policy_finder"
 require "active_support/concern"
 require "active_support/core_ext/string/inflections"
 require "active_support/core_ext/object/blank"
+require "pundit/ruby18_support"
 
 module Pundit
   class NotAuthorizedError < StandardError; end
