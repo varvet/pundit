@@ -10,6 +10,10 @@ module Pundit
       policy::Scope if policy
     rescue NameError
       nil
+    rescue ArgumentError
+      # captures <ArgumentError: Anonymous modules have no name to be referenced by>
+      # when used with ActiveSupport < 3
+      nil
     end
 
     def policy
