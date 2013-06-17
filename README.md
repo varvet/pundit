@@ -282,6 +282,38 @@ Pundit.policy_scope(user, Post)
 The bang methods will raise an exception if the policy does not exist, whereas
 those without the bang will return nil.
 
+## Pundit and strong_parameters
+
+In Rails 3 using [strong_parameters](https://github.com/rails/strong_parameters)
+or a standard Rails 4 setup, mass-assignment protection is handled in the controller. 
+Pundit helps you permit different attributes for different users.
+
+```ruby
+class PostPolicy < Struct.new(:user, :post)
+  def permitted_attributes
+    if user.admin? || user.owner_of?(post)
+      [:title, :body]
+    else
+      [:body]
+    end
+  end
+end
+
+class PostsController < ApplicationController
+  def update
+    # ...
+    if @post.update_attributes(post_attributes)
+    # ...
+  end
+
+  private
+
+  def post_attributes
+    params.require(:post).permit(policy(@post).permitted_attributes)
+  end
+end
+```
+
 ## RSpec
 
 Pundit includes a mini-DSL for writing expressive tests for your policies in RSpec.
