@@ -264,6 +264,49 @@ class ApplicationPolicy
 end
 ```
 
+## Serialized Policies
+
+In some applications you might want to provide a client API. Pundit helps
+provide your authorization policies as first class citizens, by giving you
+a way to convert a policy to a hash. It's easy, just include the serializer
+module and you're good to go.
+
+```ruby
+class MessagePolicy
+
+  include Pundit::Serializer
+
+  attr_reader :user, :message
+
+  def initialize(user, message)
+    @user = user
+    @message = message
+  end
+
+  def create?
+    not message.new_record?
+  end
+
+  def destroy?
+    message.user == user
+  end
+
+end
+```
+
+Now you can call `#to_h` on the policy with the module included.
+
+```ruby
+@message_policy = MessagePolicy.new(current_user,@message)
+@message_policy.to_h
+# => { create: true, destroy: true }
+```
+
+**Note:** For the serializer to work, you need to use the pundit naming
+convention for queries with the interrogation point in the end `index?`.
+
+The serializer also works for inherited policies.
+
 ## Manually retrieving policies and scopes
 
 Sometimes you want to retrieve a policy for a record outside the controller or

@@ -1,5 +1,6 @@
 require "pundit/version"
 require "pundit/policy_finder"
+require "pundit/serializer"
 require "active_support/concern"
 require "active_support/core_ext/string/inflections"
 require "active_support/core_ext/object/blank"
