@@ -346,6 +346,9 @@ describe PostPolicy do
 end
 ```
 
+An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
+[excellent post](http://thunderboltlabs.com/posts/testing-pundit-policies-with-rspec.html).
+
 # License
 
 Licensed under the MIT license, see the separate LICENSE.txt file.
