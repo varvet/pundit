@@ -1,5 +1,6 @@
 require "pundit"
 require "pry"
+require "active_support/core_ext"
 require "active_model/naming"
 
 class PostPolicy < Struct.new(:user, :post)
