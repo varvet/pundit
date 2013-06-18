@@ -1,6 +1,7 @@
 # Pundit
 
 [![Build Status](https://secure.travis-ci.org/elabs/pundit.png?branch=master)](https://travis-ci.org/elabs/pundit)
+[![Code Climate](https://codeclimate.com/github/elabs/pundit.png)](https://codeclimate.com/github/elabs/pundit)
 
 Pundit provides a set of helpers which guide you in leveraging regular Ruby
 classes and object oriented design patterns to build a simple, robust and
