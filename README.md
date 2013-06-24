@@ -265,6 +265,25 @@ class ApplicationPolicy
 end
 ```
 
+## Rescuing `Pundit::NotAuthorizedError` in Rails
+
+Pundit raises a `Pundit::NotAuthorizedError` you can [rescue_from](http://guides.rubyonrails.org/action_controller_overview.html#rescue_from) in your `ApplicationController`. You can customize the `user_not_authorized` method in every controller.
+
+```ruby
+class ApplicationController < ActionController::Base
+  protect_from_forgery
+  include Pundit
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  private
+
+  def user_not_authorized
+    flash[:error] = "You are not authorized to perform this action."
+    redirect_to request.headers["Referer"] || root_path
+  end
+end
+
 ## Manually retrieving policies and scopes
 
 Sometimes you want to retrieve a policy for a record outside the controller or
@@ -286,7 +305,7 @@ those without the bang will return nil.
 ## Pundit and strong_parameters
 
 In Rails 3 using [strong_parameters](https://github.com/rails/strong_parameters)
-or a standard Rails 4 setup, mass-assignment protection is handled in the controller. 
+or a standard Rails 4 setup, mass-assignment protection is handled in the controller.
 Pundit helps you permit different attributes for different users.
 
 ```ruby
