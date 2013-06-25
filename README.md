@@ -303,6 +303,74 @@ Pundit.policy_scope(user, Post)
 The bang methods will raise an exception if the policy does not exist, whereas
 those without the bang will return nil.
 
+## Error messages
+
+Pundit raises a `Pundit::NotAuthorizedError` you can [rescue_from](http://guides.rubyonrails.org/action_controller_overview.html#rescue_from) in your `ApplicationController`. You can customize the `user_not_authorized` method in every controller based on your needs.
+
+```ruby
+class ApplicationController < ActionController::Base
+  protect_from_forgery
+  include Pundit
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  private
+
+  def user_not_authorized
+    flash[:error] = "You are not authorized to perform this action."
+    redirect_to :back
+  end
+end
+```
+
+You can customize the exception message.
+
+``` ruby
+class PostsController < ApplicationController
+  def create
+    @post = Post.new(params[:post])
+
+    # Note that the error_message is the third argument
+    # Pass in nil as the second argument to let pundit
+    # determine the action automatically
+    authorize @post, :create?, "You cannot create new posts."
+
+    if @post.save
+      redirect_to @post
+    else
+      render :new
+    end
+  end
+end
+```
+
+```ruby
+class ApplicationController < ActionController::Base
+  protect_from_forgery
+  include Pundit
+
+  rescue_from Pundit::NotAuthorizedError do |exception|
+    user_not_authorized(exception)
+  end
+
+  private
+
+  def user_not_authorized(exception)
+    flash[:error] = authorization_error_message(exception.message)
+    redirect_to :back
+  end
+
+  def authorization_error_message(message)
+    case message
+    when 'Pundit::NotAuthorizedError'
+      "You are not authorized to perform this action."
+    else
+      message
+    end
+  end
+end
+```
+
 ## Pundit and strong_parameters
 
 In Rails 3 using [strong_parameters](https://github.com/rails/strong_parameters)

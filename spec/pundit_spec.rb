@@ -224,6 +224,10 @@ describe Pundit do
     it "raises an error when the permission check fails" do
       expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError)
     end
+
+    it "can be given a custom error message" do
+      expect { controller.authorize(Post.new, nil,'not authorized') }.to raise_error(Pundit::NotAuthorizedError, 'not authorized')
+    end
   end
 
   describe ".policy" do
