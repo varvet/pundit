@@ -61,10 +61,14 @@ module Pundit
 
   def policy_scope(scope)
     @_policy_scoped = true
-    Pundit.policy_scope!(current_user, scope)
+    Pundit.policy_scope!(pundit_user, scope)
   end
 
   def policy(record)
-    Pundit.policy!(current_user, record)
+    Pundit.policy!(pundit_user, record)
+  end
+
+  def pundit_user
+    respond_to?(:current_user) ? current_user : nil
   end
 end
