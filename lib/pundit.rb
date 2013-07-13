@@ -69,6 +69,6 @@ module Pundit
   end
 
   def pundit_user
-    respond_to?(:current_user) ? current_user : nil
+    current_user
   end
 end
