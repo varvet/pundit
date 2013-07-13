@@ -303,6 +303,18 @@ Pundit.policy_scope(user, Post)
 The bang methods will raise an exception if the policy does not exist, whereas
 those without the bang will return nil.
 
+## Customize pundit user
+
+In some cases your controller might not have access to `current_user`, or your
+`current_user` is not the method one that should be invoked by pundit. Simply
+define a method in your controller called `pundit_user`.
+
+```ruby
+def pundit_user
+  User.find_by_other_means
+end
+```
+
 ## Pundit and strong_parameters
 
 In Rails 3 using [strong_parameters](https://github.com/rails/strong_parameters)

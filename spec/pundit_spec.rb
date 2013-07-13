@@ -226,6 +226,12 @@ describe Pundit do
     end
   end
 
+  describe "#pundit_user" do
+    it 'returns the same thing as current_user' do
+      controller.pundit_user.should eq controller.current_user
+    end
+  end
+
   describe ".policy" do
     it "returns an instantiated policy" do
       policy = controller.policy(post)
