@@ -34,11 +34,13 @@ module Pundit
     if respond_to?(:helper_method)
       helper_method :policy_scope
       helper_method :policy
+      helper_method :pundit_user
     end
     if respond_to?(:hide_action)
       hide_action :authorize
       hide_action :verify_authorized
       hide_action :verify_policy_scoped
+      hide_action :pundit_user
     end
   end
 
@@ -61,10 +63,14 @@ module Pundit
 
   def policy_scope(scope)
     @_policy_scoped = true
-    Pundit.policy_scope!(current_user, scope)
+    Pundit.policy_scope!(pundit_user, scope)
   end
 
   def policy(record)
-    Pundit.policy!(current_user, record)
+    Pundit.policy!(pundit_user, record)
+  end
+
+  def pundit_user
+    current_user
   end
 end
