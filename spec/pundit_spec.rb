@@ -240,7 +240,7 @@ describe Pundit do
     end
 
     it "throws an exception if the given policy can't be found" do
-      expect { controller.policy(article) }.to raise_error(Pundit::NotDefinedError)
+      expect { controller.policy(article) }.to raise_error(Pundit::Error::NotDefined)
     end
   end
 
@@ -250,7 +250,7 @@ describe Pundit do
     end
 
     it "throws an exception if the given policy can't be found" do
-      expect { controller.policy_scope(Article) }.to raise_error(Pundit::NotDefinedError)
+      expect { controller.policy_scope(Article) }.to raise_error(Pundit::Error::NotDefined)
     end
   end
 end
