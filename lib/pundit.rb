@@ -5,9 +5,19 @@ require "active_support/core_ext/string/inflections"
 require "active_support/core_ext/object/blank"
 
 module Pundit
-  class NotAuthorizedError < StandardError; end
-  class AuthorizationNotPerformedError < StandardError; end
-  class NotDefinedError < StandardError; end
+  class Error < StandardError; end
+
+  # Raised when an authorize call returns an untruthy value
+  class NotAuthorized < Pundit::Error; end
+
+  # Raised when an authorize call is expected but not performed
+  class AuthorizationNotPerformed < Pundit::Error; end
+
+  # Raised when a scope is expected to be but has not been applied
+  class ScopeNotApplied < Pundit::Error; end
+
+  # Raised when a scope or a policy cannot be found
+  class NotDefined < Pundit::Error; end
 
   extend ActiveSupport::Concern
 
@@ -46,18 +56,18 @@ module Pundit
   end
 
   def verify_authorized
-    raise AuthorizationNotPerformedError unless @_policy_authorized
+    raise Error::AuthorizationNotPerformed unless @_policy_authorized
   end
 
   def verify_policy_scoped
-    raise AuthorizationNotPerformedError unless @_policy_scoped
+    raise Error::ScopeNotApplied unless @_policy_scoped
   end
 
   def authorize(record, query=nil)
     query ||= params[:action].to_s + "?"
     @_policy_authorized = true
     unless policy(record).public_send(query)
-      raise NotAuthorizedError, "not allowed to #{query} this #{record}"
+      raise Error::NotAuthorized, "not allowed to #{query} this #{record}"
     end
     true
   end
