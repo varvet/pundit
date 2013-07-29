@@ -3,6 +3,8 @@ require "pry"
 require "active_support/core_ext"
 require "active_model/naming"
 
+include Pundit
+
 class PostPolicy < Struct.new(:user, :post)
   def update?
     post.user == user
@@ -88,11 +90,11 @@ describe Pundit do
     end
 
     it "throws an exception if the given policy scope can't be found" do
-      expect { Pundit.policy_scope!(user, Article) }.to raise_error(Pundit::NotDefinedError)
+      expect { Pundit.policy_scope!(user, Article) }.to raise_error(Pundit::Error::NotDefined)
     end
 
     it "throws an exception if the given policy scope can't be found" do
-      expect { Pundit.policy_scope!(user, ArticleTag) }.to raise_error(Pundit::NotDefinedError)
+      expect { Pundit.policy_scope!(user, ArticleTag) }.to raise_error(Pundit::Error::NotDefined)
     end
   end
 
@@ -179,8 +181,8 @@ describe Pundit do
     end
 
     it "throws an exception if the given policy can't be found" do
-      expect { Pundit.policy!(user, article) }.to raise_error(Pundit::NotDefinedError)
-      expect { Pundit.policy!(user, Article) }.to raise_error(Pundit::NotDefinedError)
+      expect { Pundit.policy!(user, article) }.to raise_error(Pundit::Error::NotDefined)
+      expect { Pundit.policy!(user, Article) }.to raise_error(Pundit::Error::NotDefined)
     end
   end
 
@@ -190,8 +192,8 @@ describe Pundit do
       controller.verify_authorized
     end
 
-    it "raises an exception when not authorized" do
-      expect { controller.verify_authorized }.to raise_error(Pundit::NotAuthorizedError)
+    it "raises an exception when policy is not used" do
+      expect { controller.verify_authorized }.to raise_error(Pundit::Error::AuthorizationNotPerformed)
     end
   end
 
@@ -202,7 +204,7 @@ describe Pundit do
     end
 
     it "raises an exception when policy_scope is not used" do
-      expect { controller.verify_policy_scoped }.to raise_error(Pundit::NotAuthorizedError)
+      expect { controller.verify_policy_scoped }.to raise_error(Pundit::Error::ScopeNotApplied)
     end
   end
 
@@ -213,16 +215,16 @@ describe Pundit do
 
     it "can be given a different permission to check" do
       controller.authorize(post, :show?).should be_true
-      expect { controller.authorize(post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
+      expect { controller.authorize(post, :destroy?) }.to raise_error(Pundit::Error::NotAuthorized)
     end
 
     it "works with anonymous class policies" do
       controller.authorize(article_tag, :show?).should be_true
-      expect { controller.authorize(article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
+      expect { controller.authorize(article_tag, :destroy?) }.to raise_error(Pundit::Error::NotAuthorized)
     end
 
     it "raises an error when the permission check fails" do
-      expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError)
+      expect { controller.authorize(Post.new) }.to raise_error(Pundit::Error::NotAuthorized)
     end
   end
 
@@ -240,7 +242,7 @@ describe Pundit do
     end
 
     it "throws an exception if the given policy can't be found" do
-      expect { controller.policy(article) }.to raise_error(Pundit::NotDefinedError)
+      expect { controller.policy(article) }.to raise_error(Pundit::Error::NotDefined)
     end
   end
 
@@ -250,7 +252,7 @@ describe Pundit do
     end
 
     it "throws an exception if the given policy can't be found" do
-      expect { controller.policy_scope(Article) }.to raise_error(Pundit::NotDefinedError)
+      expect { controller.policy_scope(Article) }.to raise_error(Pundit::Error::NotDefined)
     end
   end
 end

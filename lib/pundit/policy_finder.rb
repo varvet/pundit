@@ -21,11 +21,11 @@ module Pundit
     end
 
     def scope!
-      scope or raise NotDefinedError, "unable to find scope #{find}::Scope for #{object}"
+      scope or raise Pundit::Error::NotDefined, "unable to find scope #{find}::Scope for #{object}"
     end
 
     def policy!
-      policy or raise NotDefinedError, "unable to find policy #{find} for #{object}"
+      policy or raise Pundit::Error::NotDefined, "unable to find policy #{find} for #{object}"
     end
 
   private

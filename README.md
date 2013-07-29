@@ -124,9 +124,10 @@ conditionally showing links or buttons in the view:
 ## Ensuring policies are used
 
 Pundit adds a method called `verify_authorized` to your controllers. This
-method will raise an exception if `authorize` has not yet been called. You
-should run this method in an `after_filter` to ensure that you haven't
-forgotten to authorize the action. For example:
+method will raise a `Pundit::Error::AuthorizationNotPerformed` exception 
+if `authorize` has not yet been called. You should run this method in an 
+`after_filter` to ensure that you haven't forgotten to authorize the action. 
+For example:
 
 ``` ruby
 class ApplicationController < ActionController::Base
@@ -135,10 +136,10 @@ end
 ```
 
 Likewise, pundit also adds `verify_policy_scoped` to your controller.  This
-will raise an exception in the vein of `verify_authorized`.  However it tracks
-if `policy_scoped` is used instead of `authorize`.  This is mostly useful for
-controller actions like `index` which find collections with a scope and don't
-authorize individual instances.
+will raise a `Pundit::Error::ScopeNotApplied` exception in the vein of 
+`verify_authorized`.  However it tracks if `policy_scoped` is used instead 
+of `authorize`.  This is mostly useful for controller actions like `index`
+which find collections with a scope and don't authorize individual instances.
 
 ``` ruby
 class ApplicationController < ActionController::Base
@@ -258,7 +259,7 @@ got through. This way you can fail more gracefully.
 ``` ruby
 class ApplicationPolicy
   def initialize(user, record)
-    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+    raise Pundit::Error::NotAuthorized, "must be logged in" unless user
     @user = user
     @record = record
   end
@@ -267,14 +268,18 @@ end
 
 ## Rescuing a denied Authorization in rails
 
-Pundit raises a `Pundit::NotAuthorizedError` you can [rescue_from](http://guides.rubyonrails.org/action_controller_overview.html#rescue_from) in your `ApplicationController`. You can customize the `user_not_authorized` method in every controller.
+Pundit raises a `Pundit::Error::NotAuthorized` on access violation, and raise 
+a `Pundit::Error::AuthorizationNotPerformed` or a `Pundit::Error::ScopeNotApplied`
+on missing authorize call. You can [rescue_from](http://guides.rubyonrails.org/action_controller_overview.html#rescue_from) in your `ApplicationController`. You can customize the `user_not_authorized` method in every controller.
 
 ```ruby
 class ApplicationController < ActionController::Base
   protect_from_forgery
   include Pundit
 
-  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  # Redirect user back on detected access violation
+  # or missing authorize call
+  rescue_from Pundit::Error, with: :user_not_authorized
 
   private
 
