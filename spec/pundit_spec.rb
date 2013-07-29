@@ -3,6 +3,8 @@ require "pry"
 require "active_support/core_ext"
 require "active_model/naming"
 
+include Pundit
+
 class PostPolicy < Struct.new(:user, :post)
   def update?
     post.user == user
