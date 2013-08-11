@@ -13,15 +13,27 @@ class PostPolicy < Struct.new(:user, :post)
   def show?
     true
   end
+  def compare(a, b)
+    a == b
+  end
 end
 class PostPolicy::Scope < Struct.new(:user, :scope)
   def resolve
     scope.published
   end
+  def custom
+    scope.unpublished
+  end
+  def do_math(a, b)
+    a + b
+  end
 end
 class Post < Struct.new(:user)
   def self.published
     :published
+  end
+  def self.unpublished
+    :unpublished
   end
 end
 
@@ -29,6 +41,9 @@ class CommentPolicy < Struct.new(:user, :comment); end
 class CommentPolicy::Scope < Struct.new(:user, :scope)
   def resolve
     scope
+  end
+  def custom
+    scope.name.pluralize
   end
 end
 class Comment; extend ActiveModel::Naming; end
@@ -69,12 +84,28 @@ describe Pundit do
       Pundit.policy_scope(user, Post).should == :published
     end
 
+    it "returns an instantiated custom policy scope given a plain model class" do
+      Pundit.policy_scope(user, Post, :custom).should == :unpublished
+    end
+
+    it "returns an instantiated custom policy scope with parameters given a plain model class" do
+      Pundit.policy_scope(user, Post, :do_math, 2, 3).should == 5
+    end
+
     it "returns an instantiated policy scope given an active model class" do
       Pundit.policy_scope(user, Comment).should == Comment
     end
 
+    it "returns an instantiated custom policy scope given an active model class" do
+      Pundit.policy_scope(user, Comment, :custom).should == 'Comments'
+    end
+
     it "returns nil if the given policy scope can't be found" do
       Pundit.policy_scope(user, Article).should be_nil
+    end
+
+    it "throws an exception if the given custom scope can't be found" do
+      expect{ Pundit.policy_scope(user, Comment, :wrong_name) }.to raise_error(NoMethodError)
     end
   end
 
@@ -83,8 +114,20 @@ describe Pundit do
       Pundit.policy_scope!(user, Post).should == :published
     end
 
+    it "returns an instantiated custom policy scope given a plain model class" do
+      Pundit.policy_scope!(user, Post, :custom).should == :unpublished
+    end
+
+    it "returns an instantiated custom policy scope with parameters given a plain model class" do
+      Pundit.policy_scope!(user, Post, :do_math, 2, 3).should == 5
+    end
+
     it "returns an instantiated policy scope given an active model class" do
       Pundit.policy_scope!(user, Comment).should == Comment
+    end
+
+    it "returns an instantiated custom policy scope given an active model class" do
+      Pundit.policy_scope!(user, Comment, :custom).should == 'Comments'
     end
 
     it "throws an exception if the given policy scope can't be found" do
@@ -93,6 +136,10 @@ describe Pundit do
 
     it "throws an exception if the given policy scope can't be found" do
       expect { Pundit.policy_scope!(user, ArticleTag) }.to raise_error(Pundit::NotDefinedError)
+    end
+
+    it "throws an exception if the given custom scope can't be found" do
+      expect{ Pundit.policy_scope!(user, Comment, :wrong_name) }.to raise_error(NoMethodError)
     end
   end
 
@@ -216,6 +263,11 @@ describe Pundit do
       expect { controller.authorize(post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
+    it "can be given permission to check and parameters" do
+      controller.authorize(post, :compare, 1, 1).should be_true
+      expect { controller.authorize(post, :compare, 2, 1) }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
     it "works with anonymous class policies" do
       controller.authorize(article_tag, :show?).should be_true
       expect { controller.authorize(article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
@@ -249,8 +301,20 @@ describe Pundit do
       controller.policy_scope(Post).should == :published
     end
 
+    it "returns an instantiated custom policy scope" do
+      controller.policy_scope(Post, :custom).should == :unpublished
+    end
+
+    it "returns an instantiated custom policy scope with parameters" do
+      controller.policy_scope(Post, :do_math, 2, 3).should == 5
+    end
+
     it "throws an exception if the given policy can't be found" do
       expect { controller.policy_scope(Article) }.to raise_error(Pundit::NotDefinedError)
+    end
+
+    it "throws an exception if the given custom scope can't be found" do
+      expect{ controller.policy_scope(Post, :wrong_name) }.to raise_error(NoMethodError)
     end
   end
 end
