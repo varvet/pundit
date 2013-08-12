@@ -67,8 +67,9 @@ module Pundit
   end
 
   def policy(record)
-    Pundit.policy!(pundit_user, record)
+    @policy ? @policy : Pundit.policy!(pundit_user, record)
   end
+  attr_writer :policy
 
   def pundit_user
     current_user
