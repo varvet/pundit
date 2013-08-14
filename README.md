@@ -29,6 +29,8 @@ with some useful defaults for you:
 rails g pundit:install
 ```
 
+**If your rails server is running, make sure to restart it at this point.**
+
 ## Policies
 
 Pundit is focused around the notion of policy classes. We suggest that you put
