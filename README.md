@@ -29,6 +29,9 @@ with some useful defaults for you:
 rails g pundit:install
 ```
 
+After generating your application policy, restart the Rails server so that Rails
+can pick up any classes in the new `app/policies/` directory.
+
 ## Policies
 
 Pundit is focused around the notion of policy classes. We suggest that you put
@@ -265,7 +268,7 @@ class ApplicationPolicy
 end
 ```
 
-## Rescuing a denied Authorization in rails
+## Rescuing a denied Authorization in Rails
 
 Pundit raises a `Pundit::NotAuthorizedError` you can [rescue_from](http://guides.rubyonrails.org/action_controller_overview.html#rescue_from) in your `ApplicationController`. You can customize the `user_not_authorized` method in every controller.
 
