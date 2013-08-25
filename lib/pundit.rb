@@ -10,7 +10,7 @@ module Pundit
 
   extend ActiveSupport::Concern
 
-  class << self
+  module ClassMethods
     def policy_scope(user, scope)
       policy = PolicyFinder.new(scope).scope
       policy.new(user, scope).resolve if policy
