@@ -259,5 +259,12 @@ describe Pundit do
     it "throws an exception if the given policy can't be found" do
       expect { controller.policy_scope(Article) }.to raise_error(Pundit::NotDefinedError)
     end
+
+    it "allows policy_scope to be injected" do
+      new_scope = OpenStruct.new
+      controller.policy_scope = new_scope
+
+      controller.policy_scope(post).should == new_scope
+    end
   end
 end
