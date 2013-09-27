@@ -56,7 +56,7 @@ As you can see, this is just a plain Ruby class. As a convenience, we can inheri
 from Struct:
 
 ``` ruby
-class PostPolicy < Struct.new(:user, :post)
+PostPolicy = Struct.new(:user, :post) do
   def create?
     user.admin? or not post.published?
   end
@@ -156,8 +156,8 @@ particular user has access to. When using Pundit, you are expected to
 define a class called a policy scope. It can look something like this:
 
 ``` ruby
-class PostPolicy < Struct.new(:user, :post)
-  class Scope < Struct.new(:user, :scope)
+PostPolicy = Struct.new(:user, :post) do
+  Scope = Struct.new(:user, :scope) do
     def resolve
       if user.admin?
         scope
@@ -325,7 +325,7 @@ or a standard Rails 4 setup, mass-assignment protection is handled in the contro
 Pundit helps you permit different attributes for different users.
 
 ```ruby
-class PostPolicy < Struct.new(:user, :post)
+PostPolicy = Struct.new(:user, :post) do
   def permitted_attributes
     if user.admin? || user.owner_of?(post)
       [:title, :body]
