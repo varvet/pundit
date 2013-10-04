@@ -11,6 +11,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Object oriented authorization for Rails applications}
   gem.summary       = %q{OO authorization for Rails}
   gem.homepage      = "http://github.com/elabs/pundit"
+  gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
