@@ -160,7 +160,7 @@ PostPolicy = Struct.new(:user, :post) do
   Scope = Struct.new(:user, :scope) do
     def resolve
       if user.admin?
-        scope
+        scope.all
       else
         scope.where(:published => true)
       end
