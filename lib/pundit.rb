@@ -41,6 +41,7 @@ module Pundit
       hide_action :verify_authorized
       hide_action :verify_policy_scoped
       hide_action :pundit_user
+      hide_action :pundit_error_message
     end
   end
 
@@ -53,10 +54,10 @@ module Pundit
   end
 
   def authorize(record, query=nil)
-    query ||= params[:action].to_s + "?"
     @_policy_authorized = true
+    query ||= params[:action].to_s + "?"
     unless policy(record).public_send(query)
-      raise NotAuthorizedError, "not allowed to #{query} this #{record}"
+      raise NotAuthorizedError, pundit_error_message(record, query)
     end
     true
   end
@@ -74,5 +75,11 @@ module Pundit
 
   def pundit_user
     current_user
+  end
+
+  def pundit_error_message(record, query)
+    message_query = "failed_#{query}"
+    message = policy(record).respond_to?(message_query) && policy(record).public_send(message_query)
+    message ||= "You are not allowed to perform this action."
   end
 end

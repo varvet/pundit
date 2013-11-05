@@ -25,7 +25,16 @@ class Post < Struct.new(:user)
   end
 end
 
-class CommentPolicy < Struct.new(:user, :comment); end
+class CommentPolicy < Struct.new(:user, :comment)
+  def create?
+    false
+  end
+
+  def failed_create?
+    "You cannot comment on this post."
+  end
+end
+
 class CommentPolicy::Scope < Struct.new(:user, :scope)
   def resolve
     scope
@@ -222,7 +231,12 @@ describe Pundit do
     end
 
     it "raises an error when the permission check fails" do
-      expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError)
+      standard_error_message = "You are not allowed to perform this action."
+      expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError, standard_error_message)
+    end
+
+    it "raises an error with a custom error message if defined on the policy" do
+      expect { controller.authorize(comment, :create?) }.to raise_error(Pundit::NotAuthorizedError, CommentPolicy.new.failed_create?)
     end
   end
 

@@ -288,6 +288,37 @@ class ApplicationController < ActionController::Base
 end
 ```
 
+Alternatively, you can use a block to pass the exception.
+
+```ruby
+class ApplicationController < ActionController::Base
+  protect_from_forgery
+  include Pundit
+
+  rescue_from Pundit::NotAuthorizedError do |exception|
+    flash[:error] = exception.message || "You are not authorized to perform this action."
+    redirect_to request.headers["Referer"] || root_path
+  end
+end
+```
+
+## Customize error messages
+
+If you want to display a custom error message explain why the authorization failed
+to the user, you can add a `failed_#{query}` method for each `#{query}` method to your policy.
+
+```ruby
+PostPolicy = Struct.new(:user, :post) do
+  def create?
+    user.admin? or not post.published?
+  end
+
+  def failed_create?
+    "You cannot create a published post unless you are an admin."
+  end
+end
+```
+
 ## Manually retrieving policies and scopes
 
 Sometimes you want to retrieve a policy for a record outside the controller or
@@ -398,10 +429,10 @@ describe "users/show" do
     user = assign(:user, build_stubbed(:user))
     controller.stub(:current_user).and_return user
   end
- 
+
   it "renders the destroy action" do
     allow(view).to receive(:policy).and_return double(edit?: false, destroy?: true)
- 
+
     render
     expect(rendered).to match 'Destroy'
   end
