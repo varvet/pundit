@@ -12,8 +12,8 @@ module Pundit
 
   class << self
     def policy_scope(user, scope)
-      policy = PolicyFinder.new(scope).scope
-      policy.new(user, scope).resolve if policy
+      policy_scope = PolicyFinder.new(scope).scope
+      policy_scope.new(user, scope).resolve if policy_scope
     end
 
     def policy_scope!(user, scope)
@@ -21,8 +21,8 @@ module Pundit
     end
 
     def policy(user, record)
-      scope = PolicyFinder.new(record).policy
-      scope.new(user, record) if scope
+      policy = PolicyFinder.new(record).policy
+      policy.new(user, record) if policy
     end
 
     def policy!(user, record)
