@@ -305,21 +305,51 @@ end
 ## Customize error messages
 
 If you want to display a custom error message explaining why the authorization
-failed, you can add message for each query.
+failed, you can add message for each query through `I18n`.
 
 ```ruby
-PostPolicy = Struct.new(:user, :post) do
-  def create?
-    user.admin? or not post.published?
+# app/controller/votes_controller.rb
+class VotesController < ApplicationController
+  def create
+    @vote = ...
+    authorize @vote
+    ...
   end
 
-  def create_failed_message
-    "You cannot create a published post unless you are an admin."
+  def destroy
+    @vote = ...
+    authorize @vote
   end
 end
+
+# app/policies/vote_policy.rb
+class VotePolicy < ApplicationPolicy
+  alias_method :vote, :record
+  delegate :votable, to: :vote
+
+  def create?
+    votable.user != user
+  end
+
+  def update?
+    vote.created_at > 30.days.ago or votable.updated_at > vote.created_at
+  end
+
+  alias_method :destroy?, :update?
+end
+
+# config/locales/en.yml
+en:
+  pundit:
+    default: "You are not allowed to perform this action."
+    vote: # name of the model
+      create: "You cannot vote on your own answers."
+      update: &pundit_vote_update "You can only change your vote for 30 days unless the question
+                / answer has been changed after you casted your vote."
+      destroy: *pundit_vote_update
 ```
 
-The default error message is "You are not allowed to perform this action."
+Here's how to [use messages repeatedly](http://stackoverflow.com/questions/5484016/how-can-i-do-string-concatenation-or-string-replacement-in-yaml) in YAML.
 
 ## Manually retrieving policies and scopes
 
