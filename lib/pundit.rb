@@ -78,7 +78,8 @@ module Pundit
   end
 
   def pundit_error_message(record, query)
-    message_query = "failed_#{query}"
+    query = query.to_s.gsub(/\?$/, '')
+    message_query = "#{query}_failed_message"
     message = policy(record).respond_to?(message_query) && policy(record).public_send(message_query)
     message ||= "You are not allowed to perform this action."
   end

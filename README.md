@@ -282,13 +282,13 @@ class ApplicationController < ActionController::Base
   private
 
   def user_not_authorized
-    flash[:error] = "You are not authorized to perform this action."
+    flash[:error] = "You are not allowed to perform this action."
     redirect_to request.headers["Referer"] || root_path
   end
 end
 ```
 
-Alternatively, you can use a block to pass the exception.
+Alternatively, the exception can be passed by using a block.
 
 ```ruby
 class ApplicationController < ActionController::Base
@@ -296,7 +296,7 @@ class ApplicationController < ActionController::Base
   include Pundit
 
   rescue_from Pundit::NotAuthorizedError do |exception|
-    flash[:error] = exception.message || "You are not authorized to perform this action."
+    flash[:error] = exception.message || "You are not allowed to perform this action."
     redirect_to request.headers["Referer"] || root_path
   end
 end
@@ -304,8 +304,8 @@ end
 
 ## Customize error messages
 
-If you want to display a custom error message explain why the authorization failed
-to the user, you can add a `failed_#{query}` method for each `#{query}` method to your policy.
+If you want to display a custom error message explaining why the authorization
+failed, you can add message for each query.
 
 ```ruby
 PostPolicy = Struct.new(:user, :post) do
@@ -313,11 +313,13 @@ PostPolicy = Struct.new(:user, :post) do
     user.admin? or not post.published?
   end
 
-  def failed_create?
+  def create_failed_message
     "You cannot create a published post unless you are an admin."
   end
 end
 ```
+
+The default error message is "You are not allowed to perform this action."
 
 ## Manually retrieving policies and scopes
 

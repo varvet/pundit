@@ -30,7 +30,7 @@ class CommentPolicy < Struct.new(:user, :comment)
     false
   end
 
-  def failed_create?
+  def create_failed_message
     "You cannot comment on this post."
   end
 end
@@ -236,7 +236,7 @@ describe Pundit do
     end
 
     it "raises an error with a custom error message if defined on the policy" do
-      expect { controller.authorize(comment, :create?) }.to raise_error(Pundit::NotAuthorizedError, CommentPolicy.new.failed_create?)
+      expect { controller.authorize(comment, :create?) }.to raise_error(Pundit::NotAuthorizedError, CommentPolicy.new.create_failed_message)
     end
   end
 
