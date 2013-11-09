@@ -318,34 +318,40 @@ def pundit_user
 end
 ```
 
-## Pundit and strong_parameters
+## Strong parameters
 
-In Rails 3 using [strong_parameters](https://github.com/rails/strong_parameters)
-or a standard Rails 4 setup, mass-assignment protection is handled in the controller.
-Pundit helps you permit different attributes for different users.
+In Rails 4 (or Rails 3.2 with the
+[strong_parameters](https://github.com/rails/strong_parameters) gem),
+mass-assignment protection is handled in the controller.
+Pundit helps you permit different users to set different attributes.
 
 ```ruby
-PostPolicy = Struct.new(:user, :post) do
+# app/policies/post_policy.rb
+class PostPolicy < ApplicationPolicy
   def permitted_attributes
     if user.admin? || user.owner_of?(post)
-      [:title, :body]
+      [:title, :body, :tag_list]
     else
-      [:body]
+      [:tag_list]
     end
   end
 end
 
+# app/controllers/posts_controller.rb
 class PostsController < ApplicationController
   def update
-    # ...
-    if @post.update_attributes(post_attributes)
-    # ...
+    @post = Post.find(params[:id])
+    if @post.update(post_params)
+      redirect_to @post
+    else
+      render :edit
+    end
   end
 
   private
 
-  def post_attributes
-    params.require(:post).permit(policy(@post).permitted_attributes)
+  def post_params
+    params.require(:post).permit(*policy(@post).permitted_attributes)
   end
 end
 ```
@@ -398,10 +404,10 @@ describe "users/show" do
     user = assign(:user, build_stubbed(:user))
     controller.stub(:current_user).and_return user
   end
- 
+
   it "renders the destroy action" do
     allow(view).to receive(:policy).and_return double(edit?: false, destroy?: true)
- 
+
     render
     expect(rendered).to match 'Destroy'
   end
