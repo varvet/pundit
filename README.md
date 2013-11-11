@@ -270,7 +270,7 @@ end
 
 ## Rescuing a denied Authorization in Rails
 
-Pundit raises a `Pundit::NotAuthorizedError` you can [rescue_from](http://guides.rubyonrails.org/action_controller_overview.html#rescue_from) in your `ApplicationController`. You can customize the `user_not_authorized` method in every controller.
+Pundit raises a `Pundit::NotAuthorizedError` you can [rescue_from](http://guides.rubyonrails.org/action_controller_overview.html#rescue-from) in your `ApplicationController`. You can customize the `user_not_authorized` method in every controller.
 
 ```ruby
 class ApplicationController < ActionController::Base
