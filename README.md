@@ -157,7 +157,7 @@ define a class called a policy scope. It can look something like this:
 
 ``` ruby
 PostPolicy = Struct.new(:user, :post) do
-  Scope = Struct.new(:user, :scope) do
+  self::Scope = Struct.new(:user, :scope) do
     def resolve
       if user.admin?
         scope.all
