@@ -13,6 +13,9 @@ class PostPolicy < Struct.new(:user, :post)
   def show?
     true
   end
+  def known_author?(other_user)
+    true
+  end
 end
 class PostPolicy::Scope < Struct.new(:user, :scope)
   def resolve
@@ -223,6 +226,10 @@ describe Pundit do
 
     it "raises an error when the permission check fails" do
       expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    it "passes extra attributes through to policy methods" do
+      controller.authorize(post, :known_author?, OpenStruct.new).should be_true
     end
   end
 

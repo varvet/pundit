@@ -73,7 +73,8 @@ Pundit makes the following assumptions about this class:
   you want to check. This does not need to be an ActiveRecord or even
   an ActiveModel object, it can be anything really.
 - The class implements some kind of query method, in this case `create?`.
-  Usually, this will map to the name of a particular controller action.
+  Usually, this will map to the name of a particular controller action. The
+  query method may take zero or more arguments.
 
 That's it really.
 
@@ -111,6 +112,30 @@ def publish
   authorize @post, :update?
   @post.publish!
   redirect_to @post
+end
+```
+
+Any further arguments passed to `authorize` will be passed onto the policy as
+arguments to the query method. This is most useful when the policy needs more
+information in order to make a decision. For example:
+
+``` ruby
+class PostPolicy < Struct.new(:user, :post)
+  def remove_tag?(tag)
+    record.tags.include?(tag) and record.authored_by?(user)
+  end
+end
+
+class PostsController < ApplicationController
+  include Pundit
+
+  def remove_tag
+    @post = Post.find(params[:id])
+    @tag  = @post.tags.find(params[:tag_id])
+    authorize @post, :remove_tag?, @tag
+    @post.remove_tag(@tag)
+    respond_with(@post)
+  end
 end
 ```
 
