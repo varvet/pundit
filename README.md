@@ -375,15 +375,15 @@ describe PostPolicy do
 
   permissions :create? do
     it "denies access if post is published" do
-      should_not permit(User.new(:admin => false), Post.new(:published => true))
+      expect(subject).not_to permit(User.new(:admin => false), Post.new(:published => true))
     end
 
     it "grants access if post is published and user is an admin" do
-      should permit(User.new(:admin => true), Post.new(:published => true))
+      expect(subject).to permit(User.new(:admin => true), Post.new(:published => true))
     end
 
     it "grants access if post is unpublished" do
-      should permit(User.new(:admin => false), Post.new(:published => false))
+      expect(subject).to permit(User.new(:admin => false), Post.new(:published => false))
     end
   end
 end
