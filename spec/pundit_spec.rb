@@ -13,6 +13,9 @@ class PostPolicy < Struct.new(:user, :post)
   def show?
     true
   end
+  def index?(related_record)
+    related_record.true?
+  end
 end
 class PostPolicy::Scope < Struct.new(:user, :scope)
   def resolve
@@ -214,6 +217,10 @@ describe Pundit do
     it "can be given a different permission to check" do
       controller.authorize(post, :show?).should be_true
       expect { controller.authorize(post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    it "can pass argument to permission check" do
+      controller.authorize(post, index?: double(:related_record, true?: true)).should be_true
     end
 
     it "works with anonymous class policies" do
