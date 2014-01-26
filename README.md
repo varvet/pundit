@@ -219,7 +219,7 @@ class, instead of letting Pundit infer it. This can be done like so:
 ``` ruby
 class Post
   def self.policy_class
-    PostablePolicyClass
+    PostablePolicy
   end
 end
 ```
