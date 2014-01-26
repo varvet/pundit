@@ -4,8 +4,12 @@ module Pundit
       extend ::RSpec::Matchers::DSL
 
       matcher :permit do |user, record|
-        match do |policy|
+        match_for_should do |policy|
           permissions.all? { |permission| policy.new(user, record).public_send(permission) }
+        end
+
+        match_for_should_not do |policy|
+          permissions.none? { |permission| policy.new(user, record).public_send(permission) }
         end
 
         failure_message_for_should do |policy|
