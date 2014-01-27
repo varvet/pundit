@@ -272,18 +272,29 @@ end
 
 Pundit raises a `Pundit::NotAuthorizedError` you can [rescue_from](http://guides.rubyonrails.org/action_controller_overview.html#rescue-from) in your `ApplicationController`. You can customize the `user_not_authorized` method in every controller.
 
+Optionally, `Pundit::UnverifiedAuthorizationError` may be handled specially to
+avoid a possible `AbstractController::DoubleRenderError` when using
+`verify_authorized` or `verify_policy_scoped` in an `after_filter`. In the
+example below this error is simply re-raised so that it always surfaces,
+giving more helpful error reports in development.
+
 ```ruby
 class ApplicationController < ActionController::Base
   protect_from_forgery
   include Pundit
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from Pundit::UnverifiedAuthorizationError, with: :authorization_unverified
 
   private
 
   def user_not_authorized
     flash[:error] = "You are not authorized to perform this action."
     redirect_to request.headers["Referer"] || root_path
+  end
+
+  def authorization_unverified
+    raise
   end
 end
 ```
