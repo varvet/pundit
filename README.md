@@ -52,8 +52,8 @@ class PostPolicy
 end
 ```
 
-As you can see, this is just a plain Ruby class. As a convenience, we can inherit
-from Struct:
+As you can see, this is just a plain Ruby class. As a convenience, we can
+create our class from a Struct:
 
 ``` ruby
 PostPolicy = Struct.new(:user, :post) do
