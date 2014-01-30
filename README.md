@@ -53,7 +53,7 @@ end
 ```
 
 As you can see, this is just a plain Ruby class. As a convenience, we can inherit
-from Struct:
+from Struct or use Struct.new to define the policy class:
 
 ``` ruby
 PostPolicy = Struct.new(:user, :post) do
