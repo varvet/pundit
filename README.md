@@ -35,7 +35,8 @@ can pick up any classes in the new `app/policies/` directory.
 ## Policies
 
 Pundit is focused around the notion of policy classes. We suggest that you put
-these classes in `app/policies`. This is a simple example:
+these classes in `app/policies`. This is a simple example that allows updating
+a post if the user is an admin, or if the post is unpublished:
 
 ``` ruby
 class PostPolicy
@@ -46,7 +47,7 @@ class PostPolicy
     @post = post
   end
 
-  def create?
+  def update?
     user.admin? or not post.published?
   end
 end
@@ -57,7 +58,7 @@ from Struct:
 
 ``` ruby
 PostPolicy = Struct.new(:user, :post) do
-  def create?
+  def update?
     user.admin? or not post.published?
   end
 end
@@ -72,7 +73,7 @@ Pundit makes the following assumptions about this class:
 - The second argument is some kind of model object, whose authorization
   you want to check. This does not need to be an ActiveRecord or even
   an ActiveModel object, it can be anything really.
-- The class implements some kind of query method, in this case `create?`.
+- The class implements some kind of query method, in this case `update?`.
   Usually, this will map to the name of a particular controller action.
 
 That's it really.
@@ -81,13 +82,13 @@ Supposing that you have an instance of class `Post`, Pundit now lets you do
 this in your controller:
 
 ``` ruby
-def create
-  @post = Post.new(params[:post])
+def update
+  @post = Post.find(params[:id])
   authorize @post
-  if @post.save
+  if @post.update(post_params)
     redirect_to @post
   else
-    render :new
+    render :edit
   end
 end
 ```
@@ -95,11 +96,11 @@ end
 The authorize method automatically infers that `Post` will have a matching
 `PostPolicy` class, and instantiates this class, handing in the current user
 and the given record. It then infers from the action name, that it should call
-`create?` on this instance of the policy. In this case, you can imagine that
+`update?` on this instance of the policy. In this case, you can imagine that
 `authorize` would have done something like this:
 
 ``` ruby
-raise "not authorized" unless PostPolicy.new(current_user, @post).create?
+raise "not authorized" unless PostPolicy.new(current_user, @post).update?
 ```
 
 You can pass a second argument to `authorize` if the name of the permission you
@@ -119,8 +120,8 @@ method in both the view and controller. This is especially useful for
 conditionally showing links or buttons in the view:
 
 ``` erb
-<% if policy(@post).create? %>
-  <%= link_to "New post", new_post_path %>
+<% if policy(@post).update? %>
+  <%= link_to "Edit post", edit_post_path(@post) %>
 <% end %>
 ```
 
@@ -167,7 +168,7 @@ PostPolicy = Struct.new(:user, :post) do
     end
   end
 
-  def create?
+  def update?
     user.admin? or not post.published?
   end
 end
@@ -375,7 +376,7 @@ Then put your policy specs in `spec/policies`, and make them look somewhat like 
 describe PostPolicy do
   subject { PostPolicy }
 
-  permissions :create? do
+  permissions :update? do
     it "denies access if post is published" do
       expect(subject).not_to permit(User.new(:admin => false), Post.new(:published => true))
     end
