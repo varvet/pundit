@@ -137,7 +137,7 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-Likewise, pundit also adds `verify_policy_scoped` to your controller.  This
+Likewise, Pundit also adds `verify_policy_scoped` to your controller.  This
 will raise an exception in the vein of `verify_authorized`.  However it tracks
 if `policy_scoped` is used instead of `authorize`.  This is mostly useful for
 controller actions like `index` which find collections with a scope and don't
@@ -306,10 +306,10 @@ Pundit.policy_scope(user, Post)
 The bang methods will raise an exception if the policy does not exist, whereas
 those without the bang will return nil.
 
-## Customize pundit user
+## Customize Pundit user
 
 In some cases your controller might not have access to `current_user`, or your
-`current_user` is not the method one that should be invoked by pundit. Simply
+`current_user` is not the method that should be invoked by Pundit. Simply
 define a method in your controller called `pundit_user`.
 
 ```ruby
