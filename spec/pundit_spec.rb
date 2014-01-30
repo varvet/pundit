@@ -191,7 +191,7 @@ describe Pundit do
     end
 
     it "raises an exception when not authorized" do
-      expect { controller.verify_authorized }.to raise_error(Pundit::NotAuthorizedError)
+      expect { controller.verify_authorized }.to raise_error(Pundit::UnverifiedAuthorizationError)
     end
   end
 
@@ -202,7 +202,7 @@ describe Pundit do
     end
 
     it "raises an exception when policy_scope is not used" do
-      expect { controller.verify_policy_scoped }.to raise_error(Pundit::NotAuthorizedError)
+      expect { controller.verify_policy_scoped }.to raise_error(Pundit::UnverifiedAuthorizationError)
     end
   end
 
