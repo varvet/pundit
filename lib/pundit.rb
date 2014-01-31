@@ -44,17 +44,21 @@ module Pundit
     end
   end
 
-  def verify_authorized
-    raise NotAuthorizedError unless @_policy_authorized
+  def verify_authorized(*secure_classes)
+    unless policy_authorized_classes.present? && all_specified_classes_authorized?(secure_classes)
+      raise NotAuthorizedError
+    end
   end
 
-  def verify_policy_scoped
-    raise NotAuthorizedError unless @_policy_scoped
+  def verify_policy_scoped(*secure_classes)
+    unless policy_scoped_classes.present? && all_specified_classes_policy_scoped?(secure_classes)
+      raise NotAuthorizedError
+    end
   end
 
   def authorize(record, query=nil)
     query ||= params[:action].to_s + "?"
-    @_policy_authorized = true
+    policy_authorized_classes << class_name_for(record)
     unless policy(record).public_send(query)
       raise NotAuthorizedError, "not allowed to #{query} this #{record}"
     end
@@ -62,7 +66,7 @@ module Pundit
   end
 
   def policy_scope(scope)
-    @_policy_scoped = true
+    policy_scoped_classes << class_name_for(scope)
     @policy_scope or Pundit.policy_scope!(pundit_user, scope)
   end
   attr_writer :policy_scope
@@ -74,5 +78,40 @@ module Pundit
 
   def pundit_user
     current_user
+  end
+
+  private
+  def policy_authorized_classes
+    @_policy_authorized_classes ||= []
+  end
+
+  def policy_scoped_classes
+    @_policy_scoped_classes ||= []
+  end
+
+  def all_specified_classes_authorized?(classes)
+    classes.empty? || classes.all? { |c| authorized_class? c }
+  end
+
+  def authorized_class?(klass)
+    policy_authorized_classes.include? klass
+  end
+
+  def all_specified_classes_policy_scoped?(classes)
+    classes.empty? || classes.all? { |c| policy_scoped_class? c }
+  end
+
+  def policy_scoped_class?(klass)
+    policy_scoped_classes.include? klass
+  end
+
+  def class_name_for(item)
+    if scope.respond_to? :model_name
+      scope.model_name.name.constantize
+    elsif scope.is_a? Class
+      scope
+    else
+      scope.class
+    end
   end
 end

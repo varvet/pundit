@@ -150,6 +150,19 @@ class ApplicationController < ActionController::Base
 end
 ```
 
+If you would like to be more specific in ensuring policies, Pundit also allows
+you to specify what classes of objects you would like authorized. By default,
+Pundit will pass if any `authorize` or `policy_scoped` method is called on any
+class.
+
+``` ruby
+class ApplicationController < ActionController::Base
+  after_filter(except: index) { |c| c.verify_authorized(Post, ArticleTag) }
+  after_filter(only: index) { |c| c.verify_policy_scoped(Post, Comment) }
+end
+```
+
+
 ## Scopes
 
 Often, you will want to have some kind of view listing records which a
