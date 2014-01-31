@@ -51,6 +51,9 @@ class ArticleTag
       def destroy?
         false
       end
+      def update?
+        true
+      end
     end
   end
 end
@@ -193,6 +196,23 @@ describe Pundit do
     it "raises an exception when not authorized" do
       expect { controller.verify_authorized }.to raise_error(Pundit::NotAuthorizedError)
     end
+
+    context "when it expects an instance of a class to be authorized" do
+      it "does nothing when instances of all specified classes are authorized" do
+        controller.authorize(post)
+        controller.authorize(article_tag)
+        controller.verify_authorized
+      end
+
+      it "raises an error when instances of only some of the specified classes are authorized" do
+        controller.authorize(post)
+        expect { controller.verify_authorized(Post, ArticleTag) }.to raise_error(Pundit::NotAuthorizedError)
+      end
+
+      it "raises an error when not authorized" do
+        expect { controller.verify_authorized(Post, ArticleTag) }.to raise_error(Pundit::NotAuthorizedError)
+      end
+    end
   end
 
   describe "#verify_policy_scoped" do
@@ -203,6 +223,23 @@ describe Pundit do
 
     it "raises an exception when policy_scope is not used" do
       expect { controller.verify_policy_scoped }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    context "when it expects a specific classes' policy scope" do
+      it "does nothing when all specified classes' policy scopes are called" do
+        controller.policy_scope(Post)
+        controller.policy_scope(Comment)
+        controller.verify_policy_scoped(Post, Comment)
+      end
+
+      it "raises an error when only some of the specified classes policy scopes are callled" do
+        controller.policy_scope(Post)
+        expect { controller.verify_policy_scoped(Post, Comment) }.to raise_error(Pundit::NotAuthorizedError)
+      end
+
+      it "raises an error when no policy scopes are called" do
+        expect { controller.verify_policy_scoped(Post, Comment) }.to raise_error(Pundit::NotAuthorizedError)
+      end
     end
   end
 
