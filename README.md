@@ -129,12 +129,12 @@ conditionally showing links or buttons in the view:
 
 Pundit adds a method called `verify_authorized` to your controllers. This
 method will raise an exception if `authorize` has not yet been called. You
-should run this method in an `after_filter` to ensure that you haven't
+should run this method in an `after_action` to ensure that you haven't
 forgotten to authorize the action. For example:
 
 ``` ruby
 class ApplicationController < ActionController::Base
-  after_filter :verify_authorized, :except => :index
+  after_action :verify_authorized, :except => :index
 end
 ```
 
@@ -146,7 +146,7 @@ authorize individual instances.
 
 ``` ruby
 class ApplicationController < ActionController::Base
-  after_filter :verify_policy_scoped, :only => :index
+  after_action :verify_policy_scoped, :only => :index
 end
 ```
 
