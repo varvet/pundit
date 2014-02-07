@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["jonas.nicklas@gmail.com", "dev@elabs.se"]
   gem.description   = %q{Object oriented authorization for Rails applications}
   gem.summary       = %q{OO authorization for Rails}
-  gem.homepage      = "http://github.com/elabs/pundit"
+  gem.homepage      = "https://github.com/elabs/pundit"
   gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split($/)
@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "activesupport", ">= 3.0.0"
   gem.add_development_dependency "activerecord", ">= 3.0.0"
+  gem.add_development_dependency "bundler", "~> 1.3"
   gem.add_development_dependency "rspec", "~>2.0"
   gem.add_development_dependency "pry"
   gem.add_development_dependency "rake"
