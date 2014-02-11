@@ -66,25 +66,25 @@ describe Pundit do
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
-      Pundit.policy_scope(user, Post).should == :published
+      expect(Pundit.policy_scope(user, Post)).to eq :published
     end
 
     it "returns an instantiated policy scope given an active model class" do
-      Pundit.policy_scope(user, Comment).should == Comment
+      expect(Pundit.policy_scope(user, Comment)).to eq Comment
     end
 
     it "returns nil if the given policy scope can't be found" do
-      Pundit.policy_scope(user, Article).should be_nil
+      expect(Pundit.policy_scope(user, Article)).to be_nil
     end
   end
 
   describe ".policy_scope!" do
     it "returns an instantiated policy scope given a plain model class" do
-      Pundit.policy_scope!(user, Post).should == :published
+      expect(Pundit.policy_scope!(user, Post)).to eq :published
     end
 
     it "returns an instantiated policy scope given an active model class" do
-      Pundit.policy_scope!(user, Comment).should == Comment
+      expect(Pundit.policy_scope!(user, Comment)).to eq Comment
     end
 
     it "throws an exception if the given policy scope can't be found" do
@@ -99,56 +99,56 @@ describe Pundit do
   describe ".policy" do
     it "returns an instantiated policy given a plain model instance" do
       policy = Pundit.policy(user, post)
-      policy.user.should == user
-      policy.post.should == post
+      expect(policy.user).to eq user
+      expect(policy.post).to eq post
     end
 
     it "returns an instantiated policy given an active model instance" do
       policy = Pundit.policy(user, comment)
-      policy.user.should == user
-      policy.comment.should == comment
+      expect(policy.user).to eq user
+      expect(policy.comment).to eq comment
     end
 
     it "returns an instantiated policy given a plain model class" do
       policy = Pundit.policy(user, Post)
-      policy.user.should == user
-      policy.post.should == Post
+      expect(policy.user).to eq user
+      expect(policy.post).to eq Post
     end
 
     it "returns an instantiated policy given an active model class" do
       policy = Pundit.policy(user, Comment)
-      policy.user.should == user
-      policy.comment.should == Comment
+      expect(policy.user).to eq user
+      expect(policy.comment).to eq Comment
     end
 
     it "returns nil if the given policy can't be found" do
-      Pundit.policy(user, article).should be_nil
-      Pundit.policy(user, Article).should be_nil
+      expect(Pundit.policy(user, article)).to be_nil
+      expect(Pundit.policy(user, Article)).to be_nil
     end
 
     describe "with .policy_class set on the model" do
       it "returns an instantiated policy given a plain model instance" do
         policy = Pundit.policy(user, artificial_blog)
-        policy.user.should == user
-        policy.blog.should == artificial_blog
+        expect(policy.user).to eq user
+        expect(policy.blog).to eq artificial_blog
       end
 
       it "returns an instantiated policy given a plain model class" do
         policy = Pundit.policy(user, ArtificialBlog)
-        policy.user.should == user
-        policy.blog.should == ArtificialBlog
+        expect(policy.user).to eq user
+        expect(policy.blog).to eq ArtificialBlog
       end
 
       it "returns an instantiated policy given a plain model instance providing an anonymous class" do
         policy = Pundit.policy(user, article_tag)
-        policy.user.should == user
-        policy.tag.should == article_tag
+        expect(policy.user).to eq user
+        expect(policy.tag).to eq article_tag
       end
 
       it "returns an instantiated policy given a plain model class providing an anonymous class" do
         policy = Pundit.policy(user, ArticleTag)
-        policy.user.should == user
-        policy.tag.should == ArticleTag
+        expect(policy.user).to eq user
+        expect(policy.tag).to eq ArticleTag
       end
     end
   end
@@ -156,26 +156,26 @@ describe Pundit do
   describe ".policy!" do
     it "returns an instantiated policy given a plain model instance" do
       policy = Pundit.policy!(user, post)
-      policy.user.should == user
-      policy.post.should == post
+      expect(policy.user).to eq user
+      expect(policy.post).to eq post
     end
 
     it "returns an instantiated policy given an active model instance" do
       policy = Pundit.policy!(user, comment)
-      policy.user.should == user
-      policy.comment.should == comment
+      expect(policy.user).to eq user
+      expect(policy.comment).to eq comment
     end
 
     it "returns an instantiated policy given a plain model class" do
       policy = Pundit.policy!(user, Post)
-      policy.user.should == user
-      policy.post.should == Post
+      expect(policy.user).to eq user
+      expect(policy.post).to eq Post
     end
 
     it "returns an instantiated policy given an active model class" do
       policy = Pundit.policy!(user, Comment)
-      policy.user.should == user
-      policy.comment.should == Comment
+      expect(policy.user).to eq user
+      expect(policy.comment).to eq Comment
     end
 
     it "throws an exception if the given policy can't be found" do
@@ -208,16 +208,16 @@ describe Pundit do
 
   describe "#authorize" do
     it "infers the policy name and authorized based on it" do
-      controller.authorize(post).should be_true
+      expect(controller.authorize(post)).to be_truthy
     end
 
     it "can be given a different permission to check" do
-      controller.authorize(post, :show?).should be_true
+      expect(controller.authorize(post, :show?)).to be_truthy
       expect { controller.authorize(post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
     it "works with anonymous class policies" do
-      controller.authorize(article_tag, :show?).should be_true
+      expect(controller.authorize(article_tag, :show?)).to be_truthy
       expect { controller.authorize(article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
@@ -228,15 +228,15 @@ describe Pundit do
 
   describe "#pundit_user" do
     it 'returns the same thing as current_user' do
-      controller.pundit_user.should eq controller.current_user
+      expect(controller.pundit_user).to eq controller.current_user
     end
   end
 
   describe ".policy" do
     it "returns an instantiated policy" do
       policy = controller.policy(post)
-      policy.user.should == user
-      policy.post.should == post
+      expect(policy.user).to eq user
+      expect(policy.post).to eq post
     end
 
     it "throws an exception if the given policy can't be found" do
@@ -247,13 +247,13 @@ describe Pundit do
       new_policy = OpenStruct.new
       controller.policy = new_policy
 
-      controller.policy(post).should == new_policy
+      expect(controller.policy(post)).to eq new_policy
     end
   end
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope" do
-      controller.policy_scope(Post).should == :published
+      expect(controller.policy_scope(Post)).to eq :published
     end
 
     it "throws an exception if the given policy can't be found" do
@@ -264,7 +264,7 @@ describe Pundit do
       new_scope = OpenStruct.new
       controller.policy_scope = new_scope
 
-      controller.policy_scope(post).should == new_scope
+      expect(controller.policy_scope(post)).to eq new_scope
     end
   end
 end
