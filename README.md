@@ -153,11 +153,6 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-Both these methods may lead to a `DoubleRenderError` if you use Rails and
-actually did not call `authorize` since most controllers already call `render`
-beforehand.
-
-
 ## Scopes
 
 Often, you will want to have some kind of view listing records which a

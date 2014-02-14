@@ -8,7 +8,7 @@ module Pundit
   class NotAuthorizedError < StandardError
     attr_accessor :query, :record, :policy
   end
-
+  class AuthorizationNotPerformedError < StandardError; end
   class NotDefinedError < StandardError; end
 
   extend ActiveSupport::Concern
@@ -52,11 +52,11 @@ module Pundit
   end
 
   def verify_authorized
-    raise NotAuthorizedError unless @_policy_authorized
+    raise AuthorizationNotPerformedError unless @_policy_authorized
   end
 
   def verify_policy_scoped
-    raise NotAuthorizedError unless @_policy_scoped
+    raise AuthorizationNotPerformedError unless @_policy_scoped
   end
 
   def authorize(record, query=nil)
