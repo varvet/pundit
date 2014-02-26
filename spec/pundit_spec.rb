@@ -26,6 +26,7 @@ class Post < Struct.new(:user)
 end
 
 class CommentPolicy < Struct.new(:user, :comment); end
+
 class CommentPolicy::Scope < Struct.new(:user, :scope)
   def resolve
     scope
@@ -63,6 +64,10 @@ describe Pundit do
   let(:controller) { double(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
+
+  before(:all) do
+    I18n.config.backend.load_translations('spec/locales/en.yml')
+  end
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
@@ -223,6 +228,10 @@ describe Pundit do
 
     it "raises an error when the permission check fails" do
       expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    it "raises an error with a custom error message if defined in the I18n locale file" do
+      expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError, I18n.t('pundit.post.update'))
     end
   end
 

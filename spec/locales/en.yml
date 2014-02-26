@@ -1,0 +1,5 @@
+en:
+  pundit:
+    default: "You are not allowed to perform this action."
+    post:
+      update: "You can only update your own posts."

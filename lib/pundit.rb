@@ -56,7 +56,7 @@ module Pundit
     query ||= params[:action].to_s + "?"
     @_policy_authorized = true
     unless policy(record).public_send(query)
-      raise NotAuthorizedError, "not allowed to #{query} this #{record}"
+      raise NotAuthorizedError, error_message(record, query)
     end
     true
   end
@@ -74,5 +74,21 @@ module Pundit
 
   def pundit_user
     current_user
+  end
+
+  private
+
+  def error_message(record, query)
+    record = record.class.to_s.parameterize
+    query = query.to_s.parameterize
+    message = i18n_error_message(record, query)
+    message ||= "You are not allowed to perform this action."
+  end
+
+  def i18n_error_message(record, query)
+    translation_queries = ["pundit.#{record}.#{query}", "pundit.default"]
+    translation_queries.map do |translation_query|
+      I18n.t!(translation_query) rescue nil
+    end.compact.first
   end
 end
