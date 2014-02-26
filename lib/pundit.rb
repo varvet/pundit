@@ -5,7 +5,10 @@ require "active_support/core_ext/string/inflections"
 require "active_support/core_ext/object/blank"
 
 module Pundit
-  class NotAuthorizedError < StandardError; end
+  class NotAuthorizedError < StandardError
+    attr_accessor :query, :record, :policy
+  end
+
   class NotDefinedError < StandardError; end
 
   extend ActiveSupport::Concern
@@ -55,9 +58,15 @@ module Pundit
   def authorize(record, query=nil)
     query ||= params[:action].to_s + "?"
     @_policy_authorized = true
-    unless policy(record).public_send(query)
-      raise NotAuthorizedError, "not allowed to #{query} this #{record}"
+
+    policy = policy(record)
+    unless policy.public_send(query)
+      error = NotAuthorizedError.new("not allowed to #{query} this #{record}")
+      error.query, error.record, error.policy = query, record, policy
+
+      raise error
     end
+
     true
   end
 
