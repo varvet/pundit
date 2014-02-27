@@ -224,6 +224,14 @@ describe Pundit do
     it "raises an error when the permission check fails" do
       expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError)
     end
+
+    it "raises an error with a user, record and query" do
+      expect { controller.authorize(post, :destroy?) }.to raise_error do |error|
+        expect(error.user).to eq user
+        expect(error.record).to eq post
+        expect(error.query).to eq :destroy?
+      end
+    end
   end
 
   describe "#pundit_user" do
