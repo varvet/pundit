@@ -230,6 +230,7 @@ describe Pundit do
         expect(error.user).to eq user
         expect(error.record).to eq post
         expect(error.query).to eq :destroy?
+        expect(error.message).to eq "not allowed to #{error.query} this #{error.record}"
       end
     end
   end
