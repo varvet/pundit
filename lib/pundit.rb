@@ -59,7 +59,7 @@ module Pundit
     @_policy_authorized = true
     unless policy(record).public_send(query)
       e = NotAuthorizedError.new
-      e.user, e.record, e.query = pundit_user, record, query
+      e.user, e.record, e.query = policy(record).user, record, query
       raise e, "not allowed to #{query} this #{record}"
     end
     true
