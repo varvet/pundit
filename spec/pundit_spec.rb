@@ -225,9 +225,9 @@ describe Pundit do
       expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
-    it "raises an error with a user, record and query" do
+    it "raises an error with a policy, record and query" do
       expect { controller.authorize(post, :destroy?) }.to raise_error do |error|
-        expect(error.user).to eq user
+        expect(error.policy).to eq controller.policy(post)
         expect(error.record).to eq post
         expect(error.query).to eq :destroy?
         expect(error.message).to eq "not allowed to #{error.query} this #{error.record}"

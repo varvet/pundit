@@ -6,7 +6,7 @@ require "active_support/core_ext/object/blank"
 
 module Pundit
   class NotAuthorizedError < StandardError
-    attr_accessor :user, :record, :query
+    attr_accessor :policy, :record, :query
   end
   class NotDefinedError < StandardError; end
 
@@ -59,7 +59,7 @@ module Pundit
     @_policy_authorized = true
     unless policy(record).public_send(query)
       e = NotAuthorizedError.new
-      e.user, e.record, e.query = policy(record).user, record, query
+      e.policy, e.record, e.query = policy(record), record, query
       raise e, "not allowed to #{query} this #{record}"
     end
     true
