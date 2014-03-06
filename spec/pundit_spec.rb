@@ -1,3 +1,5 @@
+require "ostruct"
+require 'minitest/autorun'
 require "pundit"
 require "pry"
 require "active_support/core_ext"
@@ -56,99 +58,99 @@ class ArticleTag
 end
 
 describe Pundit do
-  let(:user) { double }
+  let(:user) { OpenStruct.new }
   let(:post) { Post.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
-  let(:controller) { double(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
+  let(:controller) { OpenStruct.new(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
-      expect(Pundit.policy_scope(user, Post)).to eq :published
+      assert_equal :published, Pundit.policy_scope(user, Post)
     end
 
     it "returns an instantiated policy scope given an active model class" do
-      expect(Pundit.policy_scope(user, Comment)).to eq Comment
+      assert_equal Comment, Pundit.policy_scope(user, Comment)
     end
 
     it "returns nil if the given policy scope can't be found" do
-      expect(Pundit.policy_scope(user, Article)).to be_nil
+      assert_nil Pundit.policy_scope(user, Article)
     end
   end
 
   describe ".policy_scope!" do
     it "returns an instantiated policy scope given a plain model class" do
-      expect(Pundit.policy_scope!(user, Post)).to eq :published
+      assert_equal :published, Pundit.policy_scope!(user, Post)
     end
 
     it "returns an instantiated policy scope given an active model class" do
-      expect(Pundit.policy_scope!(user, Comment)).to eq Comment
+      assert_equal Comment, Pundit.policy_scope!(user, Comment)
     end
 
     it "throws an exception if the given policy scope can't be found" do
-      expect { Pundit.policy_scope!(user, Article) }.to raise_error(Pundit::NotDefinedError)
+      assert_raises(Pundit::NotDefinedError) { Pundit.policy_scope!(user, Article) }
     end
 
     it "throws an exception if the given policy scope can't be found" do
-      expect { Pundit.policy_scope!(user, ArticleTag) }.to raise_error(Pundit::NotDefinedError)
+      assert_raises(Pundit::NotDefinedError) { Pundit.policy_scope!(user, ArticleTag) }
     end
   end
 
   describe ".policy" do
     it "returns an instantiated policy given a plain model instance" do
       policy = Pundit.policy(user, post)
-      expect(policy.user).to eq user
-      expect(policy.post).to eq post
+      assert_equal user, policy.user
+      assert_equal post, policy.post
     end
 
     it "returns an instantiated policy given an active model instance" do
       policy = Pundit.policy(user, comment)
-      expect(policy.user).to eq user
-      expect(policy.comment).to eq comment
+      assert_equal user, policy.user
+      assert_equal comment, policy.comment
     end
 
     it "returns an instantiated policy given a plain model class" do
       policy = Pundit.policy(user, Post)
-      expect(policy.user).to eq user
-      expect(policy.post).to eq Post
+      assert_equal user, policy.user
+      assert_equal Post, policy.post
     end
 
     it "returns an instantiated policy given an active model class" do
       policy = Pundit.policy(user, Comment)
-      expect(policy.user).to eq user
-      expect(policy.comment).to eq Comment
+      assert_equal user, policy.user
+      assert_equal Comment, policy.comment
     end
 
     it "returns nil if the given policy can't be found" do
-      expect(Pundit.policy(user, article)).to be_nil
-      expect(Pundit.policy(user, Article)).to be_nil
+      assert_nil Pundit.policy(user, article)
+      assert_nil Pundit.policy(user, Article)
     end
 
     describe "with .policy_class set on the model" do
       it "returns an instantiated policy given a plain model instance" do
         policy = Pundit.policy(user, artificial_blog)
-        expect(policy.user).to eq user
-        expect(policy.blog).to eq artificial_blog
+        assert_equal user, policy.user
+        assert_equal artificial_blog, policy.blog
       end
 
       it "returns an instantiated policy given a plain model class" do
         policy = Pundit.policy(user, ArtificialBlog)
-        expect(policy.user).to eq user
-        expect(policy.blog).to eq ArtificialBlog
+        assert_equal user, policy.user
+        assert_equal ArtificialBlog, policy.blog
       end
 
       it "returns an instantiated policy given a plain model instance providing an anonymous class" do
         policy = Pundit.policy(user, article_tag)
-        expect(policy.user).to eq user
-        expect(policy.tag).to eq article_tag
+        assert_equal user, policy.user
+        assert_equal article_tag, policy.tag
       end
 
       it "returns an instantiated policy given a plain model class providing an anonymous class" do
         policy = Pundit.policy(user, ArticleTag)
-        expect(policy.user).to eq user
-        expect(policy.tag).to eq ArticleTag
+        assert_equal user, policy.user
+        assert_equal ArticleTag, policy.tag
       end
     end
   end
@@ -156,31 +158,31 @@ describe Pundit do
   describe ".policy!" do
     it "returns an instantiated policy given a plain model instance" do
       policy = Pundit.policy!(user, post)
-      expect(policy.user).to eq user
-      expect(policy.post).to eq post
+      assert_equal user, policy.user
+      assert_equal post, policy.post
     end
 
     it "returns an instantiated policy given an active model instance" do
       policy = Pundit.policy!(user, comment)
-      expect(policy.user).to eq user
-      expect(policy.comment).to eq comment
+      assert_equal user, policy.user
+      assert_equal comment, policy.comment
     end
 
     it "returns an instantiated policy given a plain model class" do
       policy = Pundit.policy!(user, Post)
-      expect(policy.user).to eq user
-      expect(policy.post).to eq Post
+      assert_equal user, policy.user
+      assert_equal Post, policy.post
     end
 
     it "returns an instantiated policy given an active model class" do
       policy = Pundit.policy!(user, Comment)
-      expect(policy.user).to eq user
-      expect(policy.comment).to eq Comment
+      assert_equal user, policy.user
+      assert_equal Comment, policy.comment
     end
 
     it "throws an exception if the given policy can't be found" do
-      expect { Pundit.policy!(user, article) }.to raise_error(Pundit::NotDefinedError)
-      expect { Pundit.policy!(user, Article) }.to raise_error(Pundit::NotDefinedError)
+      assert_raises(Pundit::NotDefinedError) { Pundit.policy!(user, article) }
+      assert_raises(Pundit::NotDefinedError) { Pundit.policy!(user, Article) }
     end
   end
 
@@ -191,7 +193,7 @@ describe Pundit do
     end
 
     it "raises an exception when not authorized" do
-      expect { controller.verify_authorized }.to raise_error(Pundit::NotAuthorizedError)
+      assert_raises(Pundit::NotAuthorizedError) { controller.verify_authorized }
     end
   end
 
@@ -202,77 +204,76 @@ describe Pundit do
     end
 
     it "raises an exception when policy_scope is not used" do
-      expect { controller.verify_policy_scoped }.to raise_error(Pundit::NotAuthorizedError)
+      assert_raises(Pundit::NotAuthorizedError) { controller.verify_policy_scoped }
     end
   end
 
   describe "#authorize" do
     it "infers the policy name and authorized based on it" do
-      expect(controller.authorize(post)).to be_truthy
+      assert_equal true, controller.authorize(post)
     end
 
     it "can be given a different permission to check" do
-      expect(controller.authorize(post, :show?)).to be_truthy
-      expect { controller.authorize(post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
+      assert_equal true, controller.authorize(post, :show?)
+      assert_raises(Pundit::NotAuthorizedError) { controller.authorize(post, :destroy?) }
     end
 
     it "works with anonymous class policies" do
-      expect(controller.authorize(article_tag, :show?)).to be_truthy
-      expect { controller.authorize(article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
+      assert_equal true, controller.authorize(article_tag, :show?)
+      assert_raises(Pundit::NotAuthorizedError) { controller.authorize(article_tag, :destroy?) }
     end
 
     it "raises an error when the permission check fails" do
-      expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError)
+      assert_raises(Pundit::NotAuthorizedError) { controller.authorize(Post.new) }
     end
 
     it "raises an error with a query and action" do
-      expect { controller.authorize(post, :destroy?) }.to raise_error do |error|
-        expect(error.query).to eq :destroy?
-        expect(error.record).to eq post
-        expect(error.policy).to eq controller.policy(post)
-      end
+      error = assert_raises(Pundit::NotAuthorizedError) { controller.authorize(post, :destroy?) }
+      assert_equal :destroy?, error.query
+      assert_equal post, error.record
+      assert_equal controller.policy(post), error.policy
     end
   end
 
   describe "#pundit_user" do
     it 'returns the same thing as current_user' do
-      expect(controller.pundit_user).to eq controller.current_user
+      assert_equal controller.current_user, controller.pundit_user
     end
   end
 
   describe ".policy" do
     it "returns an instantiated policy" do
       policy = controller.policy(post)
-      expect(policy.user).to eq user
-      expect(policy.post).to eq post
+      assert_equal user, policy.user
+      assert_equal post, policy.post
     end
 
     it "throws an exception if the given policy can't be found" do
-      expect { controller.policy(article) }.to raise_error(Pundit::NotDefinedError)
+      assert_raises(Pundit::NotDefinedError) { controller.policy(article) }
     end
 
     it "allows policy to be injected" do
       new_policy = OpenStruct.new
       controller.policy = new_policy
 
-      expect(controller.policy(post)).to eq new_policy
+      assert_equal new_policy, controller.policy(post)
     end
   end
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope" do
-      expect(controller.policy_scope(Post)).to eq :published
+      assert_equal :published, controller.policy_scope(Post)
     end
 
     it "throws an exception if the given policy can't be found" do
-      expect { controller.policy_scope(Article) }.to raise_error(Pundit::NotDefinedError)
+      assert_raises(Pundit::NotDefinedError) { controller.policy_scope(Article) }
     end
 
     it "allows policy_scope to be injected" do
       new_scope = OpenStruct.new
       controller.policy_scope = new_scope
 
-      expect(controller.policy_scope(post)).to eq new_scope
+      assert_equal new_scope, controller.policy_scope(post)
     end
   end
 end
