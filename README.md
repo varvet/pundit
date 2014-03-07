@@ -276,7 +276,10 @@ end
 
 ## Rescuing a denied Authorization in Rails
 
-Pundit raises a `Pundit::NotAuthorizedError` you can [rescue_from](http://guides.rubyonrails.org/action_controller_overview.html#rescue-from) in your `ApplicationController`. You can customize the `user_not_authorized` method in every controller.
+Pundit raises a `Pundit::NotAuthorizedError` you can
+[rescue_from](http://guides.rubyonrails.org/action_controller_overview.html#rescue-from)
+in your `ApplicationController`. You can customize the `user_not_authorized`
+method in every controller.
 
 ```ruby
 class ApplicationController < ActionController::Base
@@ -289,10 +292,47 @@ class ApplicationController < ActionController::Base
 
   def user_not_authorized
     flash[:error] = "You are not authorized to perform this action."
-    redirect_to request.headers["Referer"] || root_path
+    redirect_to(request.referrer || root_path)
   end
 end
 ```
+
+### Creating custom error messages
+
+`NotAuthorizedError`s provide information on what query (e.g. `:create?`), what
+record (e.g. an instance of `Post`), and what policy (e.g. an instance of
+`PostPolicy`) caused the error to be raised.
+
+One way to use these `query`, `record`, and `policy` properties is to connect
+them with `I18n` to generate error messages. Here's how you might go about doing
+that.
+
+```ruby
+class ApplicationController < ActionController::Base
+ rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+ private
+
+ def user_not_authorized(exception)
+   policy_name = exception.policy.class.to_s.underscore
+
+   flash[:error] = I18n.t "pundit.#{policy_name}.#{exception.query}",
+     default: 'You cannot perform this action.'
+   redirect_to(request.referrer || root_path)
+ end
+end
+```
+
+```yaml
+en:
+ pundit:
+   post_policy:
+     update?: 'You cannot edit this post!'
+     create?: 'You cannot create posts!'
+```
+
+Of course, this is just an example. Pundit is agnostic as to how you implement
+your error messaging.
 
 ## Manually retrieving policies and scopes
 
