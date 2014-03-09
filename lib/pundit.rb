@@ -40,6 +40,10 @@ module Pundit
       helper_method :pundit_user
     end
     if respond_to?(:hide_action)
+      hide_action :policy_scope
+      hide_action :policy_scope=
+      hide_action :policy
+      hide_action :policy=
       hide_action :authorize
       hide_action :verify_authorized
       hide_action :verify_policy_scoped
