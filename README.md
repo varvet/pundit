@@ -57,7 +57,7 @@ As you can see, this is just a plain Ruby class. As a convenience, we can inheri
 from Struct or use Struct.new to define the policy class:
 
 ``` ruby
-PostPolicy = Struct.new(:user, :post) do
+class PostPolicy < Struct.new(:user, :post)
   def update?
     user.admin? or not post.published?
   end
@@ -162,8 +162,8 @@ particular user has access to. When using Pundit, you are expected to
 define a class called a policy scope. It can look something like this:
 
 ``` ruby
-PostPolicy = Struct.new(:user, :post) do
-  self::Scope = Struct.new(:user, :scope) do
+class PostPolicy < Struct.new(:user, :post)
+  class Scope < Struct.new(:user, :scope)
     def resolve
       if user.admin?
         scope.all
