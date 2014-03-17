@@ -64,6 +64,9 @@ class PostPolicy < Struct.new(:user, :post)
 end
 ```
 
+You could also use the convenient
+[attr_extras](https://github.com/barsoom/attr_extras) gem.
+
 Pundit makes the following assumptions about this class:
 
 - The class has the same name as some kind of model class, only suffixed
