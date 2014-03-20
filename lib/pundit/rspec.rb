@@ -21,7 +21,8 @@ module Pundit
         end
 
         def permissions
-          example.metadata[:permissions]
+          current_example = ::RSpec.respond_to?(:current_example) ? ::RSpec.current_example : example
+          current_example.metadata[:permissions]
         end
       end
     end
