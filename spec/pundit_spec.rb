@@ -5,58 +5,58 @@ require "active_model/naming"
 require 'spec_helper'
 
 describe 'Pundit with ActiveSupport' do
-  module AS ; end
-  class AS::PostPolicy < Struct.new(:user, :post)
-    def update?
-      post.user == user
+  module AS
+    class PostPolicy < Struct.new(:user, :post)
+      def update?
+        post.user == user
+      end
+      def destroy?
+        false
+      end
+      def show?
+        true
+      end
     end
-    def destroy?
-      false
+    class PostPolicy::Scope < Struct.new(:user, :scope)
+      def resolve
+        scope.published
+      end
     end
-    def show?
-      true
+    class Post < Struct.new(:user)
+      def self.published
+        :published
+      end
     end
-  end
-  class AS::PostPolicy::Scope < Struct.new(:user, :scope)
-    def resolve
-      scope.published
-    end
-  end
-  class AS::Post < Struct.new(:user)
-    def self.published
-      :published
-    end
-  end
 
-  class AS::CommentPolicy < Struct.new(:user, :comment); end
-  class AS::CommentPolicy::Scope < Struct.new(:user, :scope)
-    def resolve
-      scope
+    class CommentPolicy < Struct.new(:user, :comment); end
+    class CommentPolicy::Scope < Struct.new(:user, :scope)
+      def resolve
+        scope
+      end
     end
-  end
-  class AS::Comment; extend ActiveModel::Naming; end
+    class Comment; extend ActiveModel::Naming; end
 
-  class AS::Article; end
+    class Article; end
 
-  class AS::BlogPolicy < Struct.new(:user, :blog); end
-  class AS::Blog; end
-  class AS::ArtificialBlog < AS::Blog
-    def self.policy_class
-      AS::BlogPolicy
+    class BlogPolicy < Struct.new(:user, :blog); end
+    class Blog; end
+    class ArtificialBlog < Blog
+      def self.policy_class
+        BlogPolicy
+      end
     end
-  end
-  class AS::ArticleTag
-    def self.policy_class
-      Struct.new(:user, :tag) do
-        def show?
-          true
-        end
-        def destroy?
-          false
+    class ArticleTag
+      def self.policy_class
+        Struct.new(:user, :tag) do
+          def show?
+            true
+          end
+          def destroy?
+            false
+          end
         end
       end
     end
   end
-
   SpecHelper.pundit_examples(self, AS)
 end
