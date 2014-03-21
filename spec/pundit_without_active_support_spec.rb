@@ -1,11 +1,9 @@
 require "pundit"
 require "pry"
-require "active_support/core_ext"
-require "active_model/naming"
 require 'spec_helper'
 
-describe 'Pundit with ActiveSupport' do
-  module AS
+describe  'Pundit plain' do
+  module Plain
     class PostPolicy < Struct.new(:user, :post)
       def update?
         post.user == user
@@ -34,7 +32,7 @@ describe 'Pundit with ActiveSupport' do
         scope
       end
     end
-    class Comment; extend ActiveModel::Naming; end
+    class Comment;; end
 
     class Article; end
 
@@ -58,5 +56,6 @@ describe 'Pundit with ActiveSupport' do
       end
     end
   end
-  SpecHelper.pundit_examples(self, AS)
+
+  SpecHelper.pundit_examples(self, Plain)
 end
