@@ -1,10 +1,8 @@
 require "pundit"
 require "pry"
-require "active_support/core_ext"
-require "active_model/naming"
 require 'spec_helper'
 
-module AS
+module Plain
   class PostPolicy < Struct.new(:user, :post)
     def update?
       post.user == user
@@ -33,7 +31,8 @@ module AS
       scope
     end
   end
-  class Comment; extend ActiveModel::Naming; end
+  # no ActiveModel::Naming here
+  class Comment; end
 
   class Article; end
 
@@ -57,4 +56,4 @@ module AS
     end
   end
 end
-SpecHelper.pundit_examples(self, AS)
+SpecHelper.pundit_examples(self, Plain)
