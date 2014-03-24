@@ -1,6 +1,5 @@
 require "pundit/version"
 require "pundit/policy_finder"
-require "active_support/concern"
 require "active_support/core_ext/string/inflections"
 require "active_support/core_ext/object/blank"
 
@@ -10,8 +9,6 @@ module Pundit
   end
 
   class NotDefinedError < StandardError; end
-
-  extend ActiveSupport::Concern
 
   class << self
     def policy_scope(user, scope)
@@ -33,21 +30,23 @@ module Pundit
     end
   end
 
-  included do
-    if respond_to?(:helper_method)
-      helper_method :policy_scope
-      helper_method :policy
-      helper_method :pundit_user
-    end
-    if respond_to?(:hide_action)
-      hide_action :policy_scope
-      hide_action :policy_scope=
-      hide_action :policy
-      hide_action :policy=
-      hide_action :authorize
-      hide_action :verify_authorized
-      hide_action :verify_policy_scoped
-      hide_action :pundit_user
+  def self.included(base)
+    base.instance_eval do
+      if respond_to?(:helper_method)
+        helper_method :policy_scope
+        helper_method :policy
+        helper_method :pundit_user
+      end
+      if respond_to?(:hide_action)
+        hide_action :policy_scope
+        hide_action :policy_scope=
+        hide_action :policy
+        hide_action :policy=
+        hide_action :authorize
+        hide_action :verify_authorized
+        hide_action :verify_policy_scoped
+        hide_action :pundit_user
+      end
     end
   end
 
