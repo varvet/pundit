@@ -1,5 +1,6 @@
 require "pundit/version"
 require "pundit/policy_finder"
+require 'pundit/ext/string'
 
 module Pundit
   class NotAuthorizedError < StandardError

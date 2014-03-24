@@ -14,7 +14,7 @@ module Pundit
 
     def policy
       klass = find
-      klass = Kernel.const_get(klass) if klass.is_a?(String)
+      klass = klass.constantize if klass.is_a?(String)
       klass
     rescue NameError
       nil
