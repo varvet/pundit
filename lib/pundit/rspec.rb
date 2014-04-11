@@ -3,13 +3,13 @@ module Pundit
     module Matchers
       extend ::RSpec::Matchers::DSL
 
-      matcher :permit do |user, record|
+      matcher :permit do |user, record, *args|
         match_for_should do |policy|
-          permissions.all? { |permission| policy.new(user, record).public_send(permission) }
+          permissions.all? { |permission| policy.new(user, record).public_send(permission, *args) }
         end
 
         match_for_should_not do |policy|
-          permissions.none? { |permission| policy.new(user, record).public_send(permission) }
+          permissions.none? { |permission| policy.new(user, record).public_send(permission, *args) }
         end
 
         failure_message_for_should do |policy|
