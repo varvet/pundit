@@ -13,6 +13,9 @@ class PostPolicy < Struct.new(:user, :post)
   def show?
     true
   end
+  def publish?(params={})
+    params[:editor]
+  end
 end
 class PostPolicy::Scope < Struct.new(:user, :scope)
   def resolve
@@ -214,6 +217,12 @@ describe Pundit do
     it "can be given a different permission to check" do
       expect(controller.authorize(post, :show?)).to be_truthy
       expect { controller.authorize(post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    it "can be given a query and arguments" do
+      expect(controller.authorize(post, :publish?, editor: true)).to eq(true)
+      expect { controller.authorize(post, :publish?, editor: false) }.to raise_error(Pundit::NotAuthorizedError)
+      expect { controller.authorize(post, :publish?) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
     it "works with anonymous class policies" do
