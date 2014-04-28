@@ -220,4 +220,20 @@ describe Pundit do
       expect(controller.policy_scope(post)).to eq new_scope
     end
   end
+
+  describe ".policy_attributes" do
+    it "returns the permitted attributes" do
+      expect(controller.policy_attributes(:post)).to eq ['title']
+      expect(controller.policy_attributes(post)).to eq ['title']
+      expect(controller.policy_attributes(Post)).to eq ['title']
+    end
+
+    it "throws an exception if the given policy can't be found" do
+      expect { controller.policy_attributes(:article) }.to raise_error(Pundit::NotDefinedError)
+    end
+
+    it "throws an exception if the given policy doesn't respond to #permitted_attributes" do
+      expect { controller.policy_attributes(:blog) }.to raise_error(Pundit::NotDefinedError)
+    end
+  end
 end

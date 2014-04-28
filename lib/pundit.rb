@@ -32,12 +32,22 @@ module Pundit
     def policy!(user, record)
       PolicyFinder.new(record).policy!.new(user, record)
     end
+
+    def policy_attributes!(user, record)
+      policy = policy!(user, record)
+      if policy.respond_to?(:permitted_attributes)
+        policy.permitted_attributes
+      else
+        raise NotDefinedError, "expected #{policy} to respond to #permitted_attributes"
+      end
+    end
   end
 
   included do
     if respond_to?(:helper_method)
       helper_method :policy_scope
       helper_method :policy
+      helper_method :policy_attributes
       helper_method :pundit_user
     end
     if respond_to?(:hide_action)
@@ -45,6 +55,8 @@ module Pundit
       hide_action :policy_scope=
       hide_action :policy
       hide_action :policy=
+      hide_action :policy_attributes
+      hide_action :policy_attributes=
       hide_action :authorize
       hide_action :verify_authorized
       hide_action :verify_policy_scoped
@@ -85,6 +97,11 @@ module Pundit
     @policy or Pundit.policy!(pundit_user, record)
   end
   attr_writer :policy
+
+  def policy_attributes(record)
+    @policy_attributes or Pundit.policy_attributes!(pundit_user, record)
+  end
+  attr_writer :policy_attributes
 
   def pundit_user
     current_user

@@ -40,6 +40,8 @@ module Pundit
           object.model_name
         elsif object.class.respond_to?(:model_name)
           object.class.model_name
+        elsif object.is_a?(Symbol)
+          object.to_s.classify
         elsif object.is_a?(Class)
           object
         else
