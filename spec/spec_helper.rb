@@ -57,3 +57,9 @@ class ArticleTag
     end
   end
 end
+
+class DashboardPolicy < Struct.new(:user, :dashboard)
+  def show?
+    true
+  end
+end

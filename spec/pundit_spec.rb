@@ -66,6 +66,12 @@ describe Pundit do
       expect(policy.comment).to eq Comment
     end
 
+    it "returns an instantiated policy given a symbol" do
+      policy = Pundit.policy(user, :dashboard)
+      expect(policy.class).to eq DashboardPolicy
+      expect(policy.user).to eq user
+    end
+
     it "returns nil if the given policy can't be found" do
       expect(Pundit.policy(user, article)).to be_nil
       expect(Pundit.policy(user, Article)).to be_nil
