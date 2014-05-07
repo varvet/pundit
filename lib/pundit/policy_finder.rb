@@ -31,22 +31,33 @@ module Pundit
   private
 
     def find
-      if object.respond_to?(:policy_class)
+      if policy_class_defined?(object)
         object.policy_class
-      elsif object.class.respond_to?(:policy_class)
+      elsif policy_class_defined?(object.class)
         object.class.policy_class
       else
-        klass = if object.respond_to?(:model_name)
-          object.model_name
-        elsif object.class.respond_to?(:model_name)
-          object.class.model_name
-        elsif object.is_a?(Class)
-          object
-        else
-          object.class
-        end
-        "#{klass}Policy"
+        "#{class_name_for_policy}Policy"
       end
+    end
+
+    def class_name_for_policy
+      if model_name_defined?(object)
+        object.model_name
+      elsif model_name_defined?(object.class)
+        object.class.model_name
+      elsif object.is_a?(Class)
+        object
+      else
+        object.class
+      end
+    end
+
+    def policy_class_defined?(object_to_check)
+      object_to_check.public_methods.include?(:policy_class)
+    end
+
+    def model_name_defined?(object_to_check)
+      object_to_check.public_methods.include?(:model_name)
     end
   end
 end
