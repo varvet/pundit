@@ -83,9 +83,12 @@ module Pundit
   attr_writer :policy_scope
 
   def policy(record)
-    @policy or Pundit.policy!(pundit_user, record, self.class.parent)
+    @_policy or Pundit.policy!(pundit_user, record, self.class.parent)
   end
-  attr_writer :policy
+
+  def policy=(policy)
+    @_policy = policy
+  end
 
   def pundit_user
     current_user
