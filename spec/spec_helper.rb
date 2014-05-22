@@ -54,3 +54,9 @@ class ArticleTag
     end
   end
 end
+class ModelWithProtectedPolicy
+  protected
+  def policy_class
+    BlogPolicy
+  end
+end

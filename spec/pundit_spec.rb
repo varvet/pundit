@@ -8,6 +8,7 @@ describe Pundit do
   let(:controller) { double(:current_user => user, :params => { :action => "update" }).tap { |c| c.extend(Pundit) } }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
+  let(:protected_policy_instance) { ModelWithProtectedPolicy.new }
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
@@ -96,6 +97,12 @@ describe Pundit do
         expect(policy.tag).to eq ArticleTag
       end
     end
+
+    context 'when the policy class method is protected' do
+      it 'should return nil' do
+        expect(Pundit.policy(user, protected_policy_instance)).to be_nil
+      end
+    end
   end
 
   describe ".policy!" do
@@ -126,6 +133,12 @@ describe Pundit do
     it "throws an exception if the given policy can't be found" do
       expect { Pundit.policy!(user, article) }.to raise_error(Pundit::NotDefinedError)
       expect { Pundit.policy!(user, Article) }.to raise_error(Pundit::NotDefinedError)
+    end
+
+    context 'when the policy class method is protected' do
+      it 'should throw an exception' do
+        expect { Pundit.policy!(user, protected_policy_instance) }.to raise_error(Pundit::NotDefinedError)
+      end
     end
   end
 
