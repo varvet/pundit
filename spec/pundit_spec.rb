@@ -66,6 +66,12 @@ describe Pundit do
       expect(policy.comment).to eq Comment
     end
 
+    it "returns an instantiated policy given a symbol" do
+      policy = Pundit.policy(user, :dashboard)
+      expect(policy.class).to eq DashboardPolicy
+      expect(policy.user).to eq user
+    end
+
     it "returns nil if the given policy can't be found" do
       expect(Pundit.policy(user, article)).to be_nil
       expect(Pundit.policy(user, Article)).to be_nil
@@ -218,6 +224,22 @@ describe Pundit do
       controller.policy_scope = new_scope
 
       expect(controller.policy_scope(post)).to eq new_scope
+    end
+  end
+
+  describe ".policy_attributes" do
+    it "returns the permitted attributes" do
+      expect(controller.policy_attributes(:post)).to eq ['title']
+      expect(controller.policy_attributes(post)).to eq ['title']
+      expect(controller.policy_attributes(Post)).to eq ['title']
+    end
+
+    it "throws an exception if the given policy can't be found" do
+      expect { controller.policy_attributes(:article) }.to raise_error(Pundit::NotDefinedError)
+    end
+
+    it "throws an exception if the given policy doesn't respond to #permitted_attributes" do
+      expect { controller.policy_attributes(:blog) }.to raise_error(Pundit::NotDefinedError)
     end
   end
 end

@@ -13,6 +13,9 @@ class PostPolicy < Struct.new(:user, :post)
   def show?
     true
   end
+  def permitted_attributes
+    ['title']
+  end
 end
 class PostPolicy::Scope < Struct.new(:user, :scope)
   def resolve
@@ -53,4 +56,7 @@ class ArticleTag
       end
     end
   end
+end
+
+class DashboardPolicy < Struct.new(:user, :dashboard)
 end
