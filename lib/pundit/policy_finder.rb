@@ -1,9 +1,10 @@
 module Pundit
   class PolicyFinder
-    attr_reader :object
+    attr_reader :object, :namespace
 
-    def initialize(object)
+    def initialize(object, namespace = Object)
       @object = object
+      @namespace = namespace
     end
 
     def scope
@@ -14,7 +15,7 @@ module Pundit
 
     def policy
       klass = find
-      klass = klass.constantize if klass.is_a?(String)
+      klass = namespace.const_get(klass) if klass.is_a?(String)
       klass
     rescue NameError
       nil
