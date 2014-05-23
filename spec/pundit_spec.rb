@@ -207,6 +207,13 @@ describe Pundit do
 
       expect(controller.policy(post)).to eq new_policy
     end
+
+    it "memoizes the policy" do
+      expect(Pundit).to receive(:policy!).exactly(:once).and_call_original
+
+      controller.policy(comment)
+      controller.policy(comment)
+    end
   end
 
   describe ".policy_scope" do
