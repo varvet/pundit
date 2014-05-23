@@ -54,3 +54,23 @@ class ArticleTag
     end
   end
 end
+
+class Controller
+  include Pundit
+
+  attr_reader :current_user, :params
+
+  def initialize(current_user, params)
+    @current_user = current_user
+    @params = params
+  end
+end
+
+module Admin
+  class CommentPolicy < Struct.new(:user, :comment); end
+  class Controller
+    include Pundit
+
+    attr_reader :current_user, :params
+  end
+end
