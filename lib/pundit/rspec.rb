@@ -46,5 +46,10 @@ module Pundit
 end
 
 RSpec.configure do |config|
-  config.include Pundit::RSpec::PolicyExampleGroup, :type => :policy, :file_path => /spec\/policies/
+  if RSpec::Core::Version::STRING.starts_with?("3")
+    config.include Pundit::RSpec::PolicyExampleGroup, :type => :policy, :file_path => /spec\/policies/
+  else
+    config.include Pundit::RSpec::PolicyExampleGroup, :type => :policy,
+        example_group: {:file_path => /spec\/policies/}
+  end
 end
