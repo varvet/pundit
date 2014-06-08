@@ -3,7 +3,7 @@ require "pry"
 require "active_support/core_ext"
 require "active_model/naming"
 
-class PostPolicy < Struct.new(:user, :post)
+PostPolicy = Struct.new(:user, :post) do
   def update?
     post.user == user
   end
@@ -14,19 +14,19 @@ class PostPolicy < Struct.new(:user, :post)
     true
   end
 end
-class PostPolicy::Scope < Struct.new(:user, :scope)
+PostPolicy::Scope = Struct.new(:user, :scope) do
   def resolve
     scope.published
   end
 end
-class Post < Struct.new(:user)
+Post = Struct.new(:user) do
   def self.published
     :published
   end
 end
 
-class CommentPolicy < Struct.new(:user, :comment); end
-class CommentPolicy::Scope < Struct.new(:user, :scope)
+CommentPolicy = Struct.new(:user, :comment)
+CommentPolicy::Scope = Struct.new(:user, :scope) do
   def resolve
     scope
   end
@@ -35,7 +35,7 @@ class Comment; extend ActiveModel::Naming; end
 
 class Article; end
 
-class BlogPolicy < Struct.new(:user, :blog); end
+BlogPolicy = Struct.new(:user, :blog)
 class Blog; end
 class ArtificialBlog < Blog
   def self.policy_class
@@ -67,7 +67,7 @@ class Controller
 end
 
 module Admin
-  class CommentPolicy < Struct.new(:user, :comment); end
+  CommentPolicy = Struct.new(:user, :comment)
   class Controller
     include Pundit
 
