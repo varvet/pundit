@@ -1,6 +1,6 @@
 <% module_namespacing do -%>
 class <%= class_name %>Policy < ApplicationPolicy
-  class Scope < Struct.new(:user, :scope)
+  class Scope < Scope
     def resolve
       scope
     end
