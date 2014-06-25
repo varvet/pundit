@@ -142,7 +142,7 @@ end
 
 Likewise, Pundit also adds `verify_policy_scoped` to your controller.  This
 will raise an exception in the vein of `verify_authorized`.  However it tracks
-if `policy_scoped` is used instead of `authorize`.  This is mostly useful for
+if `policy_scope` is used instead of `authorize`.  This is mostly useful for
 controller actions like `index` which find collections with a scope and don't
 authorize individual instances.
 
