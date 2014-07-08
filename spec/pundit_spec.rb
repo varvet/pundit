@@ -148,7 +148,7 @@ describe Pundit do
     end
 
     it "raises an exception when policy_scope is not used" do
-      expect { controller.verify_policy_scoped }.to raise_error(Pundit::AuthorizationNotPerformedError)
+      expect { controller.verify_policy_scoped }.to raise_error(Pundit::PolicyScopingNotPerformedError)
     end
   end
 
