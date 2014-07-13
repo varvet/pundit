@@ -11,6 +11,7 @@ module Pundit
     attr_accessor :query, :record, :policy
   end
   class AuthorizationNotPerformedError < StandardError; end
+  class PolicyScopingNotPerformedError < AuthorizationNotPerformedError; end
   class NotDefinedError < StandardError; end
 
   extend ActiveSupport::Concern
@@ -58,7 +59,7 @@ module Pundit
   end
 
   def verify_policy_scoped
-    raise AuthorizationNotPerformedError unless @_policy_scoped
+    raise PolicyScopingNotPerformedError unless @_policy_scoped
   end
 
   def authorize(record, query=nil)
