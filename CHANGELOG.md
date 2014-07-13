@@ -1,9 +1,11 @@
 # Pundit
 
-## 0.2.4 (unreleased)
+## 0.3.0 (unreleased)
 
-- Generate blank policy spec/test files for Rspec/MiniTest/Test::Unit in Rails (#138)
+- Enable namespaced policies (#152)
 - Extend the default `ApplicationPolicy` with an `ApplicationPolicy::Scope` (#120)
+- Fix RSpec 3 deprecation warnings for built-in matchers (#162)
+- Generate blank policy spec/test files for Rspec/MiniTest/Test::Unit in Rails (#138)
 
 ## 0.2.3 (2014-04-06)
 
