@@ -55,6 +55,8 @@ class ArticleTag
   end
 end
 
+class DashboardPolicy < Struct.new(:user, :dashboard); end
+
 class Controller
   include Pundit
 

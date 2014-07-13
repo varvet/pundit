@@ -43,6 +43,8 @@ module Pundit
           object.class.model_name
         elsif object.is_a?(Class)
           object
+        elsif object.is_a?(Symbol)
+          object.to_s.classify
         else
           object.class
         end

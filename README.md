@@ -143,6 +143,26 @@ end
 When no namespaced policy can be found, Pundit falls back to using the
 non-namespaced policy.
 
+## Headless policies
+
+Given there is a policy without a corresponding model / ruby class, 
+you can retrieve it by passing a symbol.
+
+```ruby
+# app/policies/dashboard_policy.rb
+class DashboardPolicy < Struct.new(:user, :dashboard)
+  # ...
+end
+
+# In controllers
+authorize :dashboard, :show?
+
+# In views
+<% if policy(:dashboard).show? %>
+  <%= link_to 'Dashboard', dashboard_path %>
+<% end %>
+```
+
 ## Ensuring policies are used
 
 Pundit adds a method called `verify_authorized` to your controllers. This
