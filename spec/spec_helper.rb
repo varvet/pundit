@@ -32,6 +32,9 @@ class CommentPolicy::Scope < Struct.new(:user, :scope)
   end
 end
 class Comment; extend ActiveModel::Naming; end
+module Admin
+  class Comment; end
+end
 
 class Article; end
 
