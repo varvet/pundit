@@ -4,6 +4,7 @@ describe Pundit do
   let(:user) { double }
   let(:post) { Post.new(user) }
   let(:comment) { Comment.new }
+  let(:nested_comment) { Admin::Comment.new }
   let(:article) { Article.new }
   let(:controller) { Controller.new(user, { :action => 'update' }) }
   let(:artificial_blog) { ArtificialBlog.new }
@@ -199,6 +200,7 @@ describe Pundit do
 
     it "looks up the policy class based on the caller's namespace" do
       expect(nested_controller.policy(comment).class).to eq Admin::CommentPolicy
+      expect(nested_controller.policy(nested_comment).class).to eq Admin::CommentPolicy
     end
 
     it "falls back to the non-namespaced policy class if there isn't a namespaced one" do

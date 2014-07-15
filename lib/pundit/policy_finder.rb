@@ -15,7 +15,7 @@ module Pundit
 
     def policy
       klass = find
-      klass = namespace.const_get(klass) if klass.is_a?(String)
+      klass = namespace.const_get(klass.demodulize) if klass.is_a?(String)
       klass
     rescue NameError
       nil
