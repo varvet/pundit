@@ -97,6 +97,13 @@ describe Pundit do
         expect(policy.user).to eq user
         expect(policy.tag).to eq ArticleTag
       end
+
+      it "returns an instantiated policy given a symbol" do
+        policy = Pundit.policy(user, :dashboard)
+        expect(policy.class).to eq DashboardPolicy
+        expect(policy.user).to eq user
+        expect(policy.dashboard).to eq :dashboard
+      end
     end
   end
 
@@ -123,6 +130,13 @@ describe Pundit do
       policy = Pundit.policy!(user, Comment)
       expect(policy.user).to eq user
       expect(policy.comment).to eq Comment
+    end
+
+    it "returns an instantiated policy given a symbol" do
+      policy = Pundit.policy!(user, :dashboard)
+      expect(policy.class).to eq DashboardPolicy
+      expect(policy.user).to eq user
+      expect(policy.dashboard).to eq :dashboard
     end
 
     it "throws an exception if the given policy can't be found" do
