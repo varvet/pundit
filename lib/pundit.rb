@@ -50,6 +50,7 @@ module Pundit
       hide_action :authorize
       hide_action :verify_authorized
       hide_action :verify_policy_scoped
+      hide_action :policy_namespace
       hide_action :pundit_user
     end
   end
@@ -77,14 +78,14 @@ module Pundit
     true
   end
 
-  def policy_scope(scope)
+  def policy_scope(scope, namespace = nil)
     @_policy_scoped = true
-    @policy_scope or Pundit.policy_scope!(pundit_user, scope, self.class.parent)
+    @policy_scope or Pundit.policy_scope!(pundit_user, scope, find_namespace(namespace))
   end
   attr_writer :policy_scope
 
-  def policy(record)
-    @_policy or Pundit.policy!(pundit_user, record, self.class.parent)
+  def policy(record, namespace = nil)
+    @_policy or Pundit.policy!(pundit_user, record, find_namespace(namespace))
   end
 
   def policy=(policy)
@@ -93,5 +94,19 @@ module Pundit
 
   def pundit_user
     current_user
+  end
+
+  def policy_namespace
+    namespace = self.class.name.deconstantize
+    return Object if namespace.empty?
+    namespace.constantize
+  end
+
+  private
+
+  def find_namespace(namespace = nil)
+    return nil if namespace == false
+    return namespace if namespace
+    policy_namespace
   end
 end

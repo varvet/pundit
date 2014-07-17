@@ -9,7 +9,7 @@ describe Pundit do
   let(:controller) { Controller.new(user, { :action => 'update' }) }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
-  let(:nested_controller) { Admin::Controller.new }
+  let(:nested_controller) { Member::Controller.new }
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
@@ -66,6 +66,13 @@ describe Pundit do
       policy = Pundit.policy(user, Comment)
       expect(policy.user).to eq user
       expect(policy.comment).to eq Comment
+    end
+
+    it "returns an instantiated policy given an namespaced active model class" do
+      policy = Pundit.policy(user, Admin::Comment)
+      expect(policy.user).to eq user
+      expect(policy.comment).to eq Admin::Comment
+      expect(policy.class).to eq Admin::CommentPolicy
     end
 
     it "returns nil if the given policy can't be found" do
@@ -199,8 +206,17 @@ describe Pundit do
     end
 
     it "looks up the policy class based on the caller's namespace" do
-      expect(nested_controller.policy(comment).class).to eq Admin::CommentPolicy
-      expect(nested_controller.policy(nested_comment).class).to eq Admin::CommentPolicy
+      expect(nested_controller.policy(comment).class).to eq Member::CommentPolicy
+      expect(nested_controller.policy(nested_comment).class).to eq Member::CommentPolicy
+    end
+
+    it "allows overriding policy namespace" do
+      expect(nested_controller.policy(comment, false).class).to eq CommentPolicy
+      # not sure about this - MyEngine::Commment will require policy(comment, MyEngine)
+      expect(nested_controller.policy(nested_comment, false).class).to eq CommentPolicy
+      expect(controller.policy(comment, Member).class).to eq Member::CommentPolicy
+      expect(controller.policy(comment, Member).update?).to be_falsey
+      expect(controller.policy(nested_comment, Member).class).to eq Member::CommentPolicy
     end
 
     it "falls back to the non-namespaced policy class if there isn't a namespaced one" do
