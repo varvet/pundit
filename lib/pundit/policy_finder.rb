@@ -15,13 +15,7 @@ module Pundit
 
     def policy
       klass = find
-
-      if klass.is_a?(String)
-        klass = klass.demodulize unless namespace == Object
-        return klass.constantize unless namespace
-        klass = namespace.const_get(klass)
-      end
-
+      klass = apply_namespace(klass) if klass.is_a?(String)
       klass
     rescue NameError
       nil
@@ -36,6 +30,22 @@ module Pundit
     end
 
   private
+
+    def apply_namespace(klass)
+      policy_namespace = namespace
+
+      if policy_namespace
+        if policy_namespace == Object && klass.constantize.parent != Object
+          policy_namespace = klass.deconstantize.constantize
+        end
+        klass = klass.demodulize
+        klass = policy_namespace.const_get(klass)
+      else
+        klass = klass.demodulize.constantize
+      end
+
+      klass
+    end
 
     def find
       if object.respond_to?(:policy_class)
