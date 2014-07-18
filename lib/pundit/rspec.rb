@@ -5,13 +5,13 @@ module Pundit
     module Matchers
       extend ::RSpec::Matchers::DSL
 
-      matcher :permit do |user, record|
+      matcher :permit do |user, record, *args|
         match_proc = lambda do |policy|
-          permissions.all? { |permission| policy.new(user, record).public_send(permission) }
+          permissions.all? { |permission| policy.new(user, record, *args).public_send(permission) }
         end
 
         match_when_negated_proc = lambda do |policy|
-          permissions.none? { |permission| policy.new(user, record).public_send(permission) }
+          permissions.none? { |permission| policy.new(user, record, *args).public_send(permission) }
         end
 
         failure_message_proc = lambda do |policy|
