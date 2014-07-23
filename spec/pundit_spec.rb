@@ -217,6 +217,10 @@ describe Pundit do
       expect(nested_controller.policy(nested_comment).class).to eq Admin::CommentPolicy
     end
 
+    it "accepts a namespace given as an argument" do
+      expect(controller.policy(comment, namespace: Admin).class).to eq Admin::CommentPolicy
+    end
+
     it "falls back to the non-namespaced policy class if there isn't a namespaced one" do
       expect(nested_controller.policy(post).class).to eq PostPolicy
     end
