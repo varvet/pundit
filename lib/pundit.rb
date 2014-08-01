@@ -83,8 +83,8 @@ module Pundit
   end
   attr_writer :policy_scope
 
-  def policy(record, options={})
-    namespace = options[:namespace] || self.class.parent
+  def policy(record)
+    namespace = self.class.deconstantize
     @_policy or Pundit.policy!(pundit_user, record, namespace)
   end
 
