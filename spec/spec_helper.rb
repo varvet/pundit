@@ -61,6 +61,7 @@ class CommentPolicy::Scope < Struct.new(:user, :scope)
 end
 class Comment; extend ActiveModel::Naming; end
 module Admin
+  class CommentPolicy < Struct.new(:user, :comment); end
   class Comment; end
 end
 
@@ -99,8 +100,13 @@ class Controller
   end
 end
 
-module Admin
-  class CommentPolicy < Struct.new(:user, :comment); end
+module Member
+  class CommentPolicy < Struct.new(:user, :comment)
+    def update?
+      false
+    end
+  end
+
   class Controller
     include Pundit
 
