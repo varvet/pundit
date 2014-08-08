@@ -84,7 +84,7 @@ module Pundit
   attr_writer :policy_scope
 
   def policy(record)
-    @_policy or Pundit.policy!(pundit_user, record, self.class.parent)
+    @_policy ||= Pundit.policy!(pundit_user, record, self.class.parent)
   end
 
   def policy=(policy)
