@@ -107,3 +107,14 @@ module Admin
     attr_reader :current_user, :params
   end
 end
+
+module Api
+  module V1
+    module Admin
+      class Controller
+        include Pundit
+        attr_reader :current_user, :params
+      end
+    end
+  end
+end
