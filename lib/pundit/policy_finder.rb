@@ -14,38 +14,48 @@ module Pundit
     end
 
     def policy
-      if object.respond_to?(:policy_class)
+      return @policy if defined?(@policy)
+
+      @policy = if object.respond_to?(:policy_class)
         object.policy_class
       elsif object.class.respond_to?(:policy_class)
         object.class.policy_class
       else
-        begin
-          policy_in_namespace(namespace)
-        rescue NameError
-          policy_in_namespace(object_namespace)
-        end
+        lookup_policy
       end
-    rescue NameError
-      nil
     end
 
     def scope!
-      scope or raise NotDefinedError, "unable to find scope [#{namespace}::#{klass_name}::Scope, #{object_namespace}::#{klass_name}::Scope] for #{object}"
+      scope or raise NotDefinedError, "unable to find scope #{policy}::Scope for #{object}"
     end
 
     def policy!
-      policy or raise NotDefinedError, "unable to find policy [#{namespace}::#{klass_name}, #{object_namespace}::#{klass_name}] for #{object}"
+      policy or raise NotDefinedError, "unable to find policy #{policy_fqns} for #{object}"
     end
 
   private
-
-    def policy_in_namespace(namespace)
-      "#{namespace}::#{klass_name}".constantize
-    end
-
     def object_namespace
       ns = object.class.name.deconstantize
       ns.empty? ? Object : ns.constantize
+    end
+
+    def lookup_policy
+      policy_fqns.each do |fqn|
+        begin
+          return fqn.constantize
+        rescue NameError
+        end
+      end
+
+      return nil
+    end
+
+    def policy_fqns
+      sanitize_fqns(["#{namespace}::#{klass_name}", "#{object_namespace}::#{klass_name}"])
+    end
+
+    def sanitize_fqns(fqns)
+      fqns.map { |fqn| fqn.gsub(/^Object::/, '') }
     end
 
     def klass_name

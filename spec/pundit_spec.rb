@@ -10,6 +10,7 @@ describe Pundit do
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
   let(:nested_controller) { Admin::Controller.new }
+  let(:deep_nested_controller) { Api::V1::Admin::Controller.new }
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
@@ -215,6 +216,7 @@ describe Pundit do
     it "looks up the policy class based on the caller's namespace" do
       expect(nested_controller.policy(comment).class).to eq Admin::CommentPolicy
       expect(nested_controller.policy(nested_comment).class).to eq Admin::CommentPolicy
+      expect(deep_nested_controller.policy(nested_comment).class).to eq Admin::CommentPolicy
     end
 
     it "falls back to the non-namespaced policy class if there isn't a namespaced one" do
