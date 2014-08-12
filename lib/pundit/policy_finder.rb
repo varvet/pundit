@@ -14,9 +14,17 @@ module Pundit
     end
 
     def policy
-      klass = find
-      klass = namespace.const_get(klass.demodulize) if klass.is_a?(String)
-      klass
+      if object.respond_to?(:policy_class)
+        object.policy_class
+      elsif object.class.respond_to?(:policy_class)
+        object.class.policy_class
+      else
+        begin
+          policy_in_namespace(namespace)
+        rescue NameError
+          policy_in_namespace(object_namespace)
+        end
+      end
     rescue NameError
       nil
     end
@@ -31,25 +39,28 @@ module Pundit
 
   private
 
-    def find
-      if object.respond_to?(:policy_class)
-        object.policy_class
-      elsif object.class.respond_to?(:policy_class)
-        object.class.policy_class
+    def policy_in_namespace(namespace)
+      "#{namespace}::#{klass_name}".constantize
+    end
+
+    def object_namespace
+      ns = object.class.name.deconstantize
+      ns.empty? ? Object : ns.constantize
+    end
+
+    def klass_name
+      klass = if object.respond_to?(:model_name)
+        object.model_name
+      elsif object.class.respond_to?(:model_name)
+        object.class.model_name
+      elsif object.is_a?(Class)
+        object
+      elsif object.is_a?(Symbol)
+        object.to_s.classify
       else
-        klass = if object.respond_to?(:model_name)
-          object.model_name
-        elsif object.class.respond_to?(:model_name)
-          object.class.model_name
-        elsif object.is_a?(Class)
-          object
-        elsif object.is_a?(Symbol)
-          object.to_s.classify
-        else
-          object.class
-        end
-        "#{klass}Policy"
+        object.class
       end
+      "#{klass}Policy".demodulize
     end
   end
 end
