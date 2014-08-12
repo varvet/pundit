@@ -143,6 +143,17 @@ end
 When no namespaced policy can be found, Pundit falls back to using the
 non-namespaced policy.
 
+Additionally, you can specify a custom namespace:
+
+```erb
+<% if policy(@post, namespace: Awesome).update? %>
+  <%= link_to "Edit post", edit_post_path(@post) %>
+<% end %>
+```
+
+... assuming you have an `Awesome::PostPolicy` you want to use
+from a controller that's not namespaced under `Awesome`.
+
 ## Headless policies
 
 Given there is a policy without a corresponding model / ruby class, 

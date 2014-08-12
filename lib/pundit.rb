@@ -83,8 +83,9 @@ module Pundit
   end
   attr_writer :policy_scope
 
-  def policy(record)
-    @_policy or Pundit.policy!(pundit_user, record, self.class.parent)
+  def policy(record, options={})
+    namespace = options[:namespace] || self.class.parent
+    @_policy or Pundit.policy!(pundit_user, record, namespace)
   end
 
   def policy=(policy)
