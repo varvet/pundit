@@ -70,12 +70,15 @@ assumptions about this class:
 That's it really.
 
 Usually you'll want to inherit from the application policy created by the 
-generator, or set up your own base class to inherit from:
+generator, or set up your own base class to inherit from.  The generated application policy
+accepts two arguments, user and resource.  Once again, Pundit will call `current_user`
+to retrieve what is passed in here, and the second argument represents any
+model object whose authorization you want to check.
 
 ``` ruby
 class PostPolicy < ApplicationPolicy
   def update?
-    user.admin? or not post.published?
+    user.admin? or not resource.published?
   end
 end
 ```
