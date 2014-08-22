@@ -4,12 +4,10 @@ describe Pundit do
   let(:user) { double }
   let(:post) { Post.new(user) }
   let(:comment) { Comment.new }
-  let(:nested_comment) { Admin::Comment.new }
   let(:article) { Article.new }
   let(:controller) { Controller.new(user, { :action => 'update' }) }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
-  let(:nested_controller) { Admin::Controller.new }
 
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
@@ -210,15 +208,6 @@ describe Pundit do
 
     it "throws an exception if the given policy can't be found" do
       expect { controller.policy(article) }.to raise_error(Pundit::NotDefinedError)
-    end
-
-    it "looks up the policy class based on the caller's namespace" do
-      expect(nested_controller.policy(comment).class).to eq Admin::CommentPolicy
-      expect(nested_controller.policy(nested_comment).class).to eq Admin::CommentPolicy
-    end
-
-    it "falls back to the non-namespaced policy class if there isn't a namespaced one" do
-      expect(nested_controller.policy(post).class).to eq PostPolicy
     end
 
     it "allows policy to be injected" do

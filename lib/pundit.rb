@@ -17,22 +17,22 @@ module Pundit
   extend ActiveSupport::Concern
 
   class << self
-    def policy_scope(user, scope, namespace = Object)
-      policy_scope = PolicyFinder.new(scope, namespace).scope
+    def policy_scope(user, scope)
+      policy_scope = PolicyFinder.new(scope).scope
       policy_scope.new(user, scope).resolve if policy_scope
     end
 
-    def policy_scope!(user, scope, namespace = Object)
-      PolicyFinder.new(scope, namespace).scope!.new(user, scope).resolve
+    def policy_scope!(user, scope)
+      PolicyFinder.new(scope).scope!.new(user, scope).resolve
     end
 
-    def policy(user, record, namespace = Object)
-      policy = PolicyFinder.new(record, namespace).policy
+    def policy(user, record)
+      policy = PolicyFinder.new(record).policy
       policy.new(user, record) if policy
     end
 
-    def policy!(user, record, namespace = Object)
-      PolicyFinder.new(record, namespace).policy!.new(user, record)
+    def policy!(user, record)
+      PolicyFinder.new(record).policy!.new(user, record)
     end
   end
 
@@ -79,12 +79,12 @@ module Pundit
 
   def policy_scope(scope)
     @_policy_scoped = true
-    @policy_scope or Pundit.policy_scope!(pundit_user, scope, self.class.parent)
+    @policy_scope or Pundit.policy_scope!(pundit_user, scope)
   end
   attr_writer :policy_scope
 
   def policy(record)
-    @_policy or Pundit.policy!(pundit_user, record, self.class.parent)
+    @_policy or Pundit.policy!(pundit_user, record)
   end
 
   def policy=(policy)

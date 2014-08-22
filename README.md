@@ -54,7 +54,7 @@ class PostPolicy
 end
 ```
 
-As you can see, this is just a plain Ruby class. Pundit makes the following 
+As you can see, this is just a plain Ruby class. Pundit makes the following
 assumptions about this class:
 
 - The class has the same name as some kind of model class, only suffixed
@@ -69,7 +69,7 @@ assumptions about this class:
 
 That's it really.
 
-Usually you'll want to inherit from the application policy created by the 
+Usually you'll want to inherit from the application policy created by the
 generator, or set up your own base class to inherit from:
 
 ``` ruby
@@ -126,26 +126,9 @@ conditionally showing links or buttons in the view:
   <%= link_to "Edit post", edit_post_path(@post) %>
 <% end %>
 ```
-## Namespaced policies
-
-You can namespace your policies, e.g. for using an `Admin::PostPolicy`
-in your `Admin::PostsController`. Since Pundit guesses the namespace
-from the controller you're calling `authorize @post` from, all you
-need to do to use a namespaced policy is create it.
-
-```ruby
-# app/policies/admin/post_policy.rb
-class Admin::PostPolicy < Admin::ApplicationPolicy
-  # ...
-end
-```
-
-When no namespaced policy can be found, Pundit falls back to using the
-non-namespaced policy.
-
 ## Headless policies
 
-Given there is a policy without a corresponding model / ruby class, 
+Given there is a policy without a corresponding model / ruby class,
 you can retrieve it by passing a symbol.
 
 ```ruby
@@ -198,12 +181,12 @@ define a class called a policy scope. It can look something like this:
 class PostPolicy < ApplicationPolicy
   class Scope
     attr_reader :user, :scope
-    
+
     def initialize(user, scope)
       @user = user
       @scope = scope
     end
-    
+
     def resolve
       if user.admin?
         scope.all

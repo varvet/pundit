@@ -60,9 +60,6 @@ class CommentPolicy::Scope < Struct.new(:user, :scope)
   end
 end
 class Comment; extend ActiveModel::Naming; end
-module Admin
-  class Comment; end
-end
 
 class Article; end
 
@@ -96,14 +93,5 @@ class Controller
   def initialize(current_user, params)
     @current_user = current_user
     @params = params
-  end
-end
-
-module Admin
-  class CommentPolicy < Struct.new(:user, :comment); end
-  class Controller
-    include Pundit
-
-    attr_reader :current_user, :params
   end
 end
