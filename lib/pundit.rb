@@ -43,10 +43,10 @@ module Pundit
       helper_method :pundit_user
     end
     if respond_to?(:hide_action)
-      hide_action :policy_scope
-      hide_action :policy_scope=
       hide_action :policy
-      hide_action :policy=
+      hide_action :policy_scope
+      hide_action :policies
+      hide_action :policy_scopes
       hide_action :authorize
       hide_action :verify_authorized
       hide_action :verify_policy_scoped
@@ -81,7 +81,6 @@ module Pundit
     @_policy_scoped = true
     policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
   end
-  attr_writer :policy_scope
 
   def policy(record)
     policies[record] ||= Pundit.policy!(pundit_user, record)
