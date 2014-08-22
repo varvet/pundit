@@ -79,16 +79,20 @@ module Pundit
 
   def policy_scope(scope)
     @_policy_scoped = true
-    @policy_scope or Pundit.policy_scope!(pundit_user, scope)
+    policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
   end
   attr_writer :policy_scope
 
   def policy(record)
-    @_policy or Pundit.policy!(pundit_user, record)
+    policies[record] ||= Pundit.policy!(pundit_user, record)
   end
 
-  def policy=(policy)
-    @_policy = policy
+  def policies
+    @_policies ||= {}
+  end
+
+  def policy_scopes
+    @_policy_scopes ||= {}
   end
 
   def pundit_user

@@ -212,7 +212,7 @@ describe Pundit do
 
     it "allows policy to be injected" do
       new_policy = OpenStruct.new
-      controller.policy = new_policy
+      controller.policies[post] = new_policy
 
       expect(controller.policy(post)).to eq new_policy
     end
@@ -229,9 +229,9 @@ describe Pundit do
 
     it "allows policy_scope to be injected" do
       new_scope = OpenStruct.new
-      controller.policy_scope = new_scope
+      controller.policy_scopes[Post] = new_scope
 
-      expect(controller.policy_scope(post)).to eq new_scope
+      expect(controller.policy_scope(Post)).to eq new_scope
     end
   end
 end
