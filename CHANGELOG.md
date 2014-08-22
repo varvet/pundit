@@ -1,6 +1,12 @@
 # Pundit
 
-## 0.3.0 (unreleased)
+## 1.0.0 (unreleased)
+
+- Caches policy scopes and policies.
+- Explicitly setting the policy for the controller via `controller.policy = foo` has been removed. Instead use `controller.policies[record] = foo`.
+- Explicitly setting the policy scope for the controller via `controller.policy_policy = foo` has been removed. Instead use `controller.policy_scopes[scope] = foo`.
+
+## 0.3.0 (2014-08-22)
 
 - Extend the default `ApplicationPolicy` with an `ApplicationPolicy::Scope` (#120)
 - Fix RSpec 3 deprecation warnings for built-in matchers (#162)
