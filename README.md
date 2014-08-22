@@ -75,10 +75,12 @@ generator, or set up your own base class to inherit from:
 ``` ruby
 class PostPolicy < ApplicationPolicy
   def update?
-    user.admin? or not post.published?
+    user.admin? or not record.published?
   end
 end
 ```
+
+In the generated `ApplicationPolicy`, the model object is called `record`.
 
 Supposing that you have an instance of class `Post`, Pundit now lets you do
 this in your controller:
