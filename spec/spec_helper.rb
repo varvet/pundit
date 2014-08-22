@@ -31,6 +31,19 @@ RSpec.configure do |config|
   config.include PunditSpecHelper
 end
 
+class AuthorPolicy < Struct.new(:user, :author)
+  attr_reader :website
+
+  def initialize(user, author, website)
+    super(user, author)
+    @website = website
+  end
+
+  def update?
+    user.email == author.email && website.owner == user
+  end
+end
+
 class PostPolicy < Struct.new(:user, :post)
   def update?
     post.user == user
