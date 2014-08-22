@@ -341,7 +341,7 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-### Creating custom error messages
+## Creating custom error messages
 
 `NotAuthorizedError`s provide information on what query (e.g. `:create?`), what
 record (e.g. an instance of `Post`), and what policy (e.g. an instance of
@@ -405,6 +405,42 @@ define a method in your controller called `pundit_user`.
 ```ruby
 def pundit_user
   User.find_by_other_means
+end
+```
+
+## Additional context
+
+Pundit strongly encourages you to model your application in such a way that the
+only context you need for authorization is a user object and a domain model that
+you want to check authorization for. If you find yourself needing more context than
+that, consider whether you are authorizing the right domain model, maybe another
+domain model (or a wrapper around multiple domain models) can provide the context
+you need.
+
+Pundit does not allow you to pass additional arguments to policies for precisely
+this reason.
+
+However, in very rare cases, you might need to authorize based on more context than just
+the currently authenticated user. Suppose for example that authorization is dependent
+on IP address in addition to the authenticated user. In that case, one option is to
+create a special class which wraps up both user and IP and passes it to the policy.
+
+``` ruby
+class UserContext
+  attr_reader :user, :ip
+  
+  def initialze(user, ip)
+    @user = user
+    @ip = ip
+  end
+end
+
+class ApplicationController
+  include Pundit
+  
+  def pundit_user
+    UserContext.new(current_user, request.ip)
+  end
 end
 ```
 
