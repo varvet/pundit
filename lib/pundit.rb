@@ -55,16 +55,16 @@ module Pundit
   end
 
   def verify_authorized
-    raise AuthorizationNotPerformedError unless @_policy_authorized
+    raise AuthorizationNotPerformedError unless @_pundit_policy_authorized
   end
 
   def verify_policy_scoped
-    raise PolicyScopingNotPerformedError unless @_policy_scoped
+    raise PolicyScopingNotPerformedError unless @_pundit_policy_scoped
   end
 
   def authorize(record, query=nil)
     query ||= params[:action].to_s + "?"
-    @_policy_authorized = true
+    @_pundit_policy_authorized = true
 
     policy = policy(record)
     unless policy.public_send(query)
@@ -78,7 +78,7 @@ module Pundit
   end
 
   def policy_scope(scope)
-    @_policy_scoped = true
+    @_pundit_policy_scoped = true
     policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
   end
 
@@ -87,11 +87,11 @@ module Pundit
   end
 
   def policies
-    @_policies ||= {}
+    @_pundit_policies ||= {}
   end
 
   def policy_scopes
-    @_policy_scopes ||= {}
+    @_pundit_policy_scopes ||= {}
   end
 
   def pundit_user
