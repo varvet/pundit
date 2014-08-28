@@ -181,7 +181,11 @@ describe Pundit do
     end
 
     it "raises an error when the permission check fails" do
-      expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError)
+      klass = Pundit::NotAuthorizedError
+      message= /not allowed to 'eat' this #<Stringy:0x[^ ]* @string="taco">/
+      object = Stringy.new("taco")
+
+      expect { controller.authorize(object, :eat) }.to raise_error(klass, message)
     end
 
     it "raises an error with a query and action" do

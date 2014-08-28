@@ -9,6 +9,10 @@ require "active_support/dependencies/autoload"
 module Pundit
   class NotAuthorizedError < StandardError
     attr_accessor :query, :record, :policy
+
+    def to_s
+      "not allowed to '#{query}' this #{record.inspect}"
+    end
   end
   class AuthorizationNotPerformedError < StandardError; end
   class PolicyScopingNotPerformedError < AuthorizationNotPerformedError; end
@@ -68,7 +72,7 @@ module Pundit
 
     policy = policy(record)
     unless policy.public_send(query)
-      error = NotAuthorizedError.new("not allowed to #{query} this #{record}")
+      error = NotAuthorizedError.new
       error.query, error.record, error.policy = query, record, policy
 
       raise error
