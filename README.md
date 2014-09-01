@@ -431,7 +431,7 @@ create a special class which wraps up both user and IP and passes it to the poli
 class UserContext
   attr_reader :user, :ip
   
-  def initialze(user, ip)
+  def initialize(user, ip)
     @user = user
     @ip = ip
   end
