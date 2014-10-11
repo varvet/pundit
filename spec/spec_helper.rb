@@ -85,6 +85,10 @@ end
 
 class DashboardPolicy < Struct.new(:user, :dashboard); end
 
+module Project
+  class DashboardPolicy < Struct.new(:user, :dashboard); end
+end
+
 class Controller
   include Pundit
 

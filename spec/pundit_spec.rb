@@ -102,6 +102,13 @@ describe Pundit do
         expect(policy.user).to eq user
         expect(policy.dashboard).to eq :dashboard
       end
+
+      it "returns an instantiated policy given an array" do
+        policy = Pundit.policy(user, [:project, :dashboard])
+        expect(policy.class).to eq Project::DashboardPolicy
+        expect(policy.user).to eq user
+        expect(policy.dashboard).to eq [:project, :dashboard]
+      end
     end
   end
 
@@ -135,6 +142,13 @@ describe Pundit do
       expect(policy.class).to eq DashboardPolicy
       expect(policy.user).to eq user
       expect(policy.dashboard).to eq :dashboard
+    end
+
+    it "returns an instantiated policy given an array" do
+      policy = Pundit.policy!(user, [:project, :dashboard])
+      expect(policy.class).to eq Project::DashboardPolicy
+      expect(policy.user).to eq user
+      expect(policy.dashboard).to eq [:project, :dashboard]
     end
 
     it "throws an exception if the given policy can't be found" do
