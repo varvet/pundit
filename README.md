@@ -430,7 +430,7 @@ create a special class which wraps up both user and IP and passes it to the poli
 ``` ruby
 class UserContext
   attr_reader :user, :ip
-  
+
   def initialize(user, ip)
     @user = user
     @ip = ip
@@ -439,7 +439,7 @@ end
 
 class ApplicationController
   include Pundit
-  
+
   def pundit_user
     UserContext.new(current_user, request.ip)
   end
@@ -501,7 +501,7 @@ Then put your policy specs in `spec/policies`, and make them look somewhat like 
 
 ``` ruby
 describe PostPolicy do
-  subject { PostPolicy }
+  subject { described_class }
 
   permissions :update? do
     it "denies access if post is published" do

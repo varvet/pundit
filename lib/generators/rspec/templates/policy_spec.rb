@@ -4,7 +4,7 @@ describe <%= class_name %>Policy do
 
   let(:user) { User.new }
 
-  subject { <%= class_name %>Policy }
+  subject { described_class }
 
   permissions ".scope" do
     pending "add some examples to (or delete) #{__FILE__}"
