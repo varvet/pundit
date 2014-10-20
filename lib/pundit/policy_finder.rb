@@ -46,7 +46,7 @@ module Pundit
           object.to_s.classify
         else
           object.class
-        end
+      end
         "#{klass}Policy"
       end
     end
