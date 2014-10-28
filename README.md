@@ -138,10 +138,14 @@ you can retrieve it by passing a symbol.
 class DashboardPolicy < Struct.new(:user, :dashboard)
   # ...
 end
+```
 
+```ruby
 # In controllers
 authorize :dashboard, :show?
+```
 
+```erb
 # In views
 <% if policy(:dashboard).show? %>
   <%= link_to 'Dashboard', dashboard_path %>
