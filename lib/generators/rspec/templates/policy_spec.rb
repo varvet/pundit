@@ -10,11 +10,11 @@ describe <%= class_name %>Policy do
     pending "add some examples to (or delete) #{__FILE__}"
   end
 
-  permissions :create? do
+  permissions :show? do
     pending "add some examples to (or delete) #{__FILE__}"
   end
 
-  permissions :show? do
+  permissions :create? do
     pending "add some examples to (or delete) #{__FILE__}"
   end
 
