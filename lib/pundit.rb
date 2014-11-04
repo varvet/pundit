@@ -63,7 +63,7 @@ module Pundit
   end
 
   def authorize(record, query=nil)
-    query ||= params[:action].to_s + "?"
+    query ||= "#{params[:action]}?"
     @_pundit_policy_authorized = true
 
     policy = policy(record)
