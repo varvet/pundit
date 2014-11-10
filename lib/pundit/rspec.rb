@@ -7,19 +7,23 @@ module Pundit
 
       matcher :permit do |user, record|
         match_proc = lambda do |policy|
-          permissions.all? { |permission| policy.new(user, record).public_send(permission) }
+          @violating_permissions = permissions.find_all { |permission| not policy.new(user, record).public_send(permission) }
+          @violating_permissions.empty?
         end
 
         match_when_negated_proc = lambda do |policy|
-          permissions.none? { |permission| policy.new(user, record).public_send(permission) }
+          @violating_permissions = permissions.find_all { |permission| policy.new(user, record).public_send(permission) }
+          @violating_permissions.empty?
         end
 
         failure_message_proc = lambda do |policy|
-          "Expected #{policy} to grant #{permissions.to_sentence} on #{record} but it didn't"
+          was_were = @violating_permissions.count > 1 ? "were" : "was"
+          "Expected #{policy} to grant #{permissions.to_sentence} on #{record} but #{@violating_permissions.to_sentence} #{was_were} not granted"
         end
 
         failure_message_when_negated_proc = lambda do |policy|
-          "Expected #{policy} not to grant #{permissions.to_sentence} on #{record} but it did"
+          was_were = @violating_permissions.count > 1 ? "were" : "was"
+          "Expected #{policy} to grant #{permissions.to_sentence} on #{record} but #{@violating_permissions.to_sentence} #{was_were} granted"
         end
 
         if respond_to?(:match_when_negated)
