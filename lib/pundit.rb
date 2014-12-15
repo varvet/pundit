@@ -17,6 +17,18 @@ module Pundit
   extend ActiveSupport::Concern
 
   class << self
+    def authorize(user, record, query, policy = nil)
+      policy ||= policy!(user, record)
+      unless policy.public_send(query)
+        error = NotAuthorizedError.new("not allowed to #{query} this #{record}")
+        error.query, error.record, error.policy = query, record, policy
+
+        raise error
+      end
+
+      true
+    end
+
     def policy_scope(user, scope)
       policy_scope = PolicyFinder.new(scope).scope
       policy_scope.new(user, scope).resolve if policy_scope
@@ -65,16 +77,7 @@ module Pundit
   def authorize(record, query=nil)
     query ||= params[:action].to_s + "?"
     @_pundit_policy_authorized = true
-
-    policy = policy(record)
-    unless policy.public_send(query)
-      error = NotAuthorizedError.new("not allowed to #{query} this #{record}")
-      error.query, error.record, error.policy = query, record, policy
-
-      raise error
-    end
-
-    true
+    Pundit.authorize(pundit_user, record, query, policy(record))
   end
 
   def policy_scope(scope)
