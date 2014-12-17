@@ -85,6 +85,23 @@ end
 
 class DashboardPolicy < Struct.new(:user, :dashboard); end
 
+class StringyPolicy
+  def initialize(*)
+  end
+  def method_missing(*)
+    false
+  end
+end
+
+class Stringy
+  def initialize(string)
+    @string = string
+  end
+  def to_s
+    @string
+  end
+end
+
 class Controller
   include Pundit
 
