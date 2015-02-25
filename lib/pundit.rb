@@ -8,7 +8,17 @@ require "active_support/dependencies/autoload"
 
 module Pundit
   class NotAuthorizedError < StandardError
-    attr_accessor :query, :record, :policy
+    attr_reader :query, :record, :policy
+
+    def initialize(options = {})
+      @query  = options[:query]
+      @record = options[:record]
+      @policy = options[:policy]
+
+      message = options.fetch(:message) { "not allowed to #{query} this #{record}" }
+
+      super(message)
+    end
   end
   class AuthorizationNotPerformedError < StandardError; end
   class PolicyScopingNotPerformedError < AuthorizationNotPerformedError; end
@@ -64,14 +74,19 @@ module Pundit
 
   def authorize(record, query=nil)
     query ||= params[:action].to_s + "?"
+
+    if record.blank?
+      raise NotAuthorizedError.new(
+        message: "cannot #{query} a blank object",
+        query: query
+      )
+    end
+
     @_pundit_policy_authorized = true
 
     policy = policy(record)
     unless policy.public_send(query)
-      error = NotAuthorizedError.new("not allowed to #{query} this #{record}")
-      error.query, error.record, error.policy = query, record, policy
-
-      raise error
+      raise NotAuthorizedError.new(query: query, record: record, policy: policy)
     end
 
     true
