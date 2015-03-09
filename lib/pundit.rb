@@ -76,6 +76,12 @@ module Pundit
 
     true
   end
+  
+  def authorize_many(model_collection, query=nil)
+    model_collection.each do |model_instance|
+      authorize model_instance, query
+    end
+  end
 
   def policy_scope(scope)
     @_pundit_policy_scoped = true
