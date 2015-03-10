@@ -1,17 +1,8 @@
-require "active_support/core_ext/kernel"
-
-warnings = capture(:stderr) do
-  require "pundit"
-  require "pundit/rspec"
-end
-
-unless warnings.to_s.empty?
-  puts "ERROR: Encountered deprecation warning!"
-  puts warnings
-  exit 1
-end
+require "pundit"
+require "pundit/rspec"
 
 require "pry"
+require "active_support"
 require "active_support/core_ext"
 require "active_model/naming"
 
