@@ -177,7 +177,7 @@ end
 ```
 
 Likewise, Pundit also adds `verify_policy_scoped` to your controller.  This
-will raise an exception in the vein of `verify_authorized`.  However it tracks
+will raise an exception in the vein of `verify_authorized`.  However, it tracks
 if `policy_scope` is used instead of `authorize`.  This is mostly useful for
 controller actions like `index` which find collections with a scope and don't
 authorize individual instances.
@@ -203,6 +203,11 @@ def show
   end
 end
 ```
+
+If you need to perform some more sophisticated logic or you want to raise a custom
+exception you can use the two lower level methods `pundit_policy_authorized?`
+and `pundit_policy_scoped?` which return `true` or `false` depending on whether
+`authorize` or `policy_scope` have been called, respectively.
 
 ## Scopes
 
