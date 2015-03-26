@@ -9,6 +9,25 @@ describe Pundit do
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
 
+  describe ".authorize" do
+    it "infers the policy and authorizes based on it" do
+      expect(Pundit.authorize(user, post, :update?)).to be_truthy
+    end
+
+    it "works with anonymous class policies" do
+      expect(Pundit.authorize(user, article_tag, :show?)).to be_truthy
+      expect { Pundit.authorize(user, article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    it "raises an error with a query and action" do
+      expect { Pundit.authorize(user, post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError) do |error|
+        expect(error.query).to eq :destroy?
+        expect(error.record).to eq post
+        expect(error.policy).to eq Pundit.policy(user, post)
+      end
+    end
+  end
+
   describe ".policy_scope" do
     it "returns an instantiated policy scope given a plain model class" do
       expect(Pundit.policy_scope(user, Post)).to eq :published
@@ -196,7 +215,7 @@ describe Pundit do
   end
 
   describe "#authorize" do
-    it "infers the policy name and authorized based on it" do
+    it "infers the policy name and authorizes based on it" do
       expect(controller.authorize(post)).to be_truthy
     end
 
@@ -210,16 +229,18 @@ describe Pundit do
       expect { controller.authorize(article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
-    it "raises an error when the permission check fails" do
+    it "throws an exception when the permission check fails" do
       expect { controller.authorize(Post.new) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
-    it "raises an error with a query and action" do
-      expect { controller.authorize(post, :destroy?) }.to raise_error do |error|
-        expect(error.query).to eq :destroy?
-        expect(error.record).to eq post
-        expect(error.policy).to eq controller.policy(post)
-      end
+    it "throws an exception when a policy cannot be found" do
+      expect { controller.authorize(Article) }.to raise_error(Pundit::NotDefinedError)
+    end
+
+    it "caches the policy" do
+      expect(controller.policies[post]).to be_nil
+      controller.authorize(post)
+      expect(controller.policies[post]).not_to be_nil
     end
 
     it "raises an error when the given record is nil" do

@@ -27,6 +27,16 @@ module Pundit
   extend ActiveSupport::Concern
 
   class << self
+    def authorize(user, record, query)
+      policy = policy!(user, record)
+
+      unless policy.public_send(query)
+        raise NotAuthorizedError.new(query: query, record: record, policy: policy)
+      end
+
+      true
+    end
+
     def policy_scope(user, scope)
       policy_scope = PolicyFinder.new(scope).scope
       policy_scope.new(user, scope).resolve if policy_scope

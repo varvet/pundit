@@ -80,6 +80,12 @@ module Project
   class DashboardPolicy < Struct.new(:user, :dashboard); end
 end
 
+class DenierPolicy < Struct.new(:user, :record)
+  def update?
+    false
+  end
+end
+
 class Controller
   include Pundit
 
