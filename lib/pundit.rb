@@ -75,13 +75,6 @@ module Pundit
   def authorize(record, query=nil)
     query ||= params[:action].to_s + "?"
 
-    if record.blank?
-      raise NotAuthorizedError.new(
-        message: "cannot #{query} a blank object",
-        query: query
-      )
-    end
-
     @_pundit_policy_authorized = true
 
     policy = policy(record)

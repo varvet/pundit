@@ -90,3 +90,15 @@ class Controller
     @params = params
   end
 end
+
+class NilClassPolicy
+  class Scope
+    def initialize(*)
+      raise "I'm only here to be annoying!"
+    end
+  end
+
+  def initialize(*)
+    raise "I'm only here to be annoying!"
+  end
+end

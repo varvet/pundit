@@ -21,6 +21,10 @@ describe Pundit do
     it "returns nil if the given policy scope can't be found" do
       expect(Pundit.policy_scope(user, Article)).to be_nil
     end
+
+    it "returns nil if blank object given" do
+      expect(Pundit.policy_scope(user, nil)).to be_nil
+    end
   end
 
   describe ".policy_scope!" do
@@ -38,6 +42,10 @@ describe Pundit do
 
     it "throws an exception if the given policy scope can't be found" do
       expect { Pundit.policy_scope!(user, ArticleTag) }.to raise_error(Pundit::NotDefinedError)
+    end
+
+    it "throws an exception if the given policy scope is nil" do
+      expect { Pundit.policy_scope!(user, nil) }.to raise_error(Pundit::NotDefinedError, "unable to find policy scope of blank object `nil`")
     end
   end
 
@@ -69,6 +77,10 @@ describe Pundit do
     it "returns nil if the given policy can't be found" do
       expect(Pundit.policy(user, article)).to be_nil
       expect(Pundit.policy(user, Article)).to be_nil
+    end
+
+    it "returns nil if the given policy is nil" do
+      expect(Pundit.policy(user, nil)).to be_nil
     end
 
     describe "with .policy_class set on the model" do
@@ -155,6 +167,10 @@ describe Pundit do
       expect { Pundit.policy!(user, article) }.to raise_error(Pundit::NotDefinedError)
       expect { Pundit.policy!(user, Article) }.to raise_error(Pundit::NotDefinedError)
     end
+
+    it "throws an exception if the given policy is nil" do
+      expect { Pundit.policy!(user, nil) }.to raise_error(Pundit::NotDefinedError, "unable to find policy of blank object `nil`")
+    end
   end
 
   describe "#verify_authorized" do
@@ -206,16 +222,8 @@ describe Pundit do
       end
     end
 
-    it "raises an error when receives nil and never look for policy" do
-      expect(controller).to receive(:policy).with(nil).never
-
-      expect { controller.authorize(nil, :destroy?) }.to raise_error do |error|
-        expect(error).to be_kind_of(Pundit::NotAuthorizedError)
-
-        expect(error.query).to eq :destroy?
-
-        expect(error.message).to eq "cannot destroy? a blank object"
-      end
+    it "raises an error when the given record is nil" do
+      expect { controller.authorize(nil, :destroy?) }.to raise_error(Pundit::NotDefinedError)
     end
   end
 
