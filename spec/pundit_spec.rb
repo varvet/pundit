@@ -191,6 +191,18 @@ describe Pundit do
         expect(error.policy).to eq controller.policy(post)
       end
     end
+
+    it "raises an error when receives nil and never look for policy" do
+      expect(controller).to receive(:policy).with(nil).never
+
+      expect { controller.authorize(nil, :destroy?) }.to raise_error do |error|
+        expect(error).to be_kind_of(Pundit::NotAuthorizedError)
+
+        expect(error.query).to eq :destroy?
+
+        expect(error.message).to eq "cannot destroy? a blank object"
+      end
+    end
   end
 
   describe "#pundit_user" do
