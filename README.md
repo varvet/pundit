@@ -177,6 +177,22 @@ class ApplicationController < ActionController::Base
 end
 ```
 
+If you're using `verify_authorized` in your controllers but need to
+conditionally bypass verification, you can use `skip_authorization`. This is
+useful in circumstances where you don't want to disable verification for the
+entire action, but have some cases where you intend to not authorize.
+
+```ruby
+def show
+  record = Record.find_by(attribute: "value")
+  if record.present?
+    authorize record
+  else
+    skip_authorization
+  end
+end
+```
+
 ## Scopes
 
 Often, you will want to have some kind of view listing records which a

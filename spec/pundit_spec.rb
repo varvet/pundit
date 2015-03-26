@@ -205,6 +205,13 @@ describe Pundit do
     end
   end
 
+  describe "#skip_authorization" do
+    it "disables authorization verification" do
+      controller.skip_authorization
+      expect { controller.verify_authorized }.not_to raise_error
+    end
+  end
+
   describe "#pundit_user" do
     it 'returns the same thing as current_user' do
       expect(controller.pundit_user).to eq controller.current_user
