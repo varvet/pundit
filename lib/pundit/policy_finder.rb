@@ -45,7 +45,7 @@ module Pundit
         elsif object.is_a?(Symbol)
           object.to_s.classify
         elsif object.is_a?(Array)
-          object.map(&:to_s).join('/').to_s.classify
+          object.join('/').to_s.classify
         else
           object.class
         end
