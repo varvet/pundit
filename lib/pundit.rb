@@ -92,6 +92,10 @@ module Pundit
     true
   end
 
+  def skip_authorization
+    @_pundit_policy_authorized = true
+  end
+
   def policy_scope(scope)
     @_pundit_policy_scoped = true
     policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
