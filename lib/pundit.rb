@@ -121,6 +121,20 @@ module Pundit
     params.require(name).permit(policy(record).permitted_attributes)
   end
 
+  def build(klass, attributes = {})
+    record = klass.build(attributes)
+    record.assign_attributes(permitted_attributes(record))
+    authorize(record)
+    record
+  end
+
+  def update(record, attributes = {})
+    authorize(record)
+    record.assign_attributes(attributes.merge(permitted_attributes(record)))
+    authorize(record)
+    record.save
+  end
+
   def policies
     @_pundit_policies ||= {}
   end

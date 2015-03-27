@@ -536,6 +536,49 @@ class PostsController < ApplicationController
 end
 ```
 
+## Controller helpers
+
+Pundit provides controller helpers which take the permitted attributes pattern to its
+logical conclusion. We can write an update action like this:
+
+```ruby
+# app/controllers/posts_controller.rb
+class PostsController < ApplicationController
+  def update
+    @post = Post.find(params[:id])
+    if update(@post)
+      redirect_to @post
+    else
+      render :edit
+    end
+  end
+end
+```
+
+Not only does this correctly retrieve the permitted attributes and assign them,
+it also makes sure authorization is performed both before *and* after we set
+these attributes. For example, an admin might be able to assign everyone a
+particular task, but a regular user can only assign themselves, not someone
+else. This kind of scenario requires the permissions to be checked twice, both
+before (they can't edit tasks assigned to someone else) and after (they can't
+assign a task to someone other than themselves).
+
+Similarly there is a helper for building a new record:
+
+```ruby
+# app/controllers/posts_controller.rb
+class PostsController < ApplicationController
+  def update
+    @post = build(Post)
+    if @post.save
+      redirect_to @post
+    else
+      render :edit
+    end
+  end
+end
+```
+
 ## RSpec
 
 ### Policy Specs

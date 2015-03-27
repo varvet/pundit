@@ -1,8 +1,8 @@
 require "spec_helper"
 
 describe Pundit do
-  let(:user) { double }
-  let(:post) { Post.new(user) }
+  let(:user) { double("user") }
+  let(:post) { Post.new(user: user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
   let(:controller) { Controller.new(user, { :action => 'update' }) }
@@ -313,6 +313,51 @@ describe Pundit do
 
       expect(Controller.new(user, params).permitted_attributes(post)).to eq({ 'title' => 'Hello', 'votes' => 5 })
       expect(Controller.new(double, params).permitted_attributes(post)).to eq({ 'votes' => 5 })
+    end
+  end
+
+  describe "#build" do
+    let(:params) { ActionController::Parameters.new({ action: 'update', post: { title: 'Hello', votes: 5, admin: true } }) }
+    let(:controller) { Controller.new(user, params) }
+
+    it "builds a record of the given type with permitted attributes" do
+      post = controller.build(Post, user: user)
+      expect(post).to be_an_instance_of(Post)
+      expect(post.user).to eq(user)
+      expect(post.attributes["title"]).to eq('Hello')
+      expect(post.attributes.has_key?("admin")).to eq(false)
+    end
+
+    it "denies authorization if the given record is not authorized to perform the action" do
+      expect { controller.build(Post, user: double("other")) }.to raise_error(Pundit::NotAuthorizedError)
+    end
+  end
+
+  describe "#update" do
+    let(:params) { ActionController::Parameters.new({ action: 'update', post: { title: 'Hello', votes: 5, admin: true } }) }
+    let(:controller) { Controller.new(user, params) }
+
+    it "builds a record of the given type with permitted attributes" do
+      post = Post.new(title: 'Monkey', user: user)
+      expect(post).to receive(:save).and_return(:done)
+
+      expect(controller.update(post, "body" => "test")).to eq(:done)
+
+      expect(post.user).to eq(user)
+      expect(post.attributes['title']).to eq('Hello')
+      expect(post.attributes['body']).to eq('test')
+    end
+
+    it "denies authorization if the given record is not authorized to perform the action" do
+      post = Post.new(title: 'Monkey', user: double("other"))
+      expect(post).not_to receive(:save)
+      expect { controller.update(post, user: user) }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    it "denies authorization if the given record is not authorized after attributes are assigned" do
+      post = Post.new(title: 'Monkey', user: user)
+      expect(post).not_to receive(:save)
+      expect { controller.update(post, user: double("other")) }.to raise_error(Pundit::NotAuthorizedError)
     end
   end
 end

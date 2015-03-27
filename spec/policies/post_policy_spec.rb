@@ -2,8 +2,8 @@ require "spec_helper"
 
 describe PostPolicy do
   let(:user) { double }
-  let(:own_post) { double(user: user) }
-  let(:other_post) { double(user: double) }
+  let(:own_post) { double(user: user, votes: 0) }
+  let(:other_post) { double(user: double, votes: 0) }
   subject { described_class }
 
   permissions :update?, :show? do
