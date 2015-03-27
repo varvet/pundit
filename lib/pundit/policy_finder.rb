@@ -21,12 +21,12 @@ module Pundit
     end
 
     def scope!
-      raise NotDefinedError, "unable to find policy scope of blank object `#{object.inspect}`" if object.blank?
+      raise NotDefinedError, "unable to find policy scope of nil" if object.nil?
       scope or raise NotDefinedError, "unable to find scope `#{find}::Scope` for `#{object.inspect}`"
     end
 
     def policy!
-      raise NotDefinedError, "unable to find policy of blank object `#{object.inspect}`" if object.blank?
+      raise NotDefinedError, "unable to find policy of nil" if object.nil?
       policy or raise NotDefinedError, "unable to find policy `#{find}` for `#{object.inspect}`"
     end
 

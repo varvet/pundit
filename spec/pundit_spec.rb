@@ -64,7 +64,7 @@ describe Pundit do
     end
 
     it "throws an exception if the given policy scope is nil" do
-      expect { Pundit.policy_scope!(user, nil) }.to raise_error(Pundit::NotDefinedError, "unable to find policy scope of blank object `nil`")
+      expect { Pundit.policy_scope!(user, nil) }.to raise_error(Pundit::NotDefinedError, "unable to find policy scope of nil")
     end
   end
 
@@ -188,7 +188,7 @@ describe Pundit do
     end
 
     it "throws an exception if the given policy is nil" do
-      expect { Pundit.policy!(user, nil) }.to raise_error(Pundit::NotDefinedError, "unable to find policy of blank object `nil`")
+      expect { Pundit.policy!(user, nil) }.to raise_error(Pundit::NotDefinedError, "unable to find policy of nil")
     end
   end
 
