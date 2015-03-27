@@ -20,7 +20,7 @@ describe Pundit do
     end
 
     it "raises an error with a query and action" do
-      expect { Pundit.authorize(user, post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError) do |error|
+      expect { Pundit.authorize(user, post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this #<Post>") do |error|
         expect(error.query).to eq :destroy?
         expect(error.record).to eq post
         expect(error.policy).to eq Pundit.policy(user, post)
