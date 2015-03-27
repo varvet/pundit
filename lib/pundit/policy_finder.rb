@@ -33,7 +33,7 @@ module Pundit
   private
 
     def find
-      if object.blank?
+      if object.nil?
         nil
       elsif object.respond_to?(:policy_class)
         object.policy_class

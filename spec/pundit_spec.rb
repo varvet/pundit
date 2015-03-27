@@ -8,6 +8,8 @@ describe Pundit do
   let(:controller) { Controller.new(user, { :action => 'update' }) }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
+  let(:comments_relation) { CommentsRelation.new }
+  let(:empty_comments_relation) { CommentsRelation.new(true) }
 
   describe ".authorize" do
     it "infers the policy and authorizes based on it" do
@@ -35,6 +37,14 @@ describe Pundit do
 
     it "returns an instantiated policy scope given an active model class" do
       expect(Pundit.policy_scope(user, Comment)).to eq Comment
+    end
+
+    it "returns an instantiated policy scope given an active record relation" do
+      expect(Pundit.policy_scope(user, comments_relation)).to eq comments_relation
+    end
+
+    it "returns an instantiated policy scope given an empty active record relation" do
+      expect(Pundit.policy_scope(user, empty_comments_relation)).to eq empty_comments_relation
     end
 
     it "returns nil if the given policy scope can't be found" do

@@ -54,6 +54,13 @@ class CommentPolicy::Scope < Struct.new(:user, :scope)
 end
 class Comment; extend ActiveModel::Naming; end
 
+# minimum mock for an ActiveRecord Relation returning comments
+class CommentsRelation
+  def initialize(empty=false); @empty=empty; end
+  def blank?; @empty; end
+  def model_name; Comment.model_name; end
+end
+
 class Article; end
 
 class BlogPolicy < Struct.new(:user, :blog); end
