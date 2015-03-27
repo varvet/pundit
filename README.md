@@ -546,31 +546,6 @@ end
 An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
 [excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/).
 
-### View Specs
-
-When writing view specs, you'll notice that the policy helper is not available
-and views under test that use it will fail. Thankfully, it's very easy to stub
-out the policy to have it return whatever is appropriate for the spec.
-
-``` ruby
-describe "users/show" do
-  before(:each) do
-    user = assign(:user, build_stubbed(:user))
-    controller.stub(:current_user).and_return user
-  end
-
-  it "renders the destroy action" do
-    allow(view).to receive(:policy).and_return double(edit?: false, destroy?: true)
-
-    render
-    expect(rendered).to match 'Destroy'
-  end
-end
-```
-
-This technique enables easy unit testing of tricky conditionaly view logic
-based on what is or is not authorized.
-
 # External Resources
 
 - [RailsApps Example Application: Pundit and Devise](https://github.com/RailsApps/rails-devise-pundit)
