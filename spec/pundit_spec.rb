@@ -39,7 +39,7 @@ describe Pundit do
       expect(Pundit.policy_scope(user, Comment)).to eq Comment
     end
 
-    it "returns an instantiated policy scope given an active record relation", focus: true do
+    it "returns an instantiated policy scope given an active record relation" do
       expect(Pundit.policy_scope(user, comments_relation)).to eq comments_relation
     end
 
