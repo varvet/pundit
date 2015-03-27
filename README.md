@@ -8,6 +8,10 @@ Pundit provides a set of helpers which guide you in leveraging regular Ruby
 classes and object oriented design patterns to build a simple, robust and
 scaleable authorization system.
 
+Sponsored by:
+
+[<img src="http://d3cv91luii1z1d.cloudfront.net/logo-gh.png" alt="Elabs" height="50px"/>](http://elabs.se)
+
 ## Installation
 
 ``` ruby
