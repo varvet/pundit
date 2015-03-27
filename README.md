@@ -8,6 +8,13 @@ Pundit provides a set of helpers which guide you in leveraging regular Ruby
 classes and object oriented design patterns to build a simple, robust and
 scaleable authorization system.
 
+Links:
+
+- [API documentation](http://www.rubydoc.info/gems/pundit)
+- [Source Code](https://github.com/elabs/pundit)
+- [Contributing](https://github.com/elabs/pundit/blob/master/CONTRIBUTING.md)
+- [Code of Conduct](https://github.com/elabs/pundit/blob/master/CODE_OF_CONDUCT.md)
+
 Sponsored by:
 
 [<img src="http://d3cv91luii1z1d.cloudfront.net/logo-gh.png" alt="Elabs" height="50px"/>](http://elabs.se)
