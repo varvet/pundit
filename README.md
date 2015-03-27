@@ -542,10 +542,57 @@ describe PostPolicy do
   end
 end
 ```
+An alternative approach to Pundit policy specs is scoping them to a user context
+as outlined in this [excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/).
+In that case be aware that you need
 
-An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
-[excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/).
+- to enable a custom matcher as described in this related
+  [post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec#a-custom-matcher-for-pundit)
+and
+- avoid namespace conflicts, e.g. choose a different matcher name or **avoid
+  requiring** `pundit/rspec`.
 
+### Scope Specs
+
+To test the scope for a view listing which a particular user has access to, you
+can do something like this:
+
+```ruby
+describe PostPolicy do
+  let(:scope) { Post.where(:published => true }
+  subject(:policy_scope) { PostPolicy::Scope.new(user, scope).resolve }
+
+  permissions ".scope" do
+    context "for an ordinary user"
+      let(:user)  { User.new(:admin => false) }
+
+      it "hides unpublished post" do
+        post = Post.create(:published => false
+        expect(policy_scope).to eq []
+      end
+
+      it "shows published post" do
+        post = Post.create(:published => true)
+        expect(policy_scope).to eq [post]
+      end
+    end
+
+    context "for an admin user"
+      let(:user)  { User.new(:admin => true) }
+
+      it "shows unpublished post" do
+        post = Post.create(:published => false)
+        expect(policy_scope).to eq [post]
+      end
+
+      it "shows published post" do
+        post = Post.create(:published => true)
+        expect(policy_scope).to eq [post]
+      end
+    end
+  end
+end
+```
 ### View Specs
 
 When writing view specs, you'll notice that the policy helper is not available
