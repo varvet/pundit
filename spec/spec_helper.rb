@@ -1,10 +1,13 @@
 require "pundit"
 require "pundit/rspec"
 
+require "rack"
+require "rack/test"
 require "pry"
 require "active_support"
 require "active_support/core_ext"
 require "active_model/naming"
+require "action_controller/metal/strong_parameters"
 
 I18n.enforce_available_locales = false
 
@@ -31,6 +34,13 @@ class PostPolicy < Struct.new(:user, :post)
   end
   def show?
     true
+  end
+  def permitted_attributes
+    if post.user == user
+      [:title, :votes]
+    else
+      [:votes]
+    end
   end
 end
 class PostPolicy::Scope < Struct.new(:user, :scope)
