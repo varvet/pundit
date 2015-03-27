@@ -56,10 +56,17 @@ module Pundit
     end
   end
 
+  module Helper
+    def policy_scope(scope)
+      pundit_policy_scope(scope)
+    end
+  end
+
   included do
+    helper Helper if respond_to?(:helper)
     if respond_to?(:helper_method)
-      helper_method :policy_scope
       helper_method :policy
+      helper_method :pundit_policy_scope
       helper_method :pundit_user
     end
     if respond_to?(:hide_action)
@@ -101,7 +108,7 @@ module Pundit
 
   def policy_scope(scope)
     @_pundit_policy_scoped = true
-    policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
+    pundit_policy_scope(scope)
   end
 
   def policy(record)
@@ -118,5 +125,11 @@ module Pundit
 
   def pundit_user
     current_user
+  end
+
+private
+
+  def pundit_policy_scope(scope)
+    policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
   end
 end
