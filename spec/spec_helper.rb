@@ -27,7 +27,7 @@ end
 
 class PostPolicy < Struct.new(:user, :post)
   def update?
-    post.user == user
+    post.user == user and post.votes < 10
   end
   def destroy?
     false
@@ -43,15 +43,37 @@ class PostPolicy < Struct.new(:user, :post)
     end
   end
 end
+
 class PostPolicy::Scope < Struct.new(:user, :scope)
   def resolve
     scope.published
   end
 end
+
 class Post < Struct.new(:user)
+  attr_reader :attributes
+  singleton_class.send :alias_method, :build, :new
+
   def self.published
     :published
   end
+
+  def initialize(attributes = {})
+    @attributes = attributes
+  end
+
+  def user
+    @attributes[:user]
+  end
+
+  def votes
+    @attributes[:votes].to_i
+  end
+
+  def assign_attributes(attributes)
+    @attributes.merge!(attributes)
+  end
+
   def to_s; "Post"; end
   def inspect; "#<Post>"; end
 end
