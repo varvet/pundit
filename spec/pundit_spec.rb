@@ -271,7 +271,7 @@ describe Pundit do
     end
   end
 
-  describe ".policy" do
+  describe "#policy" do
     it "returns an instantiated policy" do
       policy = controller.policy(post)
       expect(policy.user).to eq user
@@ -290,7 +290,7 @@ describe Pundit do
     end
   end
 
-  describe ".policy_scope" do
+  describe "#policy_scope" do
     it "returns an instantiated policy scope" do
       expect(controller.policy_scope(Post)).to eq :published
     end
@@ -304,6 +304,15 @@ describe Pundit do
       controller.policy_scopes[Post] = new_scope
 
       expect(controller.policy_scope(Post)).to eq new_scope
+    end
+  end
+
+  describe "#permitted_attributes" do
+    it "checks policy for permitted attributes" do
+      params = ActionController::Parameters.new({ action: 'update', post: { title: 'Hello', votes: 5, admin: true } })
+
+      expect(Controller.new(user, params).permitted_attributes(post)).to eq({ 'title' => 'Hello', 'votes' => 5 })
+      expect(Controller.new(double, params).permitted_attributes(post)).to eq({ 'votes' => 5 })
     end
   end
 end

@@ -481,10 +481,9 @@ end
 
 In Rails 4 (or Rails 3.2 with the
 [strong_parameters](https://github.com/rails/strong_parameters) gem),
-mass-assignment protection is handled in the controller.
-Pundit helps you permit different users to set different attributes. Don't
-forget to provide your policy an instance of object or a class so correct
-permissions could be loaded.
+mass-assignment protection is handled in the controller.  With Pundit you can
+control which attributes a user has access to update via your policies. You can
+set up a `permitted_attributes` method in your policy like this:
 
 ```ruby
 # app/policies/post_policy.rb
@@ -497,12 +496,16 @@ class PostPolicy < ApplicationPolicy
     end
   end
 end
+```
 
+You can now retrieve these attributes from the policy:
+
+```ruby
 # app/controllers/posts_controller.rb
 class PostsController < ApplicationController
   def update
     @post = Post.find(params[:id])
-    if @post.update(post_params)
+    if @post.update_attributes(post_params)
       redirect_to @post
     else
       render :edit
@@ -512,7 +515,23 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(*policy(@post || Post).permitted_attributes)
+    params.require(:post).permit(policy(@post).permitted_attributes)
+  end
+end
+```
+
+However, this is a bit cumbersome, so Pundit provides a convenient helper method:
+
+```ruby
+# app/controllers/posts_controller.rb
+class PostsController < ApplicationController
+  def update
+    @post = Post.find(params[:id])
+    if @post.update_attributes(permitted_attributes(@post))
+      redirect_to @post
+    else
+      render :edit
+    end
   end
 end
 ```

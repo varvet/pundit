@@ -77,6 +77,7 @@ module Pundit
       hide_action :authorize
       hide_action :verify_authorized
       hide_action :verify_policy_scoped
+      hide_action :permitted_attributes
       hide_action :pundit_user
     end
   end
@@ -113,6 +114,11 @@ module Pundit
 
   def policy(record)
     policies[record] ||= Pundit.policy!(pundit_user, record)
+  end
+
+  def permitted_attributes(record)
+    name = record.class.to_s.demodulize.underscore
+    params.require(name).permit(policy(record).permitted_attributes)
   end
 
   def policies
