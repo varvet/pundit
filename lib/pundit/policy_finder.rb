@@ -53,7 +53,7 @@ module Pundit
         else
           object.class
         end
-        "#{klass}Policy"
+        "#{klass}#{SUFFIX}"
       end
     end
   end

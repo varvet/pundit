@@ -7,6 +7,8 @@ require "active_support/core_ext/module/introspection"
 require "active_support/dependencies/autoload"
 
 module Pundit
+  SUFFIX = "Policy"
+
   class NotAuthorizedError < StandardError
     attr_reader :query, :record, :policy
 
