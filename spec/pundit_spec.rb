@@ -224,6 +224,28 @@ describe Pundit do
     end
   end
 
+  describe "#pundit_policy_authorized?" do
+    it "is true when authorized" do
+      controller.authorize(post)
+      expect(controller.pundit_policy_authorized?).to be true
+    end
+
+    it "is false when not authorized" do
+      expect(controller.pundit_policy_authorized?).to be false
+    end
+  end
+
+  describe "#pundit_policy_scoped?" do
+    it "is true when policy_scope is used" do
+      controller.policy_scope(Post)
+      expect(controller.pundit_policy_scoped?).to be true
+    end
+
+    it "is false when policy scope is not used" do
+      expect(controller.pundit_policy_scoped?).to be false
+    end
+  end
+
   describe "#authorize" do
     it "infers the policy name and authorizes based on it" do
       expect(controller.authorize(post)).to be_truthy

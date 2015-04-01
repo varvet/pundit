@@ -5,6 +5,7 @@
 - Caches policy scopes and policies.
 - Explicitly setting the policy for the controller via `controller.policy = foo` has been removed. Instead use `controller.policies[record] = foo`.
 - Explicitly setting the policy scope for the controller via `controller.policy_policy = foo` has been removed. Instead use `controller.policy_scopes[scope] = foo`.
+- Add `pundit_policy_authorized?` and `pundit_policy_scoped?` methods.
 
 ## 0.3.0 (2014-08-22)
 

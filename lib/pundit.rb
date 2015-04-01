@@ -84,12 +84,20 @@ module Pundit
     end
   end
 
+  def pundit_policy_authorized?
+    !!@_pundit_policy_authorized
+  end
+
+  def pundit_policy_scoped?
+    !!@_pundit_policy_scoped
+  end
+
   def verify_authorized
-    raise AuthorizationNotPerformedError unless @_pundit_policy_authorized
+    raise AuthorizationNotPerformedError unless pundit_policy_authorized?
   end
 
   def verify_policy_scoped
-    raise PolicyScopingNotPerformedError unless @_pundit_policy_scoped
+    raise PolicyScopingNotPerformedError unless pundit_policy_scoped?
   end
 
   def authorize(record, query=nil)
