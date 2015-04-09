@@ -70,6 +70,7 @@ module Pundit
       helper_method :policy
       helper_method :pundit_policy_scope
       helper_method :pundit_user
+      helper_method :skip_authorization
     end
     if respond_to?(:hide_action)
       hide_action :policy
