@@ -81,6 +81,7 @@ module Pundit
       hide_action :verify_policy_scoped
       hide_action :permitted_attributes
       hide_action :pundit_user
+      hide_action :skip_authorization
     end
   end
 
