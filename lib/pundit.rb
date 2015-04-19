@@ -118,6 +118,10 @@ module Pundit
     @_pundit_policy_authorized = true
   end
 
+  def skip_policy_scope
+    @_pundit_policy_scoped = true
+  end
+
   def policy_scope(scope)
     @_pundit_policy_scoped = true
     pundit_policy_scope(scope)

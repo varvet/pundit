@@ -287,6 +287,13 @@ describe Pundit do
     end
   end
 
+  describe "#skip_policy_scope" do
+    it "disables policy scope verification" do
+      controller.skip_policy_scope
+      expect { controller.verify_policy_scoped }.not_to raise_error
+    end
+  end
+
   describe "#pundit_user" do
     it 'returns the same thing as current_user' do
       expect(controller.pundit_user).to eq controller.current_user

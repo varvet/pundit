@@ -189,8 +189,9 @@ end
 ```
 
 If you're using `verify_authorized` in your controllers but need to
-conditionally bypass verification, you can use `skip_authorization`. This is
-useful in circumstances where you don't want to disable verification for the
+conditionally bypass verification, you can use `skip_authorization`. For
+bypassing `verify_policy_scoped`, use `skip_policy_scope`. These are useful
+in circumstances where you don't want to disable verification for the
 entire action, but have some cases where you intend to not authorize.
 
 ```ruby
