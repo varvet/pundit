@@ -9,7 +9,8 @@ require "active_support/dependencies/autoload"
 module Pundit
   SUFFIX = "Policy"
 
-  class NotAuthorizedError < StandardError
+  class Error < StandardError; end
+  class NotAuthorizedError < Error
     attr_reader :query, :record, :policy
 
     def initialize(options = {})
@@ -22,9 +23,9 @@ module Pundit
       super(message)
     end
   end
-  class AuthorizationNotPerformedError < StandardError; end
+  class AuthorizationNotPerformedError < Error; end
   class PolicyScopingNotPerformedError < AuthorizationNotPerformedError; end
-  class NotDefinedError < StandardError; end
+  class NotDefinedError < Error; end
 
   extend ActiveSupport::Concern
 
