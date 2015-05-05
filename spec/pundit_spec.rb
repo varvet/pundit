@@ -344,4 +344,11 @@ describe Pundit do
       expect(Controller.new(double, params).permitted_attributes(post)).to eq({ 'votes' => 5 })
     end
   end
+
+  describe "Pundit::NotAuthorizedError" do
+    it "can be initialized with a string as message" do
+      error = Pundit::NotAuthorizedError.new("must be logged in")
+      expect(error.message).to eq "must be logged in"
+    end
+  end
 end
