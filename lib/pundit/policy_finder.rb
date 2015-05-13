@@ -47,18 +47,14 @@ module Pundit
         elsif object.is_a?(Class)
           object
         elsif object.is_a?(Symbol)
-          classify(object)
+          object.to_s.camelize
         elsif object.is_a?(Array)
-          classify(object.join('/'))
+          object.join('/').camelize
         else
           object.class
         end
         "#{klass}#{SUFFIX}"
       end
-    end
-
-    def classify(name)
-      name.to_s.sub(/.*\./, '').camelize
     end
   end
 end
