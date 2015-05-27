@@ -1,5 +1,10 @@
 # Pundit
 
+## 1.0.1 (2015-05-27)
+
+- Fixed a regression where NotAuthorizedError could not be ininitialized with a string.
+- Use `camelize` instead of `classify` for symbol policies to prevent weird pluralizations.
+
 ## 1.0.0 (2015-04-19)
 
 - Caches policy scopes and policies.
