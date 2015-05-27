@@ -350,7 +350,7 @@ got through. This way you can fail more gracefully.
 ``` ruby
 class ApplicationPolicy
   def initialize(user, record)
-    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+    raise Pundit::NotAuthorizedError, message: "must be logged in" unless user
     @user = user
     @record = record
   end
