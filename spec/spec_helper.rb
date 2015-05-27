@@ -93,10 +93,10 @@ class ArticleTag
   end
 end
 
-class DashboardPolicy < Struct.new(:user, :dashboard); end
+class CriteriaPolicy < Struct.new(:user, :criteria); end
 
 module Project
-  class DashboardPolicy < Struct.new(:user, :dashboard); end
+  class CriteriaPolicy < Struct.new(:user, :criteria); end
 end
 
 class DenierPolicy < Struct.new(:user, :record)

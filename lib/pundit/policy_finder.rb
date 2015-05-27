@@ -47,9 +47,9 @@ module Pundit
         elsif object.is_a?(Class)
           object
         elsif object.is_a?(Symbol)
-          object.to_s.classify
+          object.to_s.camelize
         elsif object.is_a?(Array)
-          object.join('/').to_s.classify
+          object.join('/').camelize
         else
           object.class
         end

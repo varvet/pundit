@@ -138,17 +138,17 @@ describe Pundit do
       end
 
       it "returns an instantiated policy given a symbol" do
-        policy = Pundit.policy(user, :dashboard)
-        expect(policy.class).to eq DashboardPolicy
+        policy = Pundit.policy(user, :criteria)
+        expect(policy.class).to eq CriteriaPolicy
         expect(policy.user).to eq user
-        expect(policy.dashboard).to eq :dashboard
+        expect(policy.criteria).to eq :criteria
       end
 
       it "returns an instantiated policy given an array" do
-        policy = Pundit.policy(user, [:project, :dashboard])
-        expect(policy.class).to eq Project::DashboardPolicy
+        policy = Pundit.policy(user, [:project, :criteria])
+        expect(policy.class).to eq Project::CriteriaPolicy
         expect(policy.user).to eq user
-        expect(policy.dashboard).to eq [:project, :dashboard]
+        expect(policy.criteria).to eq [:project, :criteria]
       end
     end
   end
@@ -179,17 +179,17 @@ describe Pundit do
     end
 
     it "returns an instantiated policy given a symbol" do
-      policy = Pundit.policy!(user, :dashboard)
-      expect(policy.class).to eq DashboardPolicy
+      policy = Pundit.policy!(user, :criteria)
+      expect(policy.class).to eq CriteriaPolicy
       expect(policy.user).to eq user
-      expect(policy.dashboard).to eq :dashboard
+      expect(policy.criteria).to eq :criteria
     end
 
     it "returns an instantiated policy given an array" do
-      policy = Pundit.policy!(user, [:project, :dashboard])
-      expect(policy.class).to eq Project::DashboardPolicy
+      policy = Pundit.policy!(user, [:project, :criteria])
+      expect(policy.class).to eq Project::CriteriaPolicy
       expect(policy.user).to eq user
-      expect(policy.dashboard).to eq [:project, :dashboard]
+      expect(policy.criteria).to eq [:project, :criteria]
     end
 
     it "throws an exception if the given policy can't be found" do
