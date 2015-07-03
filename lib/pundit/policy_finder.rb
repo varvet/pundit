@@ -1,9 +1,13 @@
+require "action_view/model_naming"
+
 module Pundit
   class PolicyFinder
+    include ActionView::ModelNaming
+
     attr_reader :object
 
     def initialize(object)
-      @object = object
+      @object = convert_to_model(object)
     end
 
     def scope

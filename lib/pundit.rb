@@ -32,6 +32,7 @@ module Pundit
   class NotDefinedError < Error; end
 
   extend ActiveSupport::Concern
+  extend ActionView::ModelNaming
 
   class << self
     def authorize(user, record, query)
@@ -55,11 +56,11 @@ module Pundit
 
     def policy(user, record)
       policy = PolicyFinder.new(record).policy
-      policy.new(user, record) if policy
+      policy.new(user, convert_to_model(record)) if policy
     end
 
     def policy!(user, record)
-      PolicyFinder.new(record).policy!.new(user, record)
+      PolicyFinder.new(record).policy!.new(user, convert_to_model(record))
     end
   end
 
