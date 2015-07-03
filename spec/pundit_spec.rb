@@ -10,6 +10,7 @@ describe Pundit do
   let(:article_tag) { ArticleTag.new }
   let(:comments_relation) { CommentsRelation.new }
   let(:empty_comments_relation) { CommentsRelation.new(true) }
+  let(:decorated_comment) { DecoratedComment.new(comment) }
 
   describe ".authorize" do
     it "infers the policy and authorizes based on it" do
@@ -108,6 +109,18 @@ describe Pundit do
       expect(Pundit.policy(user, Article)).to be_nil
     end
 
+    it "returns an instantiated policy given an decorated model instance" do
+      policy = Pundit.policy(user, decorated_comment)
+      expect(policy.user).to eq user
+      expect(policy.comment).to eq comment
+    end
+
+    it "returns an instantiated policy given an decorated model class" do
+      policy = Pundit.policy(user, DecoratedComment)
+      expect(policy.user).to eq user
+      expect(policy.comment).to eq DecoratedComment
+    end
+
     it "returns nil if the given policy is nil" do
       expect(Pundit.policy(user, nil)).to be_nil
     end
@@ -170,6 +183,18 @@ describe Pundit do
       policy = Pundit.policy!(user, Post)
       expect(policy.user).to eq user
       expect(policy.post).to eq Post
+    end
+
+    it "returns an instantiated policy given an decorated model instance" do
+      policy = Pundit.policy!(user, decorated_comment)
+      expect(policy.user).to eq user
+      expect(policy.comment).to eq comment
+    end
+
+    it "returns an instantiated policy given an decorated model class" do
+      policy = Pundit.policy!(user, DecoratedComment)
+      expect(policy.user).to eq user
+      expect(policy.comment).to eq DecoratedComment
     end
 
     it "returns an instantiated policy given an active model class" do

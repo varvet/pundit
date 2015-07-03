@@ -71,6 +71,16 @@ class CommentsRelation
   def model_name; Comment.model_name; end
 end
 
+class DecoratedComment < Struct.new(:record)
+  def self.model_name
+    Comment.model_name
+  end
+
+  def to_model
+    record
+  end
+end
+
 class Article; end
 
 class BlogPolicy < Struct.new(:user, :blog); end
