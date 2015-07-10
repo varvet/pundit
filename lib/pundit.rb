@@ -88,6 +88,8 @@ module Pundit
       hide_action :pundit_user
       hide_action :skip_authorization
       hide_action :skip_policy_scope
+      hide_action :pundit_policy_authorized?
+      hide_action :pundit_policy_scoped?
     end
   end
 
