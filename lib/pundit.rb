@@ -139,8 +139,15 @@ module Pundit
     policies[record] ||= Pundit.policy!(pundit_user, record)
   end
 
-  def permitted_attributes(record)
-    name = record.class.to_s.demodulize.underscore
+  def permitted_attributes(record, options={})
+    name = options.delete(:param_key)
+    name ||= if record.class.respond_to?(:model_name) # ActiveModel and ActiveRecord
+               record.class.model_name.param_key
+             elsif record.respond_to?(:model_name)
+               record.model_name.param_key
+             else
+               record.class.to_s.demodulize.underscore
+             end
     params.require(name).permit(policy(record).permitted_attributes)
   end
 
