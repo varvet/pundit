@@ -17,7 +17,7 @@
 - Add `skip_authorization` and `skip_policy_scope` helpers.
 - Better errors when checking multiple permissions in RSpec tests.
 - Better errors in case `nil` is passed to `policy` or `policy_scope`.
-- Use `inpect` when printing object for better errors.
+- Use `inspect` when printing object for better errors.
 - Dropped official support for Ruby 1.9.3
 
 ## 0.3.0 (2014-08-22)
