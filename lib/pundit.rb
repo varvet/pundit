@@ -141,10 +141,10 @@ module Pundit
 
   def permitted_attributes(record, options={})
     name = options.delete(:param_key)
-    name ||= if record.class.respond_to?(:model_name) # ActiveModel and ActiveRecord
-               record.class.model_name.param_key
-             elsif record.respond_to?(:model_name)
+    name ||= if record.respond_to?(:model_name) # ActiveModel and ActiveRecord
                record.model_name.param_key
+             elsif record.is_a?(Class)
+               record.to_s.demodulize.underscore
              else
                record.class.to_s.demodulize.underscore
              end

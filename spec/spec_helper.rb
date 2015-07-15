@@ -58,7 +58,8 @@ end
 
 module Customer
   class Post < Post
-    def self.model_name
+    # In ActiveRecord this method is accessible at both object and class level
+    def model_name
       OpenStruct.new(param_key: 'customer_post')
     end
     def policy_class
