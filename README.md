@@ -542,6 +542,28 @@ class PostsController < ApplicationController
 end
 ```
 
+It is a Rails convention to require the outer object tag when permitting attributes, like so:
+
+```ruby
+params.require( :post ).permit( :title )
+```
+
+This is not desired in some instances, and can be omitted with the inclusion of the `no_root` option:
+
+```ruby
+# app/controllers/posts_controller.rb
+class PostsController < ApplicationController
+  def update
+    @post = Post.find(params[:id])
+    if @post.update_attributes(permitted_attributes(@post, no_root: true))
+      redirect_to @post
+    else
+      render :edit
+    end
+  end
+end
+```
+
 ## RSpec
 
 ### Policy Specs

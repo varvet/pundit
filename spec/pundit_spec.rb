@@ -343,6 +343,13 @@ describe Pundit do
       expect(Controller.new(user, params).permitted_attributes(post)).to eq({ 'title' => 'Hello', 'votes' => 5 })
       expect(Controller.new(double, params).permitted_attributes(post)).to eq({ 'votes' => 5 })
     end
+
+    it "checks policy for permitted attributes without requiring root node" do
+      params = ActionController::Parameters.new({ action: 'update', title: 'Hello', votes: 5, admin: true })
+
+      expect(Controller.new(user, params).permitted_attributes(post, no_root: true)).to eq({ 'title' => 'Hello', 'votes' => 5 })
+      expect(Controller.new(double, params).permitted_attributes(post, no_root: true)).to eq({ 'votes' => 5 })
+    end
   end
 
   describe "Pundit::NotAuthorizedError" do
