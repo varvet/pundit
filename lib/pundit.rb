@@ -139,9 +139,14 @@ module Pundit
     policies[record] ||= Pundit.policy!(pundit_user, record)
   end
 
-  def permitted_attributes(record)
+  def permitted_attributes(record, options = {})
     name = record.class.to_s.demodulize.underscore
-    params.require(name).permit(*policy(record).permitted_attributes)
+
+    if options[:no_root]
+      params.permit(*policy(record).permitted_attributes)
+    else
+      params.require(name).permit(*policy(record).permitted_attributes)
+    end
   end
 
   def policies
