@@ -102,11 +102,11 @@ module Pundit
   end
 
   def verify_authorized
-    raise AuthorizationNotPerformedError unless pundit_policy_authorized?
+    raise AuthorizationNotPerformedError.new(self.class) unless pundit_policy_authorized?
   end
 
   def verify_policy_scoped
-    raise PolicyScopingNotPerformedError unless pundit_policy_scoped?
+    raise PolicyScopingNotPerformedError.new(self.class) unless pundit_policy_scoped?
   end
 
   def authorize(record, query=nil)
