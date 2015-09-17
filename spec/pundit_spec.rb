@@ -351,4 +351,21 @@ describe Pundit do
       expect(error.message).to eq "must be logged in"
     end
   end
+
+  describe ".collection_authorizable" do
+    before :each do
+      @result = Pundit.collection_authorizable([1,2], String)
+    end
+
+    it "returns object with policy_scope method" do
+      expect(@result.policy_class).to eq String
+      expect(@result.class).to eq Array
+    end
+
+    it "returns object with all method" do
+      expect(@result.all).to eq @result
+      expect(@result.class).to eq Array
+    end
+  end
+
 end
