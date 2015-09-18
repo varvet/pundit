@@ -133,6 +133,7 @@ end
 If you don't have an instance for the first argument to `authorize`, then you can pass
 the class. For example:
 
+Policy:
 ```ruby
 class PostPolicy < ApplicationPolicy
   def admin_list?
@@ -141,6 +142,7 @@ class PostPolicy < ApplicationPolicy
 end
 ```
 
+Controller:
 ```ruby
 def admin_list
   authorize Post # we don't have a particular post to authorize
