@@ -130,6 +130,24 @@ def publish
 end
 ```
 
+If you don't have an instance for the first argument to `authorize`, then you can pass
+the class. For example:
+
+```ruby
+class PostPolicy < ApplicationPolicy
+  def admin_list?
+    user.admin?
+  end
+end
+```
+
+```ruby
+def admin_list
+  authorize Post # we don't have a particular post to authorize
+  # Rest of controller action
+end
+```
+
 You can easily get a hold of an instance of the policy through the `policy`
 method in both the view and controller. This is especially useful for
 conditionally showing links or buttons in the view:
@@ -559,7 +577,7 @@ Then put your policy specs in `spec/policies`, and make them look somewhat like 
 describe PostPolicy do
   subject { described_class }
 
-  permissions :update? do
+  permissions :update?, :edit? do
     it "denies access if post is published" do
       expect(subject).not_to permit(User.new(:admin => false), Post.new(:published => true))
     end
