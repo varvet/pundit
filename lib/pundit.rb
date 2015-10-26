@@ -59,11 +59,17 @@ module Pundit
     end
 
     def policy!(user, record)
-      role = "#{user.administrator}#{SUFFIX}"
+      klass = PolicyFinder.new(record).policy!
+      role = "#{user.administrator}"
       role = role.camelcase
+      role = role + SUFFIX
+      role = role.constantize
       abilities = role.new(user, record).public_send('abilities')
-      puts abilities
-      # PolicyFinder.new(record).policy!.new(user, record)
+      related_abilities = []
+      abilities.each do |ability|
+        related_abilities << ability.constantize.new(user, record) if ability.to_s.include? klass.to_s
+      end
+      related_abilities
     end
   end
 
@@ -119,7 +125,11 @@ module Pundit
     @_pundit_policy_authorized = true
 
     policy = policy(record)
-    unless policy.public_send(query)
+    result = false
+    policy.each do |i|
+      result ||= i.public_send(query)
+    end
+    unless result
       raise NotAuthorizedError.new(query: query, record: record, policy: policy)
     end
 
