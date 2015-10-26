@@ -30,7 +30,7 @@ module Pundit
       policy or raise NotDefinedError, "unable to find policy `#{find}` for `#{object.inspect}`"
     end
 
-  private
+    private
 
     def find
       if object.nil?

@@ -59,7 +59,11 @@ module Pundit
     end
 
     def policy!(user, record)
-      PolicyFinder.new(record).policy!.new(user, record)
+      role = "#{user.administrator}#{SUFFIX}"
+      role = role.camelcase
+      abilities = role.new(user, record).public_send('abilities')
+      puts abilities
+      # PolicyFinder.new(record).policy!.new(user, record)
     end
   end
 
