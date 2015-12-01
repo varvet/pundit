@@ -193,7 +193,7 @@ forgotten to authorize the action. For example:
 
 ``` ruby
 class ApplicationController < ActionController::Base
-  after_action :verify_authorized, :except => :index
+  after_action :verify_authorized
 end
 ```
 
@@ -205,6 +205,7 @@ authorize individual instances.
 
 ``` ruby
 class ApplicationController < ActionController::Base
+  after_action :verify_authorized, :except => :index
   after_action :verify_policy_scoped, :only => :index
 end
 ```
