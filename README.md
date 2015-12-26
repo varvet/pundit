@@ -56,8 +56,7 @@ class PostPolicy
   attr_reader :user, :post
 
   def initialize(user, post)
-    @user = user
-    @post = post
+    @user, @post = user, post
   end
 
   def update?
@@ -205,8 +204,8 @@ authorize individual instances.
 
 ``` ruby
 class ApplicationController < ActionController::Base
-  after_action :verify_authorized, :except => :index
-  after_action :verify_policy_scoped, :only => :index
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index
 end
 ```
 
@@ -244,15 +243,14 @@ class PostPolicy < ApplicationPolicy
     attr_reader :user, :scope
 
     def initialize(user, scope)
-      @user = user
-      @scope = scope
+      @user, @scope = user, scope
     end
 
     def resolve
       if user.admin?
         scope.all
       else
-        scope.where(:published => true)
+        scope.where(published: true)
       end
     end
   end
@@ -285,7 +283,7 @@ class PostPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       else
-        scope.where(:published => true)
+        scope.where(published: true)
       end
     end
   end
@@ -373,8 +371,7 @@ got through. This way you can fail more gracefully.
 class ApplicationPolicy
   def initialize(user, record)
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
-    @user = user
-    @record = record
+    @user, @record = user, record
   end
 end
 ```
@@ -491,8 +488,7 @@ class UserContext
   attr_reader :user, :ip
 
   def initialize(user, ip)
-    @user = user
-    @ip = ip
+    @user, @ip = user, ip
   end
 end
 
@@ -583,15 +579,15 @@ describe PostPolicy do
 
   permissions :update?, :edit? do
     it "denies access if post is published" do
-      expect(subject).not_to permit(User.new(:admin => false), Post.new(:published => true))
+      expect(subject).not_to permit(User.new(admin: false), Post.new(published: true))
     end
 
     it "grants access if post is published and user is an admin" do
-      expect(subject).to permit(User.new(:admin => true), Post.new(:published => true))
+      expect(subject).to permit(User.new(admin: true), Post.new(published: true))
     end
 
     it "grants access if post is unpublished" do
-      expect(subject).to permit(User.new(:admin => false), Post.new(:published => false))
+      expect(subject).to permit(User.new(admin: false), Post.new(published: false))
     end
   end
 end
