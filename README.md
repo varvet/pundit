@@ -56,7 +56,8 @@ class PostPolicy
   attr_reader :user, :post
 
   def initialize(user, post)
-    @user, @post = user, post
+    @user = user
+    @post = post
   end
 
   def update?
@@ -243,7 +244,8 @@ class PostPolicy < ApplicationPolicy
     attr_reader :user, :scope
 
     def initialize(user, scope)
-      @user, @scope = user, scope
+      @user  = user
+      @scope = scope
     end
 
     def resolve
@@ -371,7 +373,8 @@ got through. This way you can fail more gracefully.
 class ApplicationPolicy
   def initialize(user, record)
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
-    @user, @record = user, record
+    @user   = user
+    @record = record
   end
 end
 ```
@@ -488,7 +491,8 @@ class UserContext
   attr_reader :user, :ip
 
   def initialize(user, ip)
-    @user, @ip = user, ip
+    @user = user
+    @ip   = ip
   end
 end
 
