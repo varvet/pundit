@@ -42,6 +42,10 @@ class PostPolicy < Struct.new(:user, :post)
       [:votes]
     end
   end
+
+  def permitted_attributes_for_revise
+    [:body]
+  end
 end
 class PostPolicy::Scope < Struct.new(:user, :scope)
   def resolve

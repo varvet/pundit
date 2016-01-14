@@ -139,15 +139,15 @@ module Pundit
     policies[record] ||= Pundit.policy!(pundit_user, record)
   end
 
-  def permitted_attributes(record)
-    name = if record.respond_to?(:model_name)
-      record.model_name.param_key
-    elsif record.is_a?(Class)
-      record.to_s.demodulize.underscore
+  def permitted_attributes(record, action=params[:action])
+    param_key = PolicyFinder.new(record).param_key
+    policy = policy(record)
+    method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
+      "permitted_attributes_for_#{action}"
     else
-      record.class.to_s.demodulize.underscore
+      "permitted_attributes"
     end
-    params.require(name).permit(policy(record).permitted_attributes)
+    params.require(param_key).permit(policy.public_send(method_name))
   end
 
   def policies

@@ -430,6 +430,20 @@ describe Pundit do
     end
   end
 
+  describe "#permitted_attributes_for_action" do
+    it "is checked if it is defined in the policy" do
+      params = ActionController::Parameters.new({ action: 'revise', post: { title: 'Hello', body: "blah", votes: 5, admin: true } })
+
+      expect(Controller.new(user, params).permitted_attributes(post)).to eq({ 'body' => 'blah' })
+    end
+
+    it "can be explicitly set" do
+      params = ActionController::Parameters.new({ action: 'update', post: { title: 'Hello', body: "blah", votes: 5, admin: true } })
+
+      expect(Controller.new(user, params).permitted_attributes(post, :revise)).to eq({ 'body' => 'blah' })
+    end
+  end
+
   describe "Pundit::NotAuthorizedError" do
     it "can be initialized with a string as message" do
       error = Pundit::NotAuthorizedError.new("must be logged in")

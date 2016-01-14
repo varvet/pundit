@@ -59,6 +59,18 @@ module Pundit
       policy or raise NotDefinedError, "unable to find policy `#{find}` for `#{object.inspect}`"
     end
 
+    # @return [String] the name of the key this object would have in a params hash
+    #
+    def param_key
+      if object.respond_to?(:model_name)
+        object.model_name.param_key.to_s
+      elsif object.is_a?(Class)
+        object.to_s.demodulize.underscore
+      else
+        object.class.to_s.demodulize.underscore
+      end
+    end
+
   private
 
     # @return [String] policy class name
