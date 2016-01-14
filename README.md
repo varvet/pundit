@@ -598,7 +598,7 @@ end
 ```
 
 An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
-[excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/).
+[excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/) and implemented in the third party [pundit-matchers](https://github.com/chrisalley/pundit-matchers) gem.
 
 # External Resources
 
