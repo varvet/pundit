@@ -40,20 +40,26 @@ module Pundit
       elsif object.class.respond_to?(:policy_class)
         object.class.policy_class
       else
-        klass = if object.respond_to?(:model_name)
-          object.model_name
-        elsif object.class.respond_to?(:model_name)
-          object.class.model_name
-        elsif object.is_a?(Class)
-          object
-        elsif object.is_a?(Symbol)
-          object.to_s.camelize
-        elsif object.is_a?(Array)
-          object.join('/').camelize
+        klass = if object.is_a?(Array)
+          object.map { |x| find_class_name(x) }.join('::')
         else
-          object.class
+          find_class_name(object)
         end
         "#{klass}#{SUFFIX}"
+      end
+    end
+
+    def find_class_name(subject)
+      if subject.respond_to?(:model_name)
+        subject.model_name
+      elsif subject.class.respond_to?(:model_name)
+        subject.class.model_name
+      elsif subject.is_a?(Class)
+        subject
+      elsif subject.is_a?(Symbol)
+        subject.to_s.camelize
+      else
+        subject.class
       end
     end
   end

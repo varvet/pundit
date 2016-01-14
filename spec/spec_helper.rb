@@ -107,7 +107,9 @@ end
 class CriteriaPolicy < Struct.new(:user, :criteria); end
 
 module Project
+  class CommentPolicy < Struct.new(:user, :post); end
   class CriteriaPolicy < Struct.new(:user, :criteria); end
+  class PostPolicy < Struct.new(:user, :post); end
 end
 
 class DenierPolicy < Struct.new(:user, :record)
@@ -137,4 +139,17 @@ class NilClassPolicy
   def initialize(*)
     raise "I'm only here to be annoying!"
   end
+end
+
+class PostFourFiveSix < Struct.new(:user); end
+class CommentFourFiveSix; extend ActiveModel::Naming; end
+
+module ProjectOneTwoThree
+  class CommentFourFiveSixPolicy < Struct.new(:user, :post); end
+  class CriteriaFourFiveSixPolicy < Struct.new(:user, :criteria); end
+  class PostFourFiveSixPolicy < Struct.new(:user, :post); end
+  class TagFourFiveSix < Struct.new(:user); end
+  class TagFourFiveSixPolicy < Struct.new(:user, :tag); end
+  class AvatarFourFiveSix; extend ActiveModel::Naming; end
+  class AvatarFourFiveSixPolicy < Struct.new(:user, :avatar); end
 end
