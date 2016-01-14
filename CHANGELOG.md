@@ -1,6 +1,12 @@
 # Pundit
 
-- Add autodetection of param key to `permitted_attributes` helper with ability to override it with `param_key` option.
+## 1.1.0 (2016-01-14)
+
+- Can retrieve policies via an array of symbols/objects.
+- Add autodetection of param key to `permitted_attributes` helper.
+- Hide some methods which should not be actions.
+- Permitted attributes should be expanded.
+- Generator uses `RSpec.describe` according to modern best practices.
 
 ## 1.0.1 (2015-05-27)
 
