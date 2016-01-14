@@ -8,7 +8,7 @@ describe Pundit do
   let(:comment) { Comment.new }
   let(:comment_four_five_six) { CommentFourFiveSix.new }
   let(:article) { Article.new }
-  let(:controller) { Controller.new(user, { :action => 'update' }) }
+  let(:controller) { Controller.new(user, action: "update") }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
   let(:comments_relation) { CommentsRelation.new }
@@ -27,7 +27,10 @@ describe Pundit do
     end
 
     it "raises an error with a query and action" do
-      expect { Pundit.authorize(user, post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this #<Post>") do |error|
+      # rubocop:disable Style/MultilineBlockChain
+      expect do
+        Pundit.authorize(user, post, :destroy?)
+      end.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this #<Post>") do |error|
         expect(error.query).to eq :destroy?
         expect(error.record).to eq post
         expect(error.policy).to eq Pundit.policy(user, post)
@@ -79,7 +82,9 @@ describe Pundit do
     end
 
     it "throws an exception if the given policy scope is nil" do
-      expect { Pundit.policy_scope!(user, nil) }.to raise_error(Pundit::NotDefinedError, "unable to find policy scope of nil")
+      expect do
+        Pundit.policy_scope!(user, nil)
+      end.to raise_error(Pundit::NotDefinedError, "unable to find policy scope of nil")
     end
   end
 
@@ -373,7 +378,7 @@ describe Pundit do
   end
 
   describe "#pundit_user" do
-    it 'returns the same thing as current_user' do
+    it "returns the same thing as current_user" do
       expect(controller.pundit_user).to eq controller.current_user
     end
   end
@@ -416,31 +421,49 @@ describe Pundit do
 
   describe "#permitted_attributes" do
     it "checks policy for permitted attributes" do
-      params = ActionController::Parameters.new({ action: 'update', post: { title: 'Hello', votes: 5, admin: true } })
+      params = ActionController::Parameters.new(action: "update", post: {
+        title: "Hello",
+        votes: 5,
+        admin: true
+      })
 
-      expect(Controller.new(user, params).permitted_attributes(post)).to eq({ 'title' => 'Hello', 'votes' => 5 })
-      expect(Controller.new(double, params).permitted_attributes(post)).to eq({ 'votes' => 5 })
+      expect(Controller.new(user, params).permitted_attributes(post)).to eq("title" => "Hello", "votes" => 5)
+      expect(Controller.new(double, params).permitted_attributes(post)).to eq("votes" => 5)
     end
 
     it "checks policy for permitted attributes for record of a ActiveModel type" do
-      params = ActionController::Parameters.new({ action: 'update', customer_post: { title: 'Hello', votes: 5, admin: true } })
+      params = ActionController::Parameters.new(action: "update", customer_post: {
+        title: "Hello",
+        votes: 5,
+        admin: true
+      })
 
-      expect(Controller.new(user, params).permitted_attributes(customer_post)).to eq({ 'title' => 'Hello', 'votes' => 5 })
-      expect(Controller.new(double, params).permitted_attributes(customer_post)).to eq({ 'votes' => 5 })
+      expect(Controller.new(user, params).permitted_attributes(customer_post)).to eq("title" => "Hello", "votes" => 5)
+      expect(Controller.new(double, params).permitted_attributes(customer_post)).to eq("votes" => 5)
     end
   end
 
   describe "#permitted_attributes_for_action" do
     it "is checked if it is defined in the policy" do
-      params = ActionController::Parameters.new({ action: 'revise', post: { title: 'Hello', body: "blah", votes: 5, admin: true } })
+      params = ActionController::Parameters.new(action: "revise", post: {
+        title: "Hello",
+        body: "blah",
+        votes: 5,
+        admin: true
+      })
 
-      expect(Controller.new(user, params).permitted_attributes(post)).to eq({ 'body' => 'blah' })
+      expect(Controller.new(user, params).permitted_attributes(post)).to eq("body" => "blah")
     end
 
     it "can be explicitly set" do
-      params = ActionController::Parameters.new({ action: 'update', post: { title: 'Hello', body: "blah", votes: 5, admin: true } })
+      params = ActionController::Parameters.new(action: "update", post: {
+        title: "Hello",
+        body: "blah",
+        votes: 5,
+        admin: true
+      })
 
-      expect(Controller.new(user, params).permitted_attributes(post, :revise)).to eq({ 'body' => 'blah' })
+      expect(Controller.new(user, params).permitted_attributes(post, :revise)).to eq("body" => "blah")
     end
   end
 
