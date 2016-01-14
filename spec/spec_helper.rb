@@ -56,6 +56,17 @@ class Post < Struct.new(:user)
   def inspect; "#<Post>"; end
 end
 
+module Customer
+  class Post < Post
+    # In ActiveRecord this method is accessible at both object and class level
+    def model_name
+      OpenStruct.new(param_key: 'customer_post')
+    end
+    def policy_class
+      PostPolicy
+    end
+  end
+end
 class CommentPolicy < Struct.new(:user, :comment); end
 class CommentPolicy::Scope < Struct.new(:user, :scope)
   def resolve

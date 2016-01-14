@@ -1,5 +1,7 @@
 # Pundit
 
+- Add autodetection of param key to `permitted_attributes` helper with ability to override it with `param_key` option.
+
 ## 1.0.1 (2015-05-27)
 
 - Fixed a regression where NotAuthorizedError could not be ininitialized with a string.

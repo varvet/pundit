@@ -140,8 +140,14 @@ module Pundit
   end
 
   def permitted_attributes(record)
-    name = record.class.to_s.demodulize.underscore
-    params.require(name).permit(*policy(record).permitted_attributes)
+    name = if record.respond_to?(:model_name)
+      record.model_name.param_key
+    elsif record.is_a?(Class)
+      record.to_s.demodulize.underscore
+    else
+      record.class.to_s.demodulize.underscore
+    end
+    params.require(name).permit(policy(record).permitted_attributes)
   end
 
   def policies
