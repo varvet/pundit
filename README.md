@@ -606,6 +606,7 @@ An alternative approach to Pundit policy specs is scoping them to a user context
 - [Migrating to Pundit from CanCan](http://blog.carbonfive.com/2013/10/21/migrating-to-pundit-from-cancan/)
 - [Testing Pundit Policies with RSpec](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/)
 - [Using Pundit outside of a Rails controller](https://github.com/elabs/pundit/pull/136)
+- [Straightforward Rails Authorization with Pundit](http://www.sitepoint.com/straightforward-rails-authorization-with-pundit/)
 
 # License
 
