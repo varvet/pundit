@@ -38,7 +38,7 @@ module Pundit
       policy = policy!(user, record)
 
       unless policy.public_send(query)
-        raise NotAuthorizedError.new(query: query, record: record, policy: policy)
+        raise NotAuthorizedError, query: query, record: record, policy: policy
       end
 
       true
@@ -102,21 +102,22 @@ module Pundit
   end
 
   def verify_authorized
-    raise AuthorizationNotPerformedError.new(self.class) unless pundit_policy_authorized?
+    raise AuthorizationNotPerformedError, self.class unless pundit_policy_authorized?
   end
 
   def verify_policy_scoped
-    raise PolicyScopingNotPerformedError.new(self.class) unless pundit_policy_scoped?
+    raise PolicyScopingNotPerformedError, self.class unless pundit_policy_scoped?
   end
 
-  def authorize(record, query=nil)
+  def authorize(record, query = nil)
     query ||= params[:action].to_s + "?"
 
     @_pundit_policy_authorized = true
 
     policy = policy(record)
+
     unless policy.public_send(query)
-      raise NotAuthorizedError.new(query: query, record: record, policy: policy)
+      raise NotAuthorizedError, query: query, record: record, policy: policy
     end
 
     true
@@ -139,7 +140,7 @@ module Pundit
     policies[record] ||= Pundit.policy!(pundit_user, record)
   end
 
-  def permitted_attributes(record, action=params[:action])
+  def permitted_attributes(record, action = params[:action])
     param_key = PolicyFinder.new(record).param_key
     policy = policy(record)
     method_name = if policy.respond_to?("permitted_attributes_for_#{action}")

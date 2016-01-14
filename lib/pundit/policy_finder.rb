@@ -85,7 +85,7 @@ module Pundit
         object.class.policy_class
       else
         klass = if object.is_a?(Array)
-          object.map { |x| find_class_name(x) }.join('::')
+          object.map { |x| find_class_name(x) }.join("::")
         else
           find_class_name(object)
         end
