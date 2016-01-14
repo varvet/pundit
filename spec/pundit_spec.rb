@@ -3,6 +3,7 @@ require "spec_helper"
 describe Pundit do
   let(:user) { double }
   let(:post) { Post.new(user) }
+  let(:customer_post) { Customer::Post.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
   let(:controller) { Controller.new(user, { :action => 'update' }) }
@@ -342,6 +343,13 @@ describe Pundit do
 
       expect(Controller.new(user, params).permitted_attributes(post)).to eq({ 'title' => 'Hello', 'votes' => 5 })
       expect(Controller.new(double, params).permitted_attributes(post)).to eq({ 'votes' => 5 })
+    end
+
+    it "checks policy for permitted attributes for record of a ActiveModel type" do
+      params = ActionController::Parameters.new({ action: 'update', customer_post: { title: 'Hello', votes: 5, admin: true } })
+
+      expect(Controller.new(user, params).permitted_attributes(customer_post)).to eq({ 'title' => 'Hello', 'votes' => 5 })
+      expect(Controller.new(double, params).permitted_attributes(customer_post)).to eq({ 'votes' => 5 })
     end
   end
 
