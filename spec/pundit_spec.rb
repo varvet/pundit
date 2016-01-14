@@ -4,13 +4,17 @@ describe Pundit do
   let(:user) { double }
   let(:post) { Post.new(user) }
   let(:customer_post) { Customer::Post.new(user) }
+  let(:post_four_five_six) { PostFourFiveSix.new(user) }
   let(:comment) { Comment.new }
+  let(:comment_four_five_six) { CommentFourFiveSix.new }
   let(:article) { Article.new }
   let(:controller) { Controller.new(user, { :action => 'update' }) }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
   let(:comments_relation) { CommentsRelation.new }
   let(:empty_comments_relation) { CommentsRelation.new(true) }
+  let(:tag_four_five_six) { ProjectOneTwoThree::TagFourFiveSix.new(user) }
+  let(:avatar_four_five_six) { ProjectOneTwoThree::AvatarFourFiveSix.new }
 
   describe ".authorize" do
     it "infers the policy and authorizes based on it" do
@@ -104,6 +108,93 @@ describe Pundit do
       expect(policy.comment).to eq Comment
     end
 
+    it "returns an instantiated policy given a symbol" do
+      policy = Pundit.policy(user, :criteria)
+      expect(policy.class).to eq CriteriaPolicy
+      expect(policy.user).to eq user
+      expect(policy.criteria).to eq :criteria
+    end
+
+    it "returns an instantiated policy given an array of symbols" do
+      policy = Pundit.policy(user, [:project, :criteria])
+      expect(policy.class).to eq Project::CriteriaPolicy
+      expect(policy.user).to eq user
+      expect(policy.criteria).to eq [:project, :criteria]
+    end
+
+    it "returns an instantiated policy given an array of a symbol and plain model instance" do
+      policy = Pundit.policy(user, [:project, post])
+      expect(policy.class).to eq Project::PostPolicy
+      expect(policy.user).to eq user
+      expect(policy.post).to eq [:project, post]
+    end
+
+    it "returns an instantiated policy given an array of a symbol and an active model instance" do
+      policy = Pundit.policy(user, [:project, comment])
+      expect(policy.class).to eq Project::CommentPolicy
+      expect(policy.user).to eq user
+      expect(policy.post).to eq [:project, comment]
+    end
+
+    it "returns an instantiated policy given an array of a symbol and a plain model class" do
+      policy = Pundit.policy(user, [:project, Post])
+      expect(policy.class).to eq Project::PostPolicy
+      expect(policy.user).to eq user
+      expect(policy.post).to eq [:project, Post]
+    end
+
+    it "returns an instantiated policy given an array of a symbol and an active model class" do
+      policy = Pundit.policy(user, [:project, Comment])
+      expect(policy.class).to eq Project::CommentPolicy
+      expect(policy.user).to eq user
+      expect(policy.post).to eq [:project, Comment]
+    end
+
+    it "returns correct policy class for an array of a multi-word symbols" do
+      policy = Pundit.policy(user, [:project_one_two_three, :criteria_four_five_six])
+      expect(policy.class).to eq ProjectOneTwoThree::CriteriaFourFiveSixPolicy
+    end
+
+    it "returns correct policy class for an array of a multi-word symbol and a multi-word plain model instance" do
+      policy = Pundit.policy(user, [:project_one_two_three, post_four_five_six])
+      expect(policy.class).to eq ProjectOneTwoThree::PostFourFiveSixPolicy
+    end
+
+    it "returns correct policy class for an array of a multi-word symbol and a multi-word active model instance" do
+      policy = Pundit.policy(user, [:project_one_two_three, comment_four_five_six])
+      expect(policy.class).to eq ProjectOneTwoThree::CommentFourFiveSixPolicy
+    end
+
+    it "returns correct policy class for an array of a multi-word symbol and a multi-word plain model class" do
+      policy = Pundit.policy(user, [:project_one_two_three, PostFourFiveSix])
+      expect(policy.class).to eq ProjectOneTwoThree::PostFourFiveSixPolicy
+    end
+
+    it "returns correct policy class for an array of a multi-word symbol and a multi-word active model class" do
+      policy = Pundit.policy(user, [:project_one_two_three, CommentFourFiveSix])
+      expect(policy.class).to eq ProjectOneTwoThree::CommentFourFiveSixPolicy
+    end
+
+    it "returns correct policy class for a multi-word scoped plain model class" do
+      policy = Pundit.policy(user, ProjectOneTwoThree::TagFourFiveSix)
+      expect(policy.class).to eq ProjectOneTwoThree::TagFourFiveSixPolicy
+    end
+
+    it "returns correct policy class for a multi-word scoped plain model instance" do
+      policy = Pundit.policy(user, tag_four_five_six)
+      expect(policy.class).to eq ProjectOneTwoThree::TagFourFiveSixPolicy
+    end
+
+    it "returns correct policy class for a multi-word scoped active model class" do
+      policy = Pundit.policy(user, ProjectOneTwoThree::AvatarFourFiveSix)
+      expect(policy.class).to eq ProjectOneTwoThree::AvatarFourFiveSixPolicy
+    end
+
+    it "returns correct policy class for a multi-word scoped active model instance" do
+      policy = Pundit.policy(user, avatar_four_five_six)
+      expect(policy.class).to eq ProjectOneTwoThree::AvatarFourFiveSixPolicy
+    end
+
     it "returns nil if the given policy can't be found" do
       expect(Pundit.policy(user, article)).to be_nil
       expect(Pundit.policy(user, Article)).to be_nil
@@ -136,20 +227,6 @@ describe Pundit do
         policy = Pundit.policy(user, ArticleTag)
         expect(policy.user).to eq user
         expect(policy.tag).to eq ArticleTag
-      end
-
-      it "returns an instantiated policy given a symbol" do
-        policy = Pundit.policy(user, :criteria)
-        expect(policy.class).to eq CriteriaPolicy
-        expect(policy.user).to eq user
-        expect(policy.criteria).to eq :criteria
-      end
-
-      it "returns an instantiated policy given an array" do
-        policy = Pundit.policy(user, [:project, :criteria])
-        expect(policy.class).to eq Project::CriteriaPolicy
-        expect(policy.user).to eq user
-        expect(policy.criteria).to eq [:project, :criteria]
       end
     end
   end
@@ -186,7 +263,7 @@ describe Pundit do
       expect(policy.criteria).to eq :criteria
     end
 
-    it "returns an instantiated policy given an array" do
+    it "returns an instantiated policy given an array of symbols" do
       policy = Pundit.policy!(user, [:project, :criteria])
       expect(policy.class).to eq Project::CriteriaPolicy
       expect(policy.user).to eq user
