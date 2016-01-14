@@ -1,8 +1,8 @@
 # Pundit
 
-[![Build Status](https://secure.travis-ci.org/elabs/pundit.png?branch=master)](https://travis-ci.org/elabs/pundit)
-[![Code Climate](https://codeclimate.com/github/elabs/pundit.png)](https://codeclimate.com/github/elabs/pundit)
-[![Inline docs](http://inch-ci.org/github/elabs/pundit.png)](http://inch-ci.org/github/elabs/pundit)
+[![Build Status](https://secure.travis-ci.org/elabs/pundit.svg?branch=master)](https://travis-ci.org/elabs/pundit)
+[![Code Climate](https://codeclimate.com/github/elabs/pundit.svg)](https://codeclimate.com/github/elabs/pundit)
+[![Inline docs](http://inch-ci.org/github/elabs/pundit.svg?branch=master)](http://inch-ci.org/github/elabs/pundit)
 [![Gem Version](https://badge.fury.io/rb/pundit.svg)](http://badge.fury.io/rb/pundit)
 
 Pundit provides a set of helpers which guide you in leveraging regular Ruby
