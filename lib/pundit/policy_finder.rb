@@ -10,13 +10,13 @@ module Pundit
   class PolicyFinder
     attr_reader :object
 
-    # @param object [any]
+    # @param object [any] the object to find policy and scope classes for
     #
     def initialize(object)
       @object = object
     end
 
-    # @return [nil, Scope{#resolve}]
+    # @return [nil, Scope{#resolve}] scope class which can resolve to a scope
     # @see https://github.com/elabs/pundit#scopes
     # @example
     #   scope = finder.scope #=> UserPolicy::Scope
@@ -43,7 +43,7 @@ module Pundit
       nil
     end
 
-    # @return [Scope{#resolve}]
+    # @return [Scope{#resolve}] scope class which can resolve to a scope
     # @raise [NotDefinedError] if scope could not be determined
     #
     def scope!
@@ -73,9 +73,6 @@ module Pundit
 
   private
 
-    # @return [String] policy class name
-    # @api public
-    #
     def find
       if object.nil?
         nil
