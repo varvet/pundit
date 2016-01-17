@@ -184,54 +184,6 @@ authorize :dashboard, :show?
 <% end %>
 ```
 
-## Ensuring policies are used
-
-Pundit adds a method called `verify_authorized` to your controllers. This
-method will raise an exception if `authorize` has not yet been called. You
-should run this method in an `after_action` to ensure that you haven't
-forgotten to authorize the action. For example:
-
-``` ruby
-class ApplicationController < ActionController::Base
-  after_action :verify_authorized
-end
-```
-
-Likewise, Pundit also adds `verify_policy_scoped` to your controller.  This
-will raise an exception in the vein of `verify_authorized`.  However, it tracks
-if `policy_scope` is used instead of `authorize`.  This is mostly useful for
-controller actions like `index` which find collections with a scope and don't
-authorize individual instances.
-
-``` ruby
-class ApplicationController < ActionController::Base
-  after_action :verify_authorized, except: :index
-  after_action :verify_policy_scoped, only: :index
-end
-```
-
-If you're using `verify_authorized` in your controllers but need to
-conditionally bypass verification, you can use `skip_authorization`. For
-bypassing `verify_policy_scoped`, use `skip_policy_scope`. These are useful
-in circumstances where you don't want to disable verification for the
-entire action, but have some cases where you intend to not authorize.
-
-```ruby
-def show
-  record = Record.find_by(attribute: "value")
-  if record.present?
-    authorize record
-  else
-    skip_authorization
-  end
-end
-```
-
-If you need to perform some more sophisticated logic or you want to raise a custom
-exception you can use the two lower level methods `pundit_policy_authorized?`
-and `pundit_policy_scoped?` which return `true` or `false` depending on whether
-`authorize` or `policy_scope` have been called, respectively.
-
 ## Scopes
 
 Often, you will want to have some kind of view listing records which a
@@ -321,6 +273,54 @@ You can, and are encouraged to, use this method in views:
   <p><%= link_to post.title, post_path(post) %></p>
 <% end %>
 ```
+
+## Ensuring policies and scopes are used
+
+Pundit adds a method called `verify_authorized` to your controllers. This
+method will raise an exception if `authorize` has not yet been called. You
+should run this method in an `after_action` to ensure that you haven't
+forgotten to authorize the action. For example:
+
+``` ruby
+class ApplicationController < ActionController::Base
+  after_action :verify_authorized
+end
+```
+
+Likewise, Pundit also adds `verify_policy_scoped` to your controller.  This
+will raise an exception in the vein of `verify_authorized`.  However, it tracks
+if `policy_scope` is used instead of `authorize`.  This is mostly useful for
+controller actions like `index` which find collections with a scope and don't
+authorize individual instances.
+
+``` ruby
+class ApplicationController < ActionController::Base
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index
+end
+```
+
+If you're using `verify_authorized` in your controllers but need to
+conditionally bypass verification, you can use `skip_authorization`. For
+bypassing `verify_policy_scoped`, use `skip_policy_scope`. These are useful
+in circumstances where you don't want to disable verification for the
+entire action, but have some cases where you intend to not authorize.
+
+```ruby
+def show
+  record = Record.find_by(attribute: "value")
+  if record.present?
+    authorize record
+  else
+    skip_authorization
+  end
+end
+```
+
+If you need to perform some more sophisticated logic or you want to raise a custom
+exception you can use the two lower level methods `pundit_policy_authorized?`
+and `pundit_policy_scoped?` which return `true` or `false` depending on whether
+`authorize` or `policy_scope` have been called, respectively.
 
 ## Manually specifying policy classes
 
