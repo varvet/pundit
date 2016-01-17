@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "pundit/version"
 require "pundit/policy_finder"
 require "active_support/concern"
@@ -8,7 +9,7 @@ require "active_support/dependencies/autoload"
 
 # @api public
 module Pundit
-  SUFFIX = "Policy"
+  SUFFIX = "Policy".freeze
 
   # @api private
   module Generators; end
