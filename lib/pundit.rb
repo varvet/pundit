@@ -77,9 +77,13 @@ module Pundit
     true
   end
 
-  def policy_scope(scope)
+  def policy_scope(scope, **options)
     @_policy_scoped = true
-    @policy_scope or Pundit.policy_scope!(pundit_user, scope, self.class.parent)
+    @policy_scope or Pundit.policy_scope!(
+      options[:user] || pundit_user,
+      scope,
+      options[:namespace] || self.class.parent
+    )
   end
   attr_writer :policy_scope
 
