@@ -135,6 +135,17 @@ class ArticleTag
   def self.policy_class
     ArticleTagOtherNamePolicy
   end
+
+  def to_s
+    "article tag"
+  end
+
+  # jruby fallbacks to present #to_s unless #inspect defined
+  if RUBY_PLATFORM == "java"
+    def inspect
+      "#<ArticleTag:0x#{rand(10**8)}>"
+    end
+  end
 end
 
 class CriteriaPolicy < Struct.new(:user, :criteria); end

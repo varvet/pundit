@@ -28,11 +28,16 @@ module Pundit
         @query  = options[:query]
         @record = options[:record]
         @policy = options[:policy]
+        @inspect = "#<#{self.class}: not allowed to #{query} this #{record.inspect}>"
 
-        message = options.fetch(:message) { "not allowed to #{query} this #{record.inspect}" }
+        message = options.fetch(:message) { "not allowed to #{query} this #{record || "nil"}" }
       end
 
       super(message)
+    end
+
+    def inspect
+      @inspect || super
     end
   end
 

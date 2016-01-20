@@ -17,23 +17,28 @@ describe Pundit do
   let(:avatar_four_five_six) { ProjectOneTwoThree::AvatarFourFiveSix.new }
 
   describe ".authorize" do
+    # rubocop:disable Style/MultilineBlockChain
     it "infers the policy and authorizes based on it" do
       expect(Pundit.authorize(user, post, :update?)).to be_truthy
     end
 
     it "works with anonymous class policies" do
       expect(Pundit.authorize(user, article_tag, :show?)).to be_truthy
-      expect { Pundit.authorize(user, article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
+      expect do
+        Pundit.authorize(user, article_tag, :destroy?)
+      end.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this article tag") do |error|
+        expect(error.inspect).to match(/not allowed to destroy\? this #<ArticleTag:0x.+>/)
+      end
     end
 
     it "raises an error with a query and action" do
-      # rubocop:disable Style/MultilineBlockChain
       expect do
         Pundit.authorize(user, post, :destroy?)
-      end.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this #<Post>") do |error|
+      end.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this Post") do |error|
         expect(error.query).to eq :destroy?
         expect(error.record).to eq post
         expect(error.policy).to eq Pundit.policy(user, post)
+        expect(error.inspect).to eq "#<Pundit::NotAuthorizedError: not allowed to destroy? this #<Post>>"
       end
     end
   end
