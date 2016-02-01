@@ -404,6 +404,10 @@ class ApplicationController < ActionController::Base
 end
 ```
 
+Alternatively, you can globally handle Pundit::NotAuthorizedError's by having rails handle them as a 403 error and serving a 403 error page. Add the following to application.rb:
+
+```config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden```
+
 ## Creating custom error messages
 
 `NotAuthorizedError`s provide information on what query (e.g. `:create?`), what
