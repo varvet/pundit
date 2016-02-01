@@ -324,6 +324,24 @@ exception you can use the two lower level methods `pundit_policy_authorized?`
 and `pundit_policy_scoped?` which return `true` or `false` depending on whether
 `authorize` or `policy_scope` have been called, respectively.
 
+### Why is this important?
+
+Having a mechanism that ensures authorization happens allows developers to
+thoroughly test authorization scenarios as units on the policy objects
+themselves. The benefits include:
+
+* request tests are lean and focused on happy path behavior
+* unit tests execute much faster keeping your test suite speedy
+
+### What is this not?
+
+It's not a failsafe for authorization. Imagine a scenario where there exists a
+controller action that mutates your service, e.g. `PATCH /users/:id`.  Assuming
+the `update` action for the `UsersController` is not authorized, a request
+would result in a 500 error due to `verify_authorized`. However the update
+would already be persisted leaving a vector for updates being applied without
+proper authorization.
+
 ## Manually specifying policy classes
 
 Sometimes you might want to explicitly declare which policy to use for a given
