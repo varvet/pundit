@@ -153,6 +153,8 @@ end
 
 class Controller
   include Pundit
+  # Mark protected methods public so they may be called in test
+  public(*Pundit.protected_instance_methods)
 
   attr_reader :current_user, :params
 

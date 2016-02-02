@@ -128,22 +128,9 @@ module Pundit
       helper_method :pundit_policy_scope
       helper_method :pundit_user
     end
-    if respond_to?(:hide_action)
-      hide_action :policy
-      hide_action :policy_scope
-      hide_action :policies
-      hide_action :policy_scopes
-      hide_action :authorize
-      hide_action :verify_authorized
-      hide_action :verify_policy_scoped
-      hide_action :permitted_attributes
-      hide_action :pundit_user
-      hide_action :skip_authorization
-      hide_action :skip_policy_scope
-      hide_action :pundit_policy_authorized?
-      hide_action :pundit_policy_scoped?
-    end
   end
+
+protected
 
   # @return [Boolean] whether authorization has been performed, i.e. whether
   #                   one {#authorize} or {#skip_authorization} has been called
