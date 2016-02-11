@@ -62,6 +62,10 @@ class Post < Struct.new(:user)
     :published
   end
 
+  def self.read
+    :read
+  end
+
   def to_s
     "Post"
   end
@@ -140,9 +144,23 @@ end
 class CriteriaPolicy < Struct.new(:user, :criteria); end
 
 module Project
-  class CommentPolicy < Struct.new(:user, :post); end
+  class CommentPolicy < Struct.new(:user, :comment)
+    class Scope < Struct.new(:user, :scope)
+      def resolve
+        scope
+      end
+    end
+  end
+
   class CriteriaPolicy < Struct.new(:user, :criteria); end
-  class PostPolicy < Struct.new(:user, :post); end
+
+  class PostPolicy < Struct.new(:user, :post)
+    class Scope < Struct.new(:user, :scope)
+      def resolve
+        scope.read
+      end
+    end
+  end
 end
 
 class DenierPolicy < Struct.new(:user, :record)
