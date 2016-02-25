@@ -56,7 +56,7 @@ module Pundit
     #
     # @param user [Object] the user that initiated the action
     # @param record [Object] the object we're checking permissions of
-    # @param record [Symbol] the query method to check on the policy (e.g. `:show?`)
+    # @param query [Symbol, String] the predicate method to check on the policy (e.g. `:show?`)
     # @raise [NotAuthorizedError] if the given query method returned false
     # @return [true] Always returns true
     def authorize(user, record, query)
@@ -73,7 +73,7 @@ module Pundit
     #
     # @see https://github.com/elabs/pundit#scopes
     # @param user [Object] the user that initiated the action
-    # @param record [Object] the object we're retrieving the policy scope for
+    # @param scope [Object] the object we're retrieving the policy scope for
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
     def policy_scope(user, scope)
       policy_scope = PolicyFinder.new(scope).scope
@@ -84,7 +84,7 @@ module Pundit
     #
     # @see https://github.com/elabs/pundit#scopes
     # @param user [Object] the user that initiated the action
-    # @param record [Object] the object we're retrieving the policy scope for
+    # @param scope [Object] the object we're retrieving the policy scope for
     # @raise [NotDefinedError] if the policy scope cannot be found
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     def policy_scope!(user, scope)
@@ -184,7 +184,8 @@ module Pundit
   # authorized to perform the given action.
   #
   # @param record [Object] the object we're checking permissions of
-  # @param record [Symbol, nil] the query method to check on the policy (e.g. `:show?`)
+  # @param query [Symbol, String] the predicate method to check on the policy (e.g. `:show?`).
+  #   If omitted then this defaults to the Rails controller action name.
   # @raise [NotAuthorizedError] if the given query method returned false
   # @return [true] Always returns true
   def authorize(record, query = nil)
@@ -220,7 +221,7 @@ module Pundit
   # Retrieves the policy scope for the given record.
   #
   # @see https://github.com/elabs/pundit#scopes
-  # @param record [Object] the object we're retrieving the policy scope for
+  # @param scope [Object] the object we're retrieving the policy scope for
   # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
   def policy_scope(scope)
     @_pundit_policy_scoped = true
@@ -238,12 +239,14 @@ module Pundit
 
   # Retrieves a set of permitted attributes from the policy by instantiating
   # the policy class for the given record and calling `permitted_attributes` on
-  # it, or `permitted_attributes_for_{action}` if it is defined. It then infers
+  # it, or `permitted_attributes_for_{action}` if `action` is defined. It then infers
   # what key the record should have in the params hash and retrieves the
   # permitted attributes from the params hash under that key.
   #
   # @see https://github.com/elabs/pundit#strong-parameters
   # @param record [Object] the object we're retrieving permitted attributes for
+  # @param action [Symbol, String] the name of the action being performed on the record (e.g. `:update`).
+  #   If omitted then this defaults to the Rails controller action name.
   # @return [Hash{String => Object}] the permitted attributes
   def permitted_attributes(record, action = params[:action])
     param_key = PolicyFinder.new(record).param_key
