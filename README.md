@@ -4,6 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/elabs/pundit.svg)](https://codeclimate.com/github/elabs/pundit)
 [![Inline docs](http://inch-ci.org/github/elabs/pundit.svg?branch=master)](http://inch-ci.org/github/elabs/pundit)
 [![Gem Version](https://badge.fury.io/rb/pundit.svg)](http://badge.fury.io/rb/pundit)
+[![codebeat](https://codebeat.co/badges/d03fcbf4-525d-49dc-8022-e443a8850c42)](https://codebeat.co/projects/github-com-elabs-pundit)
 
 Pundit provides a set of helpers which guide you in leveraging regular Ruby
 classes and object oriented design patterns to build a simple, robust and
