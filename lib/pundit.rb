@@ -243,7 +243,7 @@ protected
     else
       "permitted_attributes"
     end
-    params.require(param_key).permit(policy.public_send(method_name))
+    params.require(param_key).permit(*policy.public_send(method_name))
   end
 
   # Cache of policies. You should not rely on this method.
