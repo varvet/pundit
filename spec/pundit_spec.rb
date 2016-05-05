@@ -87,7 +87,7 @@ describe Pundit do
       end.to raise_error(Pundit::NotDefinedError, "unable to find policy scope of nil")
     end
 
-    it "returns an instantiated policy scope given an array of a symbol and plain model class", focus: true do
+    it "returns an instantiated policy scope given an array of a symbol and plain model class" do
       expect(Pundit.policy_scope!(user, [:project, Post])).to eq :read
     end
 
