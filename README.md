@@ -493,6 +493,48 @@ def pundit_user
 end
 ```
 
+## Policy Namespacing
+In some cases it might be helpful to have multiple policies that serve different contexts for a
+resource. A prime example of this is the case where User policies differ from Admin policies. To
+authorize with a namespaced policy, pass the namespace into the `authorize` helper in an array:
+
+```ruby
+authorize(post)                   # => will look for a PostPolicy
+authorize([:admin, post])         # => will look for an Admin::PostPolicy
+authorize([:foo, :bar, post])     # => will look for a Foo::Bar::PostPolicy
+
+policy_scope(Post)                # => will look for a PostPolicy::Scope
+policy_scope([:admin, Post])      # => will look for an Admin::PostPolicy::Scope
+policy_scope([:foo, :bar, Post])  # => will look for a Foo::Bar::PostPolicy::Scope
+```
+
+If you are using namespaced policies for something like Admin views, it can be useful to
+override the `policy_scope` and `authorize` helpers in your `AdminController` to automatically
+apply the namespacing:
+
+```ruby
+class AdminController < ApplicationController
+  def policy_scope(scope)
+    super([:admin, scope])
+  end
+
+  def authorize(record, query = nil)
+    super([:admin, record], query)
+  end
+end
+
+class Admin::PostController < AdminController
+  def index
+    policy_scope(Post)
+  end
+
+  def show
+    post = Post.find(params[:id])
+    authorize(post)
+  end
+end
+```
+
 ## Additional context
 
 Pundit strongly encourages you to model your application in such a way that the
