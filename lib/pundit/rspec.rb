@@ -8,7 +8,7 @@ module Pundit
       matcher :permit do |user, record|
         match_proc = lambda do |policy|
           @violating_permissions = permissions.find_all do |permission|
-            not policy.new(user, record).public_send(permission)
+            !policy.new(user, record).public_send(permission)
           end
           @violating_permissions.empty?
         end
@@ -71,12 +71,14 @@ end
 
 RSpec.configure do |config|
   if RSpec::Core::Version::STRING.split(".").first.to_i >= 3
-    config.include(Pundit::RSpec::PolicyExampleGroup,
+    config.include(
+      Pundit::RSpec::PolicyExampleGroup,
       type: :policy,
       file_path: %r{spec/policies}
     )
   else
-    config.include(Pundit::RSpec::PolicyExampleGroup,
+    config.include(
+      Pundit::RSpec::PolicyExampleGroup,
       type: :policy,
       example_group: { file_path: %r{spec/policies} }
     )
