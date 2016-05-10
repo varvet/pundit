@@ -334,6 +334,10 @@ describe Pundit do
       expect(controller.authorize(post)).to be_truthy
     end
 
+    it "returns the record on successful authorization" do
+      expect(controller.authorize(post)).to be(post)
+    end
+
     it "can be given a different permission to check" do
       expect(controller.authorize(post, :show?)).to be_truthy
       expect { controller.authorize(post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
