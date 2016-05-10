@@ -17,7 +17,7 @@ module Pundit
   # @api private
   class Error < StandardError; end
 
-  # Error that will be raiser when authorization has failed
+  # Error that will be raised when authorization has failed
   class NotAuthorizedError < Error
     attr_reader :query, :record, :policy
 
@@ -58,7 +58,7 @@ module Pundit
     # @param record [Object] the object we're checking permissions of
     # @param query [Symbol, String] the predicate method to check on the policy (e.g. `:show?`)
     # @raise [NotAuthorizedError] if the given query method returned false
-    # @return [true] Always returns true
+    # @return [Object] Always returns the passed object record
     def authorize(user, record, query)
       policy = policy!(user, record)
 
@@ -66,7 +66,7 @@ module Pundit
         raise NotAuthorizedError, query: query, record: record, policy: policy
       end
 
-      true
+      record
     end
 
     # Retrieves the policy scope for the given record.
@@ -174,7 +174,7 @@ protected
   # @param query [Symbol, String] the predicate method to check on the policy (e.g. `:show?`).
   #   If omitted then this defaults to the Rails controller action name.
   # @raise [NotAuthorizedError] if the given query method returned false
-  # @return [true] Always returns true
+  # @return [Object] Always returns the passed object record
   def authorize(record, query = nil)
     query ||= params[:action].to_s + "?"
 
@@ -186,7 +186,7 @@ protected
       raise NotAuthorizedError, query: query, record: record, policy: policy
     end
 
-    true
+    record
   end
 
   # Allow this action not to perform authorization.
