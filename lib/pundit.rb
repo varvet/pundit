@@ -266,6 +266,7 @@ protected
   # @see https://github.com/elabs/pundit#customize-pundit-user
   # @return [Object] the user object to be used with pundit
   def pundit_user
+    return super if defined?(super)
     current_user
   end
 
