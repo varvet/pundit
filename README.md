@@ -597,6 +597,23 @@ class PostsController < ApplicationController
 end
 ```
 
+If you want to permit different attributes based on the current action, you can define a `permitted_attributes_for_#{action}` method on your policy:
+
+```ruby
+# app/policies/post_policy.rb
+class PostPolicy < ApplicationPolicy
+  def permitted_attributes_for_create
+    [:title, :body]
+  end
+
+  def permitted_attributes_for_edit
+    [:body]
+  end
+end
+```
+
+If you have defined an action-specific method on your policy for the current action, the `permitted_attributes` helper will call it instead of calling `permitted_attributes` on your controller.
+
 ## RSpec
 
 ### Policy Specs
