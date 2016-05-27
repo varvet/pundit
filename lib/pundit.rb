@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "pundit/version"
 require "pundit/policy_finder"
+require "pundit/prefix_policy_finder"
 require "active_support/concern"
 require "active_support/core_ext/string/inflections"
 require "active_support/core_ext/object/blank"
@@ -59,8 +60,8 @@ module Pundit
     # @param query [Symbol, String] the predicate method to check on the policy (e.g. `:show?`)
     # @raise [NotAuthorizedError] if the given query method returned false
     # @return [Object] Always returns the passed object record
-    def authorize(user, record, query)
-      policy = policy!(user, record)
+    def authorize(user, record, query, prefix_str = '')
+      policy = policy!(user, record, prefix_str)
 
       unless policy.public_send(query)
         raise NotAuthorizedError, query: query, record: record, policy: policy
@@ -75,8 +76,8 @@ module Pundit
     # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
-    def policy_scope(user, scope)
-      policy_scope = PolicyFinder.new(scope).scope
+    def policy_scope(user, scope, prefix_str = '')
+      policy_scope = PrefixPolicyFinder.new(scope, prefix_str).scope
       policy_scope.new(user, scope).resolve if policy_scope
     end
 
@@ -87,8 +88,8 @@ module Pundit
     # @param scope [Object] the object we're retrieving the policy scope for
     # @raise [NotDefinedError] if the policy scope cannot be found
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
-    def policy_scope!(user, scope)
-      PolicyFinder.new(scope).scope!.new(user, scope).resolve
+    def policy_scope!(user, scope, prefix_str = '')
+      PrefixPolicyFinder.new(scope, prefix_str).scope!.new(user, scope).resolve
     end
 
     # Retrieves the policy for the given record.
@@ -97,8 +98,8 @@ module Pundit
     # @param user [Object] the user that initiated the action
     # @param record [Object] the object we're retrieving the policy for
     # @return [Object, nil] instance of policy class with query methods
-    def policy(user, record)
-      policy = PolicyFinder.new(record).policy
+    def policy(user, record, prefix_str = '')
+      policy = PrefixPolicyFinder.new(record, prefix_str).policy
       policy.new(user, record) if policy
     end
 
@@ -109,8 +110,8 @@ module Pundit
     # @param record [Object] the object we're retrieving the policy for
     # @raise [NotDefinedError] if the policy cannot be found
     # @return [Object] instance of policy class with query methods
-    def policy!(user, record)
-      PolicyFinder.new(record).policy!.new(user, record)
+    def policy!(user, record, prefix_str = '')
+      PrefixPolicyFinder.new(record, prefix_str).policy!.new(user, record)
     end
   end
 
@@ -205,6 +206,10 @@ protected
     @_pundit_policy_scoped = true
   end
 
+  def set_pundit_prefix(prefix_str)
+    @_prefix = prefix_str ||= ''
+  end
+
   # Retrieves the policy scope for the given record.
   #
   # @see https://github.com/elabs/pundit#scopes
@@ -221,7 +226,7 @@ protected
   # @param record [Object] the object we're retrieving the policy for
   # @return [Object, nil] instance of policy class with query methods
   def policy(record)
-    policies[record] ||= Pundit.policy!(pundit_user, record)
+    policies[record] ||= Pundit.policy!(pundit_user, record, @_prefix)
   end
 
   # Retrieves a set of permitted attributes from the policy by instantiating
@@ -236,7 +241,7 @@ protected
   #   If omitted then this defaults to the Rails controller action name.
   # @return [Hash{String => Object}] the permitted attributes
   def permitted_attributes(record, action = params[:action])
-    param_key = PolicyFinder.new(record).param_key
+    param_key = PrefixPolicyFinder.new(record, @_prefix).param_key
     policy = policy(record)
     method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
       "permitted_attributes_for_#{action}"
@@ -272,6 +277,6 @@ protected
 private
 
   def pundit_policy_scope(scope)
-    policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
+    policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope, @_prefix)
   end
 end
