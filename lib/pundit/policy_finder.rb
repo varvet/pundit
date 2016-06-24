@@ -47,7 +47,6 @@ module Pundit
     # @raise [NotDefinedError] if scope could not be determined
     #
     def scope!
-      raise NotDefinedError, "unable to find policy scope of nil" if object.nil?
       scope or raise NotDefinedError, "unable to find scope `#{find}::Scope` for `#{object.inspect}`"
     end
 
@@ -55,7 +54,6 @@ module Pundit
     # @raise [NotDefinedError] if policy could not be determined
     #
     def policy!
-      raise NotDefinedError, "unable to find policy of nil" if object.nil?
       policy or raise NotDefinedError, "unable to find policy `#{find}` for `#{object.inspect}`"
     end
 
@@ -74,9 +72,7 @@ module Pundit
   private
 
     def find
-      if object.nil?
-        nil
-      elsif object.respond_to?(:policy_class)
+      if object.respond_to?(:policy_class)
         object.policy_class
       elsif object.class.respond_to?(:policy_class)
         object.class.policy_class
