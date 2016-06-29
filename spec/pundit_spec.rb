@@ -12,6 +12,7 @@ describe Pundit do
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
   let(:comments_relation) { CommentsRelation.new }
+  let(:rails_3_comments_relation) { Rails3CommentsRelation.new }
   let(:empty_comments_relation) { CommentsRelation.new(true) }
   let(:tag_four_five_six) { ProjectOneTwoThree::TagFourFiveSix.new(user) }
   let(:avatar_four_five_six) { ProjectOneTwoThree::AvatarFourFiveSix.new }
@@ -53,6 +54,10 @@ describe Pundit do
 
     it "returns an instantiated policy scope given an empty active record relation" do
       expect(Pundit.policy_scope(user, empty_comments_relation)).to eq empty_comments_relation
+    end
+
+    it "returns an instantiated policy scope given a Rails 3.x active record relation" do
+      expect(Pundit.policy_scope(user, rails_3_comments_relation)).to eq rails_3_comments_relation
     end
 
     it "returns nil if the given policy scope can't be found" do

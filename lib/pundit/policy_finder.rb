@@ -81,12 +81,7 @@ module Pundit
       elsif object.class.respond_to?(:policy_class)
         object.class.policy_class
       else
-        klass = if object.is_a?(Array)
-          object.map { |x| find_class_name(x) }.join("::")
-        else
-          find_class_name(object)
-        end
-        "#{klass}#{SUFFIX}"
+        "#{find_class_name(object)}#{SUFFIX}"
       end
     end
 
@@ -99,6 +94,8 @@ module Pundit
         subject
       elsif subject.is_a?(Symbol)
         subject.to_s.camelize
+      elsif subject.is_a?(Array)
+        subject.map { |x| find_class_name(x) }.join("::")
       else
         subject.class
       end
