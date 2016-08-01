@@ -169,6 +169,31 @@ conditionally showing links or buttons in the view:
   <%= link_to "Edit post", edit_post_path(@post) %>
 <% end %>
 ```
+### Namespaced policies
+You can use namespaced policies by giving `authorize` an array.
+
+``` ruby
+class Admin::UsersController < ApplicationController
+  def index
+    authorize [:admin, :user]
+  end
+  
+  def show
+    @user = User.find(params[:id)
+    authorize [:admin, @user]
+  end
+end
+
+class Admin::UserPolicy < ApplicationPolicy
+  def index?
+    ...
+  end
+  
+  def show?
+    ...
+  end
+end
+```
 ## Headless policies
 
 Given there is a policy without a corresponding model / ruby class,
