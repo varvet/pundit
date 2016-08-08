@@ -391,7 +391,8 @@ rails g pundit:policy post
 
 In many applications, only logged in users are really able to do anything. If
 you're building such a system, it can be kind of cumbersome to check that the
-user in a policy isn't `nil` for every single permission.
+user in a policy isn't `nil` for every single permission. Aside from policies,
+you can add this check to the base class for scopes.
 
 We suggest that you define a filter that redirects unauthenticated users to the
 login page. As a secondary defence, if you've defined an ApplicationPolicy, it
@@ -404,6 +405,16 @@ class ApplicationPolicy
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
     @user   = user
     @record = record
+  end
+
+  class Scope
+    attr_reader :user, :scope
+
+    def initialize(user, scope)
+      raise Pundit::NotAuthorizedError, "must be logged in" unless user
+      @user = user
+      @scope = scope
+    end
   end
 end
 ```
