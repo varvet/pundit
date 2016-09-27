@@ -175,7 +175,7 @@ protected
   # @raise [NotAuthorizedError] if the given query method returned false
   # @return [Object] Always returns the passed object record
   def authorize(record, query = nil)
-    query ||= params[:action].to_s + "?"
+    query ||= "#{action_name}?"
 
     @_pundit_policy_authorized = true
 
@@ -232,7 +232,7 @@ protected
   # @param action [Symbol, String] the name of the action being performed on the record (e.g. `:update`).
   #   If omitted then this defaults to the Rails controller action name.
   # @return [Hash{String => Object}] the permitted attributes
-  def permitted_attributes(record, action = params[:action])
+  def permitted_attributes(record, action = action_name)
     policy = policy(record)
     method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
       "permitted_attributes_for_#{action}"

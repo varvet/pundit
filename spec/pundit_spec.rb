@@ -8,7 +8,7 @@ describe Pundit do
   let(:comment) { Comment.new }
   let(:comment_four_five_six) { CommentFourFiveSix.new }
   let(:article) { Article.new }
-  let(:controller) { Controller.new(user, action: "update") }
+  let(:controller) { Controller.new(user, "update", {}) }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
   let(:comments_relation) { CommentsRelation.new }
@@ -426,30 +426,40 @@ describe Pundit do
 
   describe "#permitted_attributes" do
     it "checks policy for permitted attributes" do
-      params = ActionController::Parameters.new(action: "update", post: {
+      params = ActionController::Parameters.new(post: {
         title: "Hello",
         votes: 5,
         admin: true
       })
 
-      expect(Controller.new(user, params).permitted_attributes(post).to_h).to eq("title" => "Hello", "votes" => 5)
-      expect(Controller.new(double, params).permitted_attributes(post).to_h).to eq("votes" => 5)
-    end
+      action = "update"
 
-    it "checks policy for permitted attributes for record of a ActiveModel type" do
-      params = ActionController::Parameters.new(action: "update", customer_post: {
-        title: "Hello",
-        votes: 5,
-        admin: true
-      })
-
-      expect(Controller.new(user, params).permitted_attributes(customer_post)).to eq("title" => "Hello", "votes" => 5)
-      expect(Controller.new(double, params).permitted_attributes(customer_post)).to eq("votes" => 5)
-      expect(Controller.new(user, params).permitted_attributes(customer_post).to_h).to eq(
+      expect(Controller.new(user, action, params).permitted_attributes(post).to_h).to eq(
         "title" => "Hello",
         "votes" => 5
       )
-      expect(Controller.new(double, params).permitted_attributes(customer_post).to_h).to eq(
+      expect(Controller.new(double, action, params).permitted_attributes(post).to_h).to eq("votes" => 5)
+    end
+
+    it "checks policy for permitted attributes for record of a ActiveModel type" do
+      params = ActionController::Parameters.new(customer_post: {
+        title: "Hello",
+        votes: 5,
+        admin: true
+      })
+
+      action = "update"
+
+      expect(Controller.new(user, action, params).permitted_attributes(customer_post).to_h).to eq(
+        "title" => "Hello",
+        "votes" => 5
+      )
+      expect(Controller.new(double, action, params).permitted_attributes(customer_post)).to eq("votes" => 5)
+      expect(Controller.new(user, action, params).permitted_attributes(customer_post).to_h).to eq(
+        "title" => "Hello",
+        "votes" => 5
+      )
+      expect(Controller.new(double, action, params).permitted_attributes(customer_post).to_h).to eq(
         "votes" => 5
       )
     end
@@ -457,25 +467,27 @@ describe Pundit do
 
   describe "#permitted_attributes_for_action" do
     it "is checked if it is defined in the policy" do
-      params = ActionController::Parameters.new(action: "revise", post: {
+      params = ActionController::Parameters.new(post: {
         title: "Hello",
         body: "blah",
         votes: 5,
         admin: true
       })
 
-      expect(Controller.new(user, params).permitted_attributes(post).to_h).to eq("body" => "blah")
+      action = "revise"
+      expect(Controller.new(user, action, params).permitted_attributes(post).to_h).to eq("body" => "blah")
     end
 
     it "can be explicitly set" do
-      params = ActionController::Parameters.new(action: "update", post: {
+      params = ActionController::Parameters.new(post: {
         title: "Hello",
         body: "blah",
         votes: 5,
         admin: true
       })
 
-      expect(Controller.new(user, params).permitted_attributes(post, :revise).to_h).to eq("body" => "blah")
+      action = "update"
+      expect(Controller.new(user, action, params).permitted_attributes(post, :revise).to_h).to eq("body" => "blah")
     end
   end
 

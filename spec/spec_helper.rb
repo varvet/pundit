@@ -156,10 +156,11 @@ class Controller
   # Mark protected methods public so they may be called in test
   public(*Pundit.protected_instance_methods)
 
-  attr_reader :current_user, :params
+  attr_reader :current_user, :action_name, :params
 
-  def initialize(current_user, params)
+  def initialize(current_user, action_name, params)
     @current_user = current_user
+    @action_name = action_name
     @params = params
   end
 end
