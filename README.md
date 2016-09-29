@@ -614,6 +614,20 @@ end
 
 If you have defined an action-specific method on your policy for the current action, the `permitted_attributes` helper will call it instead of calling `permitted_attributes` on your controller.
 
+To show/hide the UI element you can just call permitted_attributes method in the view:
+
+```ruby
+<%= simple_form_for(@post) do |f| %>
+...
+<% if policy(@post).permitted_attributes.include? :body %>
+  <div class="form-inputs">
+    <%= f.input :body %>
+  </div>
+<% end %>
+...
+<% end %>
+```
+
 ## RSpec
 
 ### Policy Specs
