@@ -318,8 +318,8 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-**This verification mechanism only exists to aid you while developing you
-application, so you don't forget to call `authorize`. If is not some kind of
+**This verification mechanism only exists to aid you while developing your
+application, so you don't forget to call `authorize`. It is not some kind of
 failsafe mechanism or authorization mechanism. You should be able to remove
 these filters without affecting how your app works in any way.**
 
