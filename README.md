@@ -285,10 +285,17 @@ You can, and are encouraged to, use this method in views:
 
 ## Ensuring policies and scopes are used
 
-Pundit adds a method called `verify_authorized` to your controllers. This
-method will raise an exception if `authorize` has not yet been called. You
-should run this method in an `after_action` to ensure that you haven't
-forgotten to authorize the action. For example:
+When you are developing an application with Pundit it can be easy to forget to
+authorize some action. People are forgetful after all. Since Pundit encourages
+you to add the `authorize` call manually to each controller action, it's really
+easy to miss one.
+
+Thankfully, Pundit has a handy feature which reminds you in case you forget.
+Pundit tracks whether you have called `authorize` anywhere in you controller
+action. Pundit also adds a method to you controllers called
+`verify_authorized`. This method will raise an exception if `authorize` has not
+yet been called. You should run this method in an `after_action` hook to ensure
+that you haven't forgotten to authorize the action. For example:
 
 ``` ruby
 class ApplicationController < ActionController::Base
@@ -297,9 +304,9 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-Likewise, Pundit also adds `verify_policy_scoped` to your controller.  This
-will raise an exception in the vein of `verify_authorized`.  However, it tracks
-if `policy_scope` is used instead of `authorize`.  This is mostly useful for
+Likewise, Pundit also adds `verify_policy_scoped` to your controller. This
+will raise an exception similar to `verify_authorized`. However, it tracks
+if `policy_scope` is used instead of `authorize`. This is mostly useful for
 controller actions like `index` which find collections with a scope and don't
 authorize individual instances.
 
@@ -310,6 +317,18 @@ class ApplicationController < ActionController::Base
   after_action :verify_policy_scoped, only: :index
 end
 ```
+
+**This verification mechanism only exists to aid you while developing you
+application, so you don't forget to call `authorize`. If is not some kind of
+failsafe mechanism or authorization mechanism. You should be able to remove
+these filters without affecting how your app works in any way.**
+
+Some people have found this feature confusing, while many others
+find it extremely helpful. If you fall into the category of people who find it
+confusing then you do not need to use it. Pundit will work just fine without
+using `verify_authorized` and `verify_policy_scoped`.
+
+### Conditional verification
 
 If you're using `verify_authorized` in your controllers but need to
 conditionally bypass verification, you can use `skip_authorization`. For
@@ -327,29 +346,6 @@ def show
   end
 end
 ```
-
-If you need to perform some more sophisticated logic or you want to raise a custom
-exception you can use the two lower level methods `pundit_policy_authorized?`
-and `pundit_policy_scoped?` which return `true` or `false` depending on whether
-`authorize` or `policy_scope` have been called, respectively.
-
-### Why is this important?
-
-Having a mechanism that ensures authorization happens allows developers to
-thoroughly test authorization scenarios as units on the policy objects
-themselves. The benefits include:
-
-* request tests are lean and focused on happy path behavior
-* unit tests execute much faster keeping your test suite speedy
-
-### What is this not?
-
-It's not a failsafe for authorization. Imagine a scenario where there exists a
-controller action that mutates your service, e.g. `PATCH /users/:id`.  Assuming
-the `update` action for the `UsersController` is not authorized, a request
-would result in a 500 error due to `verify_authorized`. However the update
-would already be persisted leaving a vector for updates being applied without
-proper authorization.
 
 ## Manually specifying policy classes
 
