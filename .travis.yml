@@ -5,5 +5,4 @@ rvm:
   - 2.1
   - 2.2
   - 2.3
-  - jruby-19mode
-  - rbx-2
+  - jruby
