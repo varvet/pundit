@@ -116,7 +116,9 @@ and the given record. It then infers from the action name, that it should call
 `authorize` would have done something like this:
 
 ``` ruby
-raise "not authorized" unless PostPolicy.new(current_user, @post).update?
+unless PostPolicy.new(current_user, @post).update?
+  raise Pundit::NotAuthorizedError, "not allowed to update? this #{@post.inspect}"
+end
 ```
 
 You can pass a second argument to `authorize` if the name of the permission you
