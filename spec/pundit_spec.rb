@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Pundit do
-  let(:user) { double }
+  let(:user) { double(moderator?: false) }
   let(:post) { Post.new(user) }
   let(:customer_post) { Customer::Post.new(user) }
   let(:post_four_five_six) { PostFourFiveSix.new(user) }
@@ -365,6 +365,16 @@ describe Pundit do
     it "raises an error when the given record is nil" do
       expect { controller.authorize(nil, :destroy?) }.to raise_error(Pundit::NotDefinedError)
     end
+  end
+
+  describe "#authorize_with" do
+
+    it "uses the policy specified" do
+      expect {
+        controller.authorize_with(post, policy_class: PostModerationPolicy)
+      }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
   end
 
   describe "#skip_authorization" do

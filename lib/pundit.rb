@@ -176,17 +176,11 @@ protected
   # @raise [NotAuthorizedError] if the given query method returned false
   # @return [Object] Always returns the passed object record
   def authorize(record, query = nil)
-    query ||= params[:action].to_s + "?"
+    pundit_authorize_with_policy(record, query) {  policy(record) }
+  end
 
-    @_pundit_policy_authorized = true
-
-    policy = policy(record)
-
-    unless policy.public_send(query)
-      raise NotAuthorizedError, query: query, record: record, policy: policy
-    end
-
-    record
+  def authorize_with(record, policy_class:, query: nil)
+    pundit_authorize_with_policy(record, query) {  policy_class.new(pundit_user, record) }
   end
 
   # Allow this action not to perform authorization.
@@ -270,6 +264,20 @@ protected
   end
 
 private
+
+  def pundit_authorize_with_policy(record, query)
+    query ||= params[:action].to_s + "?"
+
+    @_pundit_policy_authorized = true
+
+    policy = yield
+
+    unless policy.public_send(query)
+      raise NotAuthorizedError, query: query, record: record, policy: policy
+    end
+
+    record
+  end
 
   def pundit_policy_scope(scope)
     policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
