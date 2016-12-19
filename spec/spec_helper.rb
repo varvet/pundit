@@ -91,6 +91,18 @@ class CommentPolicy < Struct.new(:user, :comment)
   end
 end
 
+class PublicationPolicy < Struct.new(:user, :publication)
+  class Scope < Struct.new(:user, :scope)
+    def resolve
+      scope
+    end
+  end
+
+  def create?
+    true
+  end
+end
+
 class Comment
   extend ActiveModel::Naming
 end

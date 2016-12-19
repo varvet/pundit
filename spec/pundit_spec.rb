@@ -375,6 +375,10 @@ describe Pundit do
       expect { controller.authorize(post, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
+    it "can be given a different policy class" do
+      expect(controller.authorize(post, :create?, policy_class: PublicationPolicy)).to be_truthy
+    end
+
     it "works with anonymous class policies" do
       expect(controller.authorize(article_tag, :show?)).to be_truthy
       expect { controller.authorize(article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)

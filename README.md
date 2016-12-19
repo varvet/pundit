@@ -133,6 +133,18 @@ def publish
 end
 ```
 
+You can pass an argument to override the policy class if necessary. For example:
+
+```ruby
+def create
+  @publication = find_publication # assume this method returns any model that behaves like a publication
+  # @publication.class => Post
+  authorize @publication, policy_class: PublicationPolicy
+  @publication.publish!
+  redirect_to @publication
+end
+```
+
 If you don't have an instance for the first argument to `authorize`, then you can pass
 the class. For example:
 
