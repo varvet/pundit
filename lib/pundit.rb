@@ -224,10 +224,11 @@ protected
   #
   # @see https://github.com/elabs/pundit#scopes
   # @param scope [Object] the object we're retrieving the policy scope for
+  # @param policy_scope_class [Class] the policy scope class we wan't to force use of
   # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
-  def policy_scope(scope)
+  def policy_scope(scope, policy_scope_class: nil)
     @_pundit_policy_scoped = true
-    pundit_policy_scope(scope)
+    policy_scope_class ? policy_scope_class.new(pundit_user, scope).resolve : pundit_policy_scope(scope)
   end
 
   # Retrieves the policy for the given record.

@@ -283,6 +283,15 @@ def show
 end
 ```
 
+Like with the authorize method, you can also override the policy scope class:
+
+``` ruby
+def index
+  # publication_class => Post
+  @publications = policy_scope(publication_class, policy_scope_class: PublicationPolicy::Scope)
+end
+```
+
 Just as with your policy, this will automatically infer that you want to use
 the `PostPolicy::Scope` class, it will instantiate this class and call
 `resolve` on the instance. In this case it is a shortcut for doing:
