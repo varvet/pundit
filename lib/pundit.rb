@@ -74,10 +74,11 @@ module Pundit
     # @see https://github.com/elabs/pundit#scopes
     # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
+    # @param method [Symbol] the method to call on the scope. Defaults to :resolve.
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
-    def policy_scope(user, scope)
+    def policy_scope(user, scope, method = :resolve)
       policy_scope = PolicyFinder.new(scope).scope
-      policy_scope.new(user, scope).resolve if policy_scope
+      policy_scope.new(user, scope).public_send(method) if policy_scope
     end
 
     # Retrieves the policy scope for the given record.
@@ -85,10 +86,11 @@ module Pundit
     # @see https://github.com/elabs/pundit#scopes
     # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
+    # @param method [Symbol] the method to call on the scope. Defaults to :resolve.
     # @raise [NotDefinedError] if the policy scope cannot be found
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
-    def policy_scope!(user, scope)
-      PolicyFinder.new(scope).scope!.new(user, scope).resolve
+    def policy_scope!(user, scope, method = :resolve)
+      PolicyFinder.new(scope).scope!.new(user, scope).public_send(method)
     end
 
     # Retrieves the policy for the given record.
@@ -116,8 +118,8 @@ module Pundit
 
   # @api private
   module Helper
-    def policy_scope(scope)
-      pundit_policy_scope(scope)
+    def policy_scope(scope, method = :resolve)
+      pundit_policy_scope(scope, method)
     end
   end
 
@@ -209,10 +211,11 @@ protected
   #
   # @see https://github.com/elabs/pundit#scopes
   # @param scope [Object] the object we're retrieving the policy scope for
+  # @param method [Symbol] the method to call on the scope. Defaults to :resolve.
   # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
-  def policy_scope(scope)
+  def policy_scope(scope, method = :resolve)
     @_pundit_policy_scoped = true
-    pundit_policy_scope(scope)
+    pundit_policy_scope(scope, method)
   end
 
   # Retrieves the policy for the given record.
@@ -271,7 +274,10 @@ protected
 
 private
 
-  def pundit_policy_scope(scope)
-    policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
+  def pundit_policy_scope(scope, method = :resolve)
+    method = method.to_sym
+    key    = method == :resolve ? scope : [scope, method]
+
+    policy_scopes[key] ||= Pundit.policy_scope!(pundit_user, scope, method)
   end
 end

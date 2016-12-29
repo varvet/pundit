@@ -285,6 +285,45 @@ You can, and are encouraged to, use this method in views:
 <% end %>
 ```
 
+It is also possible to define additional methods the scope that you can use in
+different situations. We'll add an `unpublished` scope to the 
+`PostPolicy::Scope`:
+
+``` ruby
+class PostPolicy < ApplicationPolicy
+  class Scope < Scope
+    def resolve
+      if user.admin?
+        scope.all
+      else
+        scope.where(published: true)
+      end
+    end
+
+    def unpublished
+      if user.admin?
+        scope.all
+      else
+        scope.where(published: false)
+      end
+    end
+  end
+
+  def update?
+    user.admin? or not post.published?
+  end
+end
+```
+
+To use the `unpublished` scope, simply pass the name of the method as the 2nd 
+argument to `policy_scope`:
+
+``` ruby
+def index
+  @posts = policy_scope(Post, :unpublished)
+end
+```
+
 ## Ensuring policies and scopes are used
 
 When you are developing an application with Pundit it can be easy to forget to
