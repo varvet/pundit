@@ -86,6 +86,14 @@ describe Pundit do
         Pundit.policy_scope!(user, nil)
       end.to raise_error(Pundit::NotDefinedError, "unable to find policy scope of nil")
     end
+
+    it "throws NameError if the policy is failed to be auto-loaded" do
+      expect(ArticleTagOtherNamePolicy).to receive(:const_missing).with(:Scope) do |_name|
+        AnotherMissingConstant
+      end
+      expect(Object).to receive(:const_missing).and_call_original
+      expect { Pundit.policy_scope!(user, ArticleTag) }.to raise_error(NameError)
+    end
   end
 
   describe ".policy" do
@@ -282,6 +290,14 @@ describe Pundit do
 
     it "throws an exception if the given policy is nil" do
       expect { Pundit.policy!(user, nil) }.to raise_error(Pundit::NotDefinedError, "unable to find policy of nil")
+    end
+
+    it "throws NameError if the policy has failed to be auto-loaded" do
+      expect(Object).to receive(:const_missing).with(:ArticlePolicy) do |_name|
+        AnotherMissingConstant
+      end
+      expect(Object).to receive(:const_missing).and_call_original
+      expect { Pundit.policy!(user, article) }.to raise_error(NameError)
     end
   end
 
