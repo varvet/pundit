@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "activesupport", ">= 3.0.0"
   gem.add_development_dependency "activemodel", ">= 3.0.0"
+  gem.add_development_dependency "actionpack", ">= 3.0.0"
   gem.add_development_dependency "bundler", "~> 1.3"
   gem.add_development_dependency "rspec", ">=2.0.0"
   gem.add_development_dependency "pry"
