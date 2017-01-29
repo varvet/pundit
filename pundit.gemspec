@@ -25,10 +25,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "pry"
   gem.add_development_dependency "yard"
   gem.add_development_dependency "rubocop"
-
-  if RUBY_VERSION == "2.3.0"
-    gem.add_development_dependency "rake", "< 11.0"
-  else
-    gem.add_development_dependency "rake"
-  end
+  gem.add_development_dependency "rake", "< 11.0"
 end
