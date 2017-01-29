@@ -3,7 +3,7 @@ sudo: false
 rvm:
   - 2.0.0
   - 2.1
-  - 2.2
+  - 2.2.2
   - 2.3.0
   - jruby-19mode
   - rbx-2
