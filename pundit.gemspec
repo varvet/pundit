@@ -24,7 +24,12 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "bundler", "~> 1.3"
   gem.add_development_dependency "rspec", ">=2.0.0"
   gem.add_development_dependency "pry"
-  gem.add_development_dependency "rake", "< 11.0"
   gem.add_development_dependency "yard"
   gem.add_development_dependency "rubocop"
+
+  if RUBY_VERSION == "2.3.0"
+    gem.add_development_dependency "rake", "< 11.0"
+  else
+    gem.add_development_dependency "rake"
+  end
 end

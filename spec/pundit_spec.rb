@@ -1,5 +1,5 @@
 require "spec_helper"
-
+# rubocop:disable Metrics/BlockLength
 describe Pundit do
   let(:user) { double }
   let(:post) { Post.new(user) }
@@ -478,3 +478,4 @@ describe Pundit do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

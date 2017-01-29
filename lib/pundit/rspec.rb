@@ -4,7 +4,7 @@ module Pundit
   module RSpec
     module Matchers
       extend ::RSpec::Matchers::DSL
-
+      # rubocop:disable Metrics/BlockLength
       matcher :permit do |user, record|
         match_proc = lambda do |policy|
           @violating_permissions = permissions.find_all do |permission|
@@ -49,6 +49,7 @@ module Pundit
           current_example.metadata[:permissions]
         end
       end
+      # rubocop:enable Metrics/BlockLength
     end
 
     module DSL
