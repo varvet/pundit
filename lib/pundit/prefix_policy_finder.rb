@@ -27,9 +27,10 @@ module Pundit
       @prefix = prefix
     end
 
-    private
+  private
+
     def find
-      return "#{prefix}#{super.to_s}"
+      "#{prefix}#{super}"
     end
   end
 end

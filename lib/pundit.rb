@@ -60,7 +60,7 @@ module Pundit
     # @param query [Symbol, String] the predicate method to check on the policy (e.g. `:show?`)
     # @raise [NotAuthorizedError] if the given query method returned false
     # @return [Object] Always returns the passed object record
-    def authorize(user, record, query, prefix_str = '')
+    def authorize(user, record, query, prefix_str = "")
       policy = policy!(user, record, prefix_str)
 
       unless policy.public_send(query)
@@ -76,7 +76,7 @@ module Pundit
     # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
-    def policy_scope(user, scope, prefix_str = '')
+    def policy_scope(user, scope, prefix_str = "")
       policy_scope = PrefixPolicyFinder.new(scope, prefix_str).scope
       policy_scope.new(user, scope).resolve if policy_scope
     end
@@ -88,7 +88,7 @@ module Pundit
     # @param scope [Object] the object we're retrieving the policy scope for
     # @raise [NotDefinedError] if the policy scope cannot be found
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
-    def policy_scope!(user, scope, prefix_str = '')
+    def policy_scope!(user, scope, prefix_str = "")
       PrefixPolicyFinder.new(scope, prefix_str).scope!.new(user, scope).resolve
     end
 
@@ -98,7 +98,7 @@ module Pundit
     # @param user [Object] the user that initiated the action
     # @param record [Object] the object we're retrieving the policy for
     # @return [Object, nil] instance of policy class with query methods
-    def policy(user, record, prefix_str = '')
+    def policy(user, record, prefix_str = "")
       policy = PrefixPolicyFinder.new(record, prefix_str).policy
       policy.new(user, record) if policy
     end
@@ -110,7 +110,7 @@ module Pundit
     # @param record [Object] the object we're retrieving the policy for
     # @raise [NotDefinedError] if the policy cannot be found
     # @return [Object] instance of policy class with query methods
-    def policy!(user, record, prefix_str = '')
+    def policy!(user, record, prefix_str = "")
       PrefixPolicyFinder.new(record, prefix_str).policy!.new(user, record)
     end
   end
@@ -206,8 +206,8 @@ protected
     @_pundit_policy_scoped = true
   end
 
-  def set_pundit_prefix(prefix_str)
-    @_prefix = prefix_str ||= ''
+  def pundit_prefix(prefix_str)
+    @_prefix = prefix_str || ""
   end
 
   # Retrieves the policy scope for the given record.
