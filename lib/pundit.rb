@@ -77,6 +77,7 @@ module Pundit
     # @see https://github.com/elabs/pundit#scopes
     # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
+    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
     def policy_scope(user, scope)
       policy_scope = PolicyFinder.new(scope).scope
@@ -91,6 +92,7 @@ module Pundit
     # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
     # @raise [NotDefinedError] if the policy scope cannot be found
+    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     def policy_scope!(user, scope)
       policy_scope = PolicyFinder.new(scope).scope!
@@ -104,6 +106,7 @@ module Pundit
     # @see https://github.com/elabs/pundit#policies
     # @param user [Object] the user that initiated the action
     # @param record [Object] the object we're retrieving the policy for
+    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Object, nil] instance of policy class with query methods
     def policy(user, record)
       policy = PolicyFinder.new(record).policy
@@ -118,6 +121,7 @@ module Pundit
     # @param user [Object] the user that initiated the action
     # @param record [Object] the object we're retrieving the policy for
     # @raise [NotDefinedError] if the policy cannot be found
+    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Object] instance of policy class with query methods
     def policy!(user, record)
       policy = PolicyFinder.new(record).policy!
