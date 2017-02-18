@@ -84,7 +84,7 @@ module Pundit
       policy_scope = PolicyFinder.new(scope).scope
       policy_scope.new(user, scope).resolve if policy_scope
     rescue ArgumentError
-      raise InvalidConstructorError, "Invalid #{policy_scope.class} constructor is called."
+      raise InvalidConstructorError, "Invalid #<#{policy_scope}> constructor is called"
     end
 
     # Retrieves the policy scope for the given record.
@@ -99,7 +99,7 @@ module Pundit
       policy_scope = PolicyFinder.new(scope).scope!
       policy_scope.new(user, scope).resolve
     rescue ArgumentError
-      raise InvalidConstructorError, "Invalid #{policy_scope.class} constructor is called."
+      raise InvalidConstructorError, "Invalid #<#{policy_scope}> constructor is called"
     end
 
     # Retrieves the policy for the given record.
@@ -113,7 +113,7 @@ module Pundit
       policy = PolicyFinder.new(record).policy
       policy.new(user, record) if policy
     rescue ArgumentError
-      raise InvalidConstructorError, "Invalid #{policy.class} constructor is called."
+      raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
     end
 
     # Retrieves the policy for the given record.
@@ -128,7 +128,7 @@ module Pundit
       policy = PolicyFinder.new(record).policy!
       policy.new(user, record)
     rescue ArgumentError
-      raise InvalidConstructorError, "Invalid #{policy.class} constructor is called."
+      raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
     end
   end
 
