@@ -36,6 +36,9 @@ module Pundit
     end
   end
 
+  # Error that will be raised if a policy or policy scope constructor is not called correctly.
+  class InvalidConstructorError < Error; end
+
   # Error that will be raised if a controller action has not called the
   # `authorize` or `skip_authorization` methods.
   class AuthorizationNotPerformedError < Error; end
