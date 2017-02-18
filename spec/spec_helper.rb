@@ -176,6 +176,14 @@ class NilClassPolicy
   end
 end
 
+class Wiki; end
+class WikiPolicy
+  class Scope
+    # deliberate typo method
+    def initalize; end
+  end
+end
+
 class PostFourFiveSix < Struct.new(:user); end
 
 class CommentFourFiveSix; extend ActiveModel::Naming; end

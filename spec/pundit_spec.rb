@@ -15,6 +15,7 @@ describe Pundit do
   let(:empty_comments_relation) { CommentsRelation.new(true) }
   let(:tag_four_five_six) { ProjectOneTwoThree::TagFourFiveSix.new(user) }
   let(:avatar_four_five_six) { ProjectOneTwoThree::AvatarFourFiveSix.new }
+  let(:wiki) { Wiki.new }
 
   describe ".authorize" do
     it "infers the policy and authorizes based on it" do
@@ -35,6 +36,12 @@ describe Pundit do
         expect(error.record).to eq post
         expect(error.policy).to eq Pundit.policy(user, post)
       end
+    end
+
+    it "raises an error with a invalid policy constructor" do
+      expect do
+        Pundit.authorize(user, wiki, :update?)
+      end.to raise_error(Pundit::InvalidConstructorError, "Invalid #<WikiPolicy> constructor is called")
     end
   end
 
@@ -62,6 +69,12 @@ describe Pundit do
     it "returns nil if blank object given" do
       expect(Pundit.policy_scope(user, nil)).to be_nil
     end
+
+    it "raises an error with a invalid policy scope constructor" do
+      expect do
+        Pundit.policy_scope(user, Wiki)
+      end.to raise_error(Pundit::InvalidConstructorError, "Invalid #<WikiPolicy::Scope> constructor is called")
+    end
   end
 
   describe ".policy_scope!" do
@@ -85,6 +98,12 @@ describe Pundit do
       expect do
         Pundit.policy_scope!(user, nil)
       end.to raise_error(Pundit::NotDefinedError, "unable to find policy scope of nil")
+    end
+
+    it "raises an error with a invalid policy scope constructor" do
+      expect do
+        Pundit.policy_scope(user, Wiki)
+      end.to raise_error(Pundit::InvalidConstructorError, "Invalid #<WikiPolicy::Scope> constructor is called")
     end
   end
 
@@ -146,6 +165,12 @@ describe Pundit do
       expect(policy.class).to eq Project::PostPolicy
       expect(policy.user).to eq user
       expect(policy.post).to eq [:project, Post]
+    end
+
+    it "raises an error with a invalid policy constructor" do
+      expect do
+        Pundit.policy(user, Wiki)
+      end.to raise_error(Pundit::InvalidConstructorError, "Invalid #<WikiPolicy> constructor is called")
     end
 
     it "returns an instantiated policy given an array of a symbol and an active model class" do
@@ -283,6 +308,12 @@ describe Pundit do
     it "throws an exception if the given policy is nil" do
       expect { Pundit.policy!(user, nil) }.to raise_error(Pundit::NotDefinedError, "unable to find policy of nil")
     end
+
+    it "raises an error with a invalid policy constructor" do
+      expect do
+        Pundit.policy(user, Wiki)
+      end.to raise_error(Pundit::InvalidConstructorError, "Invalid #<WikiPolicy> constructor is called")
+    end
   end
 
   describe "#verify_authorized" do
@@ -365,6 +396,10 @@ describe Pundit do
     it "raises an error when the given record is nil" do
       expect { controller.authorize(nil, :destroy?) }.to raise_error(Pundit::NotDefinedError)
     end
+
+    it "raises an error with a invalid policy constructor" do
+      expect { controller.authorize(wiki, :destroy?) }.to raise_error(Pundit::InvalidConstructorError)
+    end
   end
 
   describe "#skip_authorization" do
@@ -398,6 +433,10 @@ describe Pundit do
       expect { controller.policy(article) }.to raise_error(Pundit::NotDefinedError)
     end
 
+    it "raises an error with a invalid policy constructor" do
+      expect { controller.policy(wiki) }.to raise_error(Pundit::InvalidConstructorError)
+    end
+
     it "allows policy to be injected" do
       new_policy = OpenStruct.new
       controller.policies[post] = new_policy
@@ -413,6 +452,10 @@ describe Pundit do
 
     it "throws an exception if the given policy can't be found" do
       expect { controller.policy_scope(Article) }.to raise_error(Pundit::NotDefinedError)
+    end
+
+    it "raises an error with a invalid policy scope constructor" do
+      expect { controller.policy_scope(Wiki) }.to raise_error(Pundit::InvalidConstructorError)
     end
 
     it "allows policy_scope to be injected" do
