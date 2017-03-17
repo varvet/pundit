@@ -1,12 +1,20 @@
 language: ruby
 sudo: false
-rvm:
-  - 2.0.0
-  - 2.1
-  - 2.2
-  - 2.3.0
-  - jruby-19mode
-  - rbx-2
-env:
-  - RSPEC_VERSION="<2.99"
-  - RSPEC_VERSION="~>3.0
+before_install:
+  - gem update --system
+  - gem install bundler
+
+matrix:
+  include:
+    - rvm: 2.4.0
+      script: bundle exec rake rubocop # ONLY lint once, first
+    - rvm: 2.1
+    - rvm: 2.2
+    - rvm: 2.3.3
+    - rvm: 2.4.0
+    - rvm: jruby-1.7.26
+      env:
+        - JRUBY_OPTS="--debug"
+    - rvm: jruby-9.1.8.0
+      env:
+        - JRUBY_OPTS="--debug"
