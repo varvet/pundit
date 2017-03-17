@@ -1,14 +1,23 @@
+inherit_from: .rubocop_todo.yml
 AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 1.9
   Exclude:
     - "gemfiles/**/*"
     - "vendor/**/*"
     - "lib/generators/**/*"
+
+Metrics/BlockLength:
+  Exclude:
+    - "**/*_spec.rb"
 
 Metrics/MethodLength:
   Max: 40
 
 Metrics/ModuleLength:
   Max: 200
+  Exclude:
+    - "**/*_spec.rb"
 
 Metrics/LineLength:
   Max: 120
@@ -50,7 +59,7 @@ Documentation:
   Enabled: false # TODO: Enable again once we have more docs
 
 Style/CaseIndentation:
-  IndentWhenRelativeTo: case
+  EnforcedStyle: case
   SupportedStyles:
     - case
     - end
@@ -74,7 +83,7 @@ Style/TrivialAccessors:
   ExactNameMatch: true
 
 Lint/EndAlignment:
-  AlignWith: variable
+  EnforcedStyleAlignWith: variable
 
 Lint/DefEndAlignment:
   Enabled: false

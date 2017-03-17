@@ -16,4 +16,3 @@ YARD::Rake::YardocTask.new do |t|
 end
 
 task default: :spec
-task default: :rubocop unless RUBY_ENGINE == "rbx"

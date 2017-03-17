@@ -1,4 +1,16 @@
 source "https://rubygems.org"
 
-gem "rspec", ENV["RSPEC_VERSION"] unless ENV["RSPEC_VERSION"].to_s.empty?
+ruby RUBY_VERSION
+
 gemspec
+
+group :development, :test do
+  gem "actionpack"
+  gem "activemodel"
+  gem "bundler"
+  gem "pry"
+  gem "rake"
+  gem "rspec"
+  gem "rubocop"
+  gem "yard"
+end
