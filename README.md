@@ -61,7 +61,7 @@ class PostPolicy
   end
 
   def update?
-    user.admin? or not post.published?
+    user.admin? || !post.published?
   end
 end
 ```
@@ -87,7 +87,7 @@ generator, or set up your own base class to inherit from:
 ``` ruby
 class PostPolicy < ApplicationPolicy
   def update?
-    user.admin? or not record.published?
+    user.admin? || !record.published?
   end
 end
 ```
@@ -221,7 +221,7 @@ class PostPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? or not post.published?
+    user.admin? || !post.published?
   end
 end
 ```
@@ -254,7 +254,7 @@ class PostPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? or not post.published?
+    user.admin? || !post.published?
   end
 end
 ```
