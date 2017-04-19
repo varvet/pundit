@@ -294,7 +294,7 @@ easy to miss one.
 
 Thankfully, Pundit has a handy feature which reminds you in case you forget.
 Pundit tracks whether you have called `authorize` anywhere in your controller
-action. Pundit also adds a method to you controllers called
+action. Pundit also adds a method to your controllers called
 `verify_authorized`. This method will raise an exception if `authorize` has not
 yet been called. You should run this method in an `after_action` hook to ensure
 that you haven't forgotten to authorize the action. For example:
