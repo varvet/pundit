@@ -362,6 +362,16 @@ class Post
 end
 ```
 
+You can also explicitly declare which policy to use for a specific instance of a class.
+
+```ruby
+class Post
+  def policy_class
+    published? ? PublishedPostPolicy : PostPolicy
+  end
+end
+```
+
 ## Just plain old Ruby
 
 As you can see, Pundit doesn't do anything you couldn't have easily done
