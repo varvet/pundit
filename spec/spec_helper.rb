@@ -57,6 +57,14 @@ class PostPolicy < Struct.new(:user, :post)
   end
 end
 
+class PostModerationPolicy < PostPolicy
+
+  def update?
+    user.moderator?
+  end
+
+end
+
 class Post < Struct.new(:user)
   def self.published
     :published
