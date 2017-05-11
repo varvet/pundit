@@ -385,6 +385,28 @@ describe Pundit do
     it "returns the same thing as current_user" do
       expect(controller.pundit_user).to eq controller.current_user
     end
+
+    it "is not overridden if defined before including Pundit" do
+      wrapper_module = Module.new do
+        extend ActiveSupport::Concern
+
+        included do
+          include Pundit
+        end
+
+        def pundit_user
+          "Thomas Friedman"
+        end
+      end
+
+      controller_class = Class.new do
+        include wrapper_module
+      end
+
+      pundit_user = controller_class.new.send(:pundit_user)
+
+      expect(pundit_user).to eq "Thomas Friedman"
+    end
   end
 
   describe "#policy" do
