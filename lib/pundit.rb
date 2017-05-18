@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "pundit/version"
+require "pundit_authorizer"
 require "pundit/policy_finder"
 require "active_support/concern"
 require "active_support/core_ext/string/inflections"
