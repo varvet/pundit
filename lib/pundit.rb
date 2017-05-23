@@ -189,6 +189,12 @@ protected
 
     record
   end
+  
+  def authorize_many(model_collection, query=nil)
+    model_collection.each do |model_instance|
+      authorize model_instance, query
+    end
+  end
 
   # Allow this action not to perform authorization.
   #
