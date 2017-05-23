@@ -113,6 +113,20 @@ module Pundit
     def policy!(user, record)
       PolicyFinder.new(record).policy!.new(user, record)
     end
+
+    def collection_authorizable(collection, klass)
+      collection.instance_exec(klass) do |_klass|
+        @_policy_klass = _klass
+        def self.policy_class
+          @_policy_klass
+        end
+        def all
+          self
+        end
+      end
+      collection
+    end
+
   end
 
   # @api private
@@ -268,6 +282,10 @@ protected
   # @return [Object] the user object to be used with pundit
   def pundit_user
     current_user
+  end
+
+  def collection_authorizable(collection, policy_class)
+    Pundit.collection_authorizable(collection, policy_class)
   end
 
 private
