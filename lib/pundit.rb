@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "pundit/version"
 require "pundit/policy_finder"
 require "pundit/prefix_policy_finder"

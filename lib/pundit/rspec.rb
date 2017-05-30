@@ -4,6 +4,7 @@ module Pundit
   module RSpec
     module Matchers
       extend ::RSpec::Matchers::DSL
+
       # rubocop:disable Metrics/BlockLength
       matcher :permit do |user, record|
         match_proc = lambda do |policy|
