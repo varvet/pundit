@@ -12,9 +12,9 @@ matrix:
     - rvm: 2.2.7
     - rvm: 2.3.4
     - rvm: 2.4.1
-    - rvm: jruby-1.7.26
+    - rvm: jruby-1.7.27
       env:
         - JRUBY_OPTS="--debug"
-    - rvm: jruby-9.1.8.0
+    - rvm: jruby-9.1.12.0
       env:
         - JRUBY_OPTS="--debug"
