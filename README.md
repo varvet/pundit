@@ -382,7 +382,7 @@ really have to.
 Use the supplied generator to generate policies:
 
 ``` sh
-rails g pundit:policy post
+rails g policy post
 ```
 
 ## Closed systems
