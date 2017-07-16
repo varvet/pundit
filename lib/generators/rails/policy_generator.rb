@@ -1,6 +1,6 @@
-module Pundit
+module Rails
   module Generators
-    class PolicyGenerator < ::Rails::Generators::NamedBase
+    class PolicyGenerator < NamedBase
       source_root File.expand_path('templates', __dir__)
 
       def create_policy
