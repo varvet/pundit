@@ -1,7 +1,6 @@
 require '<%= File.exists?('spec/rails_helper.rb') ? 'rails_helper' : 'spec_helper' %>'
 
 RSpec.describe <%= class_name %>Policy do
-
   let(:user) { User.new }
 
   subject { described_class }
