@@ -134,6 +134,13 @@ describe Pundit do
       expect(policy.post).to eq [:project, post]
     end
 
+    it "returns an instantiated policy given an array of a symbol and a model instance with policy_class override" do
+      policy = Pundit.policy(user, [:project, customer_post])
+      expect(policy.class).to eq Project::PostPolicy
+      expect(policy.user).to eq user
+      expect(policy.post).to eq [:project, customer_post]
+    end
+
     it "returns an instantiated policy given an array of a symbol and an active model instance" do
       policy = Pundit.policy(user, [:project, comment])
       expect(policy.class).to eq Project::CommentPolicy
@@ -153,6 +160,13 @@ describe Pundit do
       expect(policy.class).to eq Project::CommentPolicy
       expect(policy.user).to eq user
       expect(policy.post).to eq [:project, Comment]
+    end
+
+    it "returns an instantiated policy given an array of a symbol and a class with policy_class override" do
+      policy = Pundit.policy(user, [:project, Customer::Post])
+      expect(policy.class).to eq Project::PostPolicy
+      expect(policy.user).to eq user
+      expect(policy.post).to eq [:project, Customer::Post]
     end
 
     it "returns correct policy class for an array of a multi-word symbols" do

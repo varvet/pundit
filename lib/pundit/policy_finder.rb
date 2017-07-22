@@ -36,7 +36,7 @@ module Pundit
     #   policy.update? #=> false
     #
     def policy
-      klass = find
+      klass = find(object)
       klass = klass.constantize if klass.is_a?(String)
       klass
     rescue NameError
@@ -48,7 +48,7 @@ module Pundit
     #
     def scope!
       raise NotDefinedError, "unable to find policy scope of nil" if object.nil?
-      scope or raise NotDefinedError, "unable to find scope `#{find}::Scope` for `#{object.inspect}`"
+      scope or raise NotDefinedError, "unable to find scope `#{find(object)}::Scope` for `#{object.inspect}`"
     end
 
     # @return [Class] policy class with query methods
@@ -56,7 +56,7 @@ module Pundit
     #
     def policy!
       raise NotDefinedError, "unable to find policy of nil" if object.nil?
-      policy or raise NotDefinedError, "unable to find policy `#{find}` for `#{object.inspect}`"
+      policy or raise NotDefinedError, "unable to find policy `#{find(object)}` for `#{object.inspect}`"
     end
 
     # @return [String] the name of the key this object would have in a params hash
@@ -73,19 +73,20 @@ module Pundit
 
   private
 
-    def find
-      if object.nil?
+    def find(subject)
+      if subject.nil?
         nil
-      elsif object.respond_to?(:policy_class)
-        object.policy_class
-      elsif object.class.respond_to?(:policy_class)
-        object.class.policy_class
+      elsif subject.is_a?(Array)
+        modules = subject.dup
+        last = modules.pop
+        context = modules.map { |x| find_class_name(x) }.join("::")
+        [context, find(last)].join("::")
+      elsif subject.respond_to?(:policy_class)
+        subject.policy_class
+      elsif subject.class.respond_to?(:policy_class)
+        subject.class.policy_class
       else
-        klass = if object.is_a?(Array)
-          object.map { |x| find_class_name(x) }.join("::")
-        else
-          find_class_name(object)
-        end
+        klass = find_class_name(subject)
         "#{klass}#{SUFFIX}"
       end
     end
