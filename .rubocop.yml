@@ -34,7 +34,7 @@ Metrics/PerceivedComplexity:
 Style/StructInheritance:
   Enabled: false
 
-Style/AlignParameters:
+Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
 Style/StringLiterals:
@@ -43,7 +43,7 @@ Style/StringLiterals:
 Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 
-Style/ClosingParenthesisIndentation:
+Layout/ClosingParenthesisIndentation:
   Enabled: false
 
 Style/OneLineConditional:
@@ -58,7 +58,7 @@ Style/Not:
 Documentation:
   Enabled: false # TODO: Enable again once we have more docs
 
-Style/CaseIndentation:
+Layout/CaseIndentation:
   EnforcedStyle: case
   SupportedStyles:
     - case
@@ -70,13 +70,13 @@ Style/PercentLiteralDelimiters:
     '%w': "[]"
     '%W': "[]"
 
-Style/AccessModifierIndentation:
+Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
 
 Style/SignalException:
   Enabled: false
 
-Style/IndentationWidth:
+Layout/IndentationWidth:
   Enabled: false
 
 Style/TrivialAccessors:
@@ -97,7 +97,7 @@ Style/SpecialGlobalVars:
 Style/TrivialAccessors:
   Enabled: false
 
-Style/IndentHash:
+Layout/IndentHash:
   Enabled: false
 
 Style/DoubleNegation:
