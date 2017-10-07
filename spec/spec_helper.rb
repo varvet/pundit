@@ -180,6 +180,16 @@ class PostFourFiveSix < Struct.new(:user); end
 
 class CommentFourFiveSix; extend ActiveModel::Naming; end
 
+module Admin
+  class PostPolicy < Struct.new(:user, :post)
+    class Scope < Struct.new(:user, :scope)
+      def resolve
+        scope.published
+      end
+    end
+  end
+end
+
 module ProjectOneTwoThree
   class CommentFourFiveSixPolicy < Struct.new(:user, :post); end
 

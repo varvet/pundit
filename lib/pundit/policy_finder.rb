@@ -1,4 +1,46 @@
 module Pundit
+  class ScopeResolver
+    attr_reader :policy
+    attr_reader :user
+    attr_reader :resource_scope
+
+    def initialize(user, resource_scope)
+      @user = user
+      @resource_scope = resource_scope.respond_to?(:each) ? resource_scope.last : resource_scope
+      @policy = PolicyFinder.new(resource_scope).policy
+    end
+
+    def resolve
+      scope_class.new(user, resource_scope).resolve if scope_class
+    end
+
+    def resolve!
+      scope_class!.new(user, resource_scope).resolve
+    end
+
+  private
+
+    # @return [nil, Scope{#resolve}] scope class which can resolve to a scope
+    # @see https://github.com/elabs/pundit#scopes
+    # @example
+    #   scope = finder.scope #=> UserPolicy::Scope
+    #   scope.resolve #=> <#ActiveRecord::Relation ...>
+    #
+    def scope_class
+      policy::Scope if policy
+    rescue NameError
+      nil
+    end
+
+    # @return [Scope{#resolve}] scope class which can resolve to a scope
+    # @raise [NotDefinedError] if scope could not be determined
+    #
+    def scope_class!
+      raise NotDefinedError, "unable to find policy scope of nil" if resource_scope.nil?
+      scope_class or raise NotDefinedError, "unable to find scope for `#{policy}` policy"
+    end
+  end
+
   # Finds policy and scope classes for given object.
   # @api public
   # @example
@@ -16,18 +58,6 @@ module Pundit
       @object = object
     end
 
-    # @return [nil, Scope{#resolve}] scope class which can resolve to a scope
-    # @see https://github.com/elabs/pundit#scopes
-    # @example
-    #   scope = finder.scope #=> UserPolicy::Scope
-    #   scope.resolve #=> <#ActiveRecord::Relation ...>
-    #
-    def scope
-      policy::Scope if policy
-    rescue NameError
-      nil
-    end
-
     # @return [nil, Class] policy class with query methods
     # @see https://github.com/elabs/pundit#policies
     # @example
@@ -41,14 +71,6 @@ module Pundit
       klass
     rescue NameError
       nil
-    end
-
-    # @return [Scope{#resolve}] scope class which can resolve to a scope
-    # @raise [NotDefinedError] if scope could not be determined
-    #
-    def scope!
-      raise NotDefinedError, "unable to find policy scope of nil" if object.nil?
-      scope or raise NotDefinedError, "unable to find scope `#{find}::Scope` for `#{object.inspect}`"
     end
 
     # @return [Class] policy class with query methods
