@@ -23,9 +23,7 @@ module Pundit
     #   scope.resolve #=> <#ActiveRecord::Relation ...>
     #
     def scope
-      policy::Scope if policy
-    rescue NameError
-      nil
+      "#{policy}::Scope".safe_constantize
     end
 
     # @return [nil, Class] policy class with query methods
@@ -37,10 +35,7 @@ module Pundit
     #
     def policy
       klass = find(object)
-      klass = klass.constantize if klass.is_a?(String)
-      klass
-    rescue NameError
-      nil
+      klass.is_a?(String) ? klass.safe_constantize : klass
     end
 
     # @return [Scope{#resolve}] scope class which can resolve to a scope
