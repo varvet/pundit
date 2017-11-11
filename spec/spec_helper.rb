@@ -25,6 +25,12 @@ RSpec.configure do |config|
   config.include PunditSpecHelper
 end
 
+class NonePolicy
+end
+
+class None
+end
+
 class PostPolicy < Struct.new(:user, :post)
   class Scope < Struct.new(:user, :scope)
     def resolve
