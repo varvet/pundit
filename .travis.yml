@@ -1,7 +1,6 @@
 language: ruby
 sudo: false
 before_install:
-  - gem update --system
   - gem install bundler
 
 matrix:
@@ -13,8 +12,8 @@ matrix:
     - rvm: 2.3.4
     - rvm: 2.4.1
     - rvm: jruby-1.7.27
-      env:
-        - JRUBY_OPTS="--debug"
-    - rvm: jruby-9.1.13.0
-      env:
-        - JRUBY_OPTS="--debug"
+    - rvm: jruby-9.1.14.0
+
+env:
+  global:
+    - JRUBY_OPTS="--debug"
