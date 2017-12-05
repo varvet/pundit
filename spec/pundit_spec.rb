@@ -121,10 +121,10 @@ describe Pundit do
     end
 
     it "returns an instantiated policy given an array of symbols" do
-      policy = Pundit.policy(user, [:project, :criteria])
+      policy = Pundit.policy(user, %i[project criteria])
       expect(policy.class).to eq Project::CriteriaPolicy
       expect(policy.user).to eq user
-      expect(policy.criteria).to eq [:project, :criteria]
+      expect(policy.criteria).to eq %i[project criteria]
     end
 
     it "returns an instantiated policy given an array of a symbol and plain model instance" do
@@ -156,7 +156,7 @@ describe Pundit do
     end
 
     it "returns correct policy class for an array of a multi-word symbols" do
-      policy = Pundit.policy(user, [:project_one_two_three, :criteria_four_five_six])
+      policy = Pundit.policy(user, %i[project_one_two_three criteria_four_five_six])
       expect(policy.class).to eq ProjectOneTwoThree::CriteriaFourFiveSixPolicy
     end
 
@@ -269,10 +269,10 @@ describe Pundit do
     end
 
     it "returns an instantiated policy given an array of symbols" do
-      policy = Pundit.policy!(user, [:project, :criteria])
+      policy = Pundit.policy!(user, %i[project criteria])
       expect(policy.class).to eq Project::CriteriaPolicy
       expect(policy.user).to eq user
-      expect(policy.criteria).to eq [:project, :criteria]
+      expect(policy.criteria).to eq %i[project criteria]
     end
 
     it "throws an exception if the given policy can't be found" do
