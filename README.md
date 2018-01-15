@@ -42,8 +42,10 @@ with some useful defaults for you:
 rails g pundit:install
 ```
 
-After generating your application policy, restart the Rails server so that Rails
-can pick up any classes in the new `app/policies/` directory.
+After generating your application policy, restart the Rails server 
+(`spring stop` may be required as well, if you running tests) so that Rails 
+can pick up any classes in the new `app/policies/` directory. (If you fail
+to do so, you may get this error: `Pundit::NotDefinedError: unable to find policy`).
 
 ## Policies
 
