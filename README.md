@@ -153,15 +153,6 @@ def admin_list
 end
 ```
 
-`authorize` returns the object passed to it, so you can chain it like this:
-
-Controller:
-```ruby
-def show
-  @user = authorize User.find(params[:id])
-end
-```
-
 You can easily get a hold of an instance of the policy through the `policy`
 method in both the view and controller. This is especially useful for
 conditionally showing links or buttons in the view:
