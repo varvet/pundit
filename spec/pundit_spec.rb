@@ -421,6 +421,15 @@ describe Pundit do
 
       expect(controller.policy_scope(Post)).to eq new_scope
     end
+
+    it "raises an error if a namespace policy scope cannot be found" do
+      expect { controller.policy_scope([:project, Comment]) }.to raise_error(Pundit::NotDefinedError)
+    end
+
+    it "resolves a policy scope under admin namespace" do
+      scope = controller.policy_scope([:admin, Post])
+      expect(scope).to eq Post.published
+    end
   end
 
   describe "#permitted_attributes" do

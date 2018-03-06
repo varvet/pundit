@@ -1,31 +1,18 @@
 module Pundit
-  # Finds policy and scope classes for given object.
+  # Finds policy for given object.
   # @api public
   # @example
   #   user = User.find(params[:id])
   #   finder = PolicyFinder.new(user)
   #   finder.policy #=> UserPolicy
-  #   finder.scope #=> UserPolicy::Scope
   #
   class PolicyFinder
     attr_reader :object
 
-    # @param object [any] the object to find policy and scope classes for
+    # @param object [any] the object to find policy for
     #
     def initialize(object)
       @object = object
-    end
-
-    # @return [nil, Scope{#resolve}] scope class which can resolve to a scope
-    # @see https://github.com/elabs/pundit#scopes
-    # @example
-    #   scope = finder.scope #=> UserPolicy::Scope
-    #   scope.resolve #=> <#ActiveRecord::Relation ...>
-    #
-    def scope
-      policy::Scope if policy
-    rescue NameError
-      nil
     end
 
     # @return [nil, Class] policy class with query methods
@@ -37,18 +24,7 @@ module Pundit
     #
     def policy
       klass = find
-      klass = klass.constantize if klass.is_a?(String)
-      klass
-    rescue NameError
-      nil
-    end
-
-    # @return [Scope{#resolve}] scope class which can resolve to a scope
-    # @raise [NotDefinedError] if scope could not be determined
-    #
-    def scope!
-      raise NotDefinedError, "unable to find policy scope of nil" if object.nil?
-      scope or raise NotDefinedError, "unable to find scope `#{find}::Scope` for `#{object.inspect}`"
+      klass.is_a?(String) ? klass.safe_constantize : klass
     end
 
     # @return [Class] policy class with query methods

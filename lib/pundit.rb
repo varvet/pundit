@@ -2,6 +2,7 @@
 
 require "pundit/version"
 require "pundit/policy_finder"
+require "pundit/scope_resolver"
 require "active_support/concern"
 require "active_support/core_ext/string/inflections"
 require "active_support/core_ext/object/blank"
@@ -77,8 +78,7 @@ module Pundit
     # @param scope [Object] the object we're retrieving the policy scope for
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
     def policy_scope(user, scope)
-      policy_scope = PolicyFinder.new(scope).scope
-      policy_scope.new(user, scope).resolve if policy_scope
+      ScopeResolver.new(user, scope).resolve
     end
 
     # Retrieves the policy scope for the given record.
@@ -89,7 +89,7 @@ module Pundit
     # @raise [NotDefinedError] if the policy scope cannot be found
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     def policy_scope!(user, scope)
-      PolicyFinder.new(scope).scope!.new(user, scope).resolve
+      ScopeResolver.new(user, scope).resolve!
     end
 
     # Retrieves the policy for the given record.

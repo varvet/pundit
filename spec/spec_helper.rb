@@ -25,6 +25,12 @@ RSpec.configure do |config|
   config.include PunditSpecHelper
 end
 
+class NonePolicy
+end
+
+class None
+end
+
 class PostPolicy < Struct.new(:user, :post)
   class Scope < Struct.new(:user, :scope)
     def resolve
@@ -179,6 +185,16 @@ end
 class PostFourFiveSix < Struct.new(:user); end
 
 class CommentFourFiveSix; extend ActiveModel::Naming; end
+
+module Admin
+  class PostPolicy < Struct.new(:user, :post)
+    class Scope < Struct.new(:user, :scope)
+      def resolve
+        scope.published
+      end
+    end
+  end
+end
 
 module ProjectOneTwoThree
   class CommentFourFiveSixPolicy < Struct.new(:user, :post); end
