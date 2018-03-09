@@ -109,6 +109,12 @@ class CommentsRelation
   end
 end
 
+class Rails3CommentsRelation < CommentsRelation
+  def is_a?(klass)
+    klass == Array
+  end
+end
+
 class Article; end
 
 class BlogPolicy < Struct.new(:user, :blog); end
