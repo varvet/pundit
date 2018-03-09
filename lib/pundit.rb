@@ -233,14 +233,17 @@ protected
   #   If omitted then this defaults to the Rails controller action name.
   # @return [Hash{String => Object}] the permitted attributes
   def permitted_attributes(record, action = params[:action])
-    param_key = PolicyFinder.new(record).param_key
     policy = policy(record)
     method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
       "permitted_attributes_for_#{action}"
     else
       "permitted_attributes"
     end
-    params.require(param_key).permit(*policy.public_send(method_name))
+    pundit_params_for(record).permit(*policy.public_send(method_name))
+  end
+
+  def pundit_params_for(record)
+    params.require(PolicyFinder.new(record).param_key)
   end
 
   # Cache of policies. You should not rely on this method.
