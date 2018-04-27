@@ -63,9 +63,7 @@ module Pundit
     def authorize(user, record, query)
       policy = policy!(user, record)
 
-      unless policy.public_send(query)
-        raise NotAuthorizedError, query: query, record: record, policy: policy
-      end
+      raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
 
       record
     end
@@ -183,9 +181,7 @@ protected
 
     policy = policy(record)
 
-    unless policy.public_send(query)
-      raise NotAuthorizedError, query: query, record: record, policy: policy
-    end
+    raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
 
     record
   end
@@ -250,16 +246,20 @@ protected
   # Cache of policies. You should not rely on this method.
   #
   # @api private
+  # rubocop:disable Naming/MemoizedInstanceVariableName
   def policies
     @_pundit_policies ||= {}
   end
+  # rubocop:enable Naming/MemoizedInstanceVariableName
 
   # Cache of policy scope. You should not rely on this method.
   #
   # @api private
+  # rubocop:disable Naming/MemoizedInstanceVariableName
   def policy_scopes
     @_pundit_policy_scopes ||= {}
   end
+  # rubocop:enable Naming/MemoizedInstanceVariableName
 
   # Hook method which allows customizing which user is passed to policies and
   # scopes initialized by {#authorize}, {#policy} and {#policy_scope}.

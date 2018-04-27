@@ -50,6 +50,7 @@ module Pundit
           current_example.metadata[:permissions]
         end
       end
+      # rubocop:enable Metrics/BlockLength
     end
 
     module DSL
