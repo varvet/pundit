@@ -1,5 +1,9 @@
 # Pundit
 
+## Unreleased
+
+- Return passed object from `#authorize` method to make chaining possible (#385)
+
 ## 1.1.0 (2016-01-14)
 
 - Can retrieve policies via an array of symbols/objects.
