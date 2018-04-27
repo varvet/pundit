@@ -11,6 +11,6 @@ group :development, :test do
   gem "pry"
   gem "rake"
   gem "rspec"
-  gem "rubocop"
+  gem "rubocop", "0.51.0"
   gem "yard"
 end
