@@ -1,7 +1,7 @@
 # Pundit
 
-[![Build Status](https://secure.travis-ci.org/elabs/pundit.svg?branch=master)](https://travis-ci.org/elabs/pundit)
-[![Code Climate](https://codeclimate.com/github/elabs/pundit.svg)](https://codeclimate.com/github/elabs/pundit)
+[![Build Status](https://secure.travis-ci.org/varvet/pundit.svg?branch=master)](https://travis-ci.org/varvet/pundit)
+[![Code Climate](https://codeclimate.com/github/varvet/pundit.svg)](https://codeclimate.com/github/varvet/pundit)
 [![Inline docs](http://inch-ci.org/github/elabs/pundit.svg?branch=master)](http://inch-ci.org/github/elabs/pundit)
 [![Gem Version](https://badge.fury.io/rb/pundit.svg)](http://badge.fury.io/rb/pundit)
 
@@ -12,13 +12,13 @@ scaleable authorization system.
 Links:
 
 - [API documentation](http://www.rubydoc.info/gems/pundit)
-- [Source Code](https://github.com/elabs/pundit)
-- [Contributing](https://github.com/elabs/pundit/blob/master/CONTRIBUTING.md)
-- [Code of Conduct](https://github.com/elabs/pundit/blob/master/CODE_OF_CONDUCT.md)
+- [Source Code](https://github.com/varvet/pundit)
+- [Contributing](https://github.com/varvet/pundit/blob/master/CONTRIBUTING.md)
+- [Code of Conduct](https://github.com/varvet/pundit/blob/master/CODE_OF_CONDUCT.md)
 
 Sponsored by:
 
-[<img src="http://d3cv91luii1z1d.cloudfront.net/logo-gh.png" alt="Elabs" height="50px"/>](http://elabs.se)
+[<img src="https://www.varvet.com/images/wordmark-red.svg" alt="Varvet" height="50px"/>](https://varvet.com)
 
 ## Installation
 
