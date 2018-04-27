@@ -18,7 +18,7 @@ Links:
 
 Sponsored by:
 
-[<img src="https://www.varvet.com/images/wordmark-red.svg" alt="Varvet" height="50px"/>](https://varvet.com)
+[<img src="https://www.varvet.com/images/wordmark-red.svg" alt="Varvet" height="50px"/>](https://www.varvet.com)
 
 ## Installation
 
