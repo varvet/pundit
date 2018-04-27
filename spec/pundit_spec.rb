@@ -35,6 +35,7 @@ describe Pundit do
         expect(error.record).to eq post
         expect(error.policy).to eq Pundit.policy(user, post)
       end
+      # rubocop:enable Style/MultilineBlockChain
     end
   end
 

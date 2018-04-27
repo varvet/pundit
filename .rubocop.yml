@@ -82,10 +82,10 @@ Layout/IndentationWidth:
 Style/TrivialAccessors:
   ExactNameMatch: true
 
-Lint/EndAlignment:
+Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
-Lint/DefEndAlignment:
+Layout/DefEndAlignment:
   Enabled: false
 
 Lint/HandleExceptions:
