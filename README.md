@@ -171,6 +171,28 @@ conditionally showing links or buttons in the view:
   <%= link_to "Edit post", edit_post_path(@post) %>
 <% end %>
 ```
+
+If you prefer to organize your policies using namespaces, then you can pass an array of symbols
+that match the policy path. For example:
+
+Policy:
+```ruby
+module Admin
+  class PostPolicy < ApplicationPolicy
+    def admin_update?
+      user.admin?
+    end
+  end
+end
+```
+
+Controller:
+```ruby
+def admin_update?
+  authorize [:admin, Post]
+end
+```
+
 ## Headless policies
 
 Given there is a policy without a corresponding model / ruby class,
