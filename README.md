@@ -351,6 +351,8 @@ end
 
 ## Manually specifying policy classes
 
+### From a given class
+
 Sometimes you might want to explicitly declare which policy to use for a given
 class, instead of letting Pundit infer it. This can be done like so:
 
@@ -358,6 +360,38 @@ class, instead of letting Pundit infer it. This can be done like so:
 class Post
   def self.policy_class
     PostablePolicy
+  end
+end
+```
+
+### From the place you call `authorize`
+
+Sometimes you might want to apply namespace for your policy, especially when you
+have namespace for your controller, you can simply override `policy(record)` method
+from you controller.
+
+Here is an example for rails controllers:
+
+```ruby
+# app/controllers/api/v1/base_controller.rb
+class Api::V1::BaseController < ApplicationController
+  include Pundit
+
+  private
+
+  def policy(record)
+    policies[record] ||= "#{controller_path.classify}Policy".constantize.new(pundit_user, record)
+  end
+end
+```
+
+And add your policy
+
+```ruby
+# app/policies/api/v1/auth/offer_policy.rb
+class Api::V1::Auth::OfferPolicy < Api::V1::BasePolicy
+  def index?
+    true
   end
 end
 ```
