@@ -285,6 +285,38 @@ You can, and are encouraged to, use this method in views:
 <% end %>
 ```
 
+A Scope can be applied to a single record, for example the ```show``` method without duplicating code between the scope and the individual actions. This can be either done in the the controller or within the Pundit policy.
+
+Option 1: Modify the action
+
+```ruby
+def show
+  # Also remove :show from the :only option where
+  # before_action :set_customer, only: ... is called.
+  @customer = policy_scope(Customer).find(params[:id])
+  authorize @customer
+end
+```
+
+Option 2: Modify the ```set``` filter
+
+```ruby
+def set_customer
+  @customer = policy_scope(Customer).find(params[:id])
+end
+```
+
+Option 3: Modify the policy, ie: ```CustomerPolicy#show?```
+
+```ruby
+def show?
+  scope.where(:id => record.id).exists?
+end
+```
+
+[source](https://stackoverflow.com/a/25609167/993592)
+
+
 ## Ensuring policies and scopes are used
 
 When you are developing an application with Pundit it can be easy to forget to
