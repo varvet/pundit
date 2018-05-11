@@ -265,6 +265,10 @@ You can now use this class from your controller via the `policy_scope` method:
 def index
   @posts = policy_scope(Post)
 end
+
+def show
+  @post = policy_scope(Post).find(params[:id])
+end
 ```
 
 Just as with your policy, this will automatically infer that you want to use
