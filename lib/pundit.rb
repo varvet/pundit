@@ -147,7 +147,7 @@ protected
   # `after_action` filter to prevent programmer error in forgetting to call
   # {#authorize} or {#skip_authorization}.
   #
-  # @see https://github.com/elabs/pundit#ensuring-policies-are-used
+  # @see https://github.com/elabs/pundit#ensuring-policies-and-scopes-are-used
   # @raise [AuthorizationNotPerformedError] if authorization has not been performed
   # @return [void]
   def verify_authorized
@@ -158,7 +158,7 @@ protected
   # `after_action` filter to prevent programmer error in forgetting to call
   # {#policy_scope} or {#skip_policy_scope} in index actions.
   #
-  # @see https://github.com/elabs/pundit#ensuring-policies-are-used
+  # @see https://github.com/elabs/pundit#ensuring-policies-and-scopes-are-used
   # @raise [AuthorizationNotPerformedError] if policy scoping has not been performed
   # @return [void]
   def verify_policy_scoped
@@ -188,7 +188,7 @@ protected
 
   # Allow this action not to perform authorization.
   #
-  # @see https://github.com/elabs/pundit#ensuring-policies-are-used
+  # @see https://github.com/elabs/pundit#ensuring-policies-and-scopes-are-used
   # @return [void]
   def skip_authorization
     @_pundit_policy_authorized = true
@@ -196,7 +196,7 @@ protected
 
   # Allow this action not to perform policy scoping.
   #
-  # @see https://github.com/elabs/pundit#ensuring-policies-are-used
+  # @see https://github.com/elabs/pundit#ensuring-policies-and-scopes-are-used
   # @return [void]
   def skip_policy_scope
     @_pundit_policy_scoped = true
