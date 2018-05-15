@@ -221,7 +221,7 @@ class PostPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? or not post.published?
+    user.admin? or not record.published?
   end
 end
 ```
@@ -254,7 +254,7 @@ class PostPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? or not post.published?
+    user.admin? or not record.published?
   end
 end
 ```
