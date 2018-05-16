@@ -242,6 +242,10 @@ protected
     pundit_params_for(record).permit(*policy.public_send(method_name))
   end
 
+  # Retrieves the params for the given record.
+  #
+  # @param record [Object] the object we're retrieving params for
+  # @return [ActionController::Parameters] the params
   def pundit_params_for(record)
     params.require(PolicyFinder.new(record).param_key)
   end
