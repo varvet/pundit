@@ -669,6 +669,28 @@ end
 
 If you have defined an action-specific method on your policy for the current action, the `permitted_attributes` helper will call it instead of calling `permitted_attributes` on your controller.
 
+If you need to fetch parameters based on namespaces different from the suggested one, override the below method and return an instance of `ActionController::Parameters`.
+
+```ruby
+def pundit_params_for(record)
+  params.require(PolicyFinder.new(record).param_key)
+end
+```
+
+For example:
+
+```ruby
+# If you don't want to use require
+def pundit_params_for(record)
+  params.fetch(PolicyFinder.new(record).param_key, {})
+end
+
+# If you are using something like the jsonapi spec
+def pundit_params_for(_record)
+  params.fetch(:data, {}).fetch(:attributes, {})
+end
+```
+
 ## RSpec
 
 ### Policy Specs
