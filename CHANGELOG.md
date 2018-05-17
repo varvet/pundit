@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Raise `InvalidConstructorError` if a policy or policy scope with an invalid constructor is called. (#462)
 - Add `pundit_params_for` method to make it easy to customize params fetching. (#502)
 - Return passed object from `#authorize` method to make chaining possible. (#385)
 
