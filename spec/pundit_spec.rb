@@ -87,6 +87,14 @@ describe Pundit do
         Pundit.policy_scope!(user, nil)
       end.to raise_error(Pundit::NotDefinedError, "unable to find policy scope of nil")
     end
+
+    it "returns an instantiated policy scope given an array of a symbol and plain model class" do
+      expect(Pundit.policy_scope!(user, [:project, Post])).to eq :read
+    end
+
+    it "returns an instantiated policy scope given an array of a symbol and active model class" do
+      expect(Pundit.policy_scope!(user, [:project, Comment])).to eq Comment
+    end
   end
 
   describe ".policy" do
@@ -139,7 +147,7 @@ describe Pundit do
       policy = Pundit.policy(user, [:project, comment])
       expect(policy.class).to eq Project::CommentPolicy
       expect(policy.user).to eq user
-      expect(policy.post).to eq [:project, comment]
+      expect(policy.comment).to eq [:project, comment]
     end
 
     it "returns an instantiated policy given an array of a symbol and a plain model class" do
@@ -153,7 +161,7 @@ describe Pundit do
       policy = Pundit.policy(user, [:project, Comment])
       expect(policy.class).to eq Project::CommentPolicy
       expect(policy.user).to eq user
-      expect(policy.post).to eq [:project, Comment]
+      expect(policy.comment).to eq [:project, Comment]
     end
 
     it "returns correct policy class for an array of a multi-word symbols" do

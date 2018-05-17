@@ -87,7 +87,8 @@ module Pundit
     # @raise [NotDefinedError] if the policy scope cannot be found
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     def policy_scope!(user, scope)
-      PolicyFinder.new(scope).scope!.new(user, scope).resolve
+      model = scope.is_a?(Array) ? scope.last : scope
+      PolicyFinder.new(scope).scope!.new(user, model).resolve
     end
 
     # Retrieves the policy for the given record.
