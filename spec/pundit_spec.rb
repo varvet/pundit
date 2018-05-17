@@ -454,11 +454,6 @@ describe Pundit do
         "title" => "Hello",
         "votes" => 5
       )
-      expect(Controller.new(double, action, params).permitted_attributes(customer_post)).to eq("votes" => 5)
-      expect(Controller.new(user, action, params).permitted_attributes(customer_post).to_h).to eq(
-        "title" => "Hello",
-        "votes" => 5
-      )
       expect(Controller.new(double, action, params).permitted_attributes(customer_post).to_h).to eq(
         "votes" => 5
       )
