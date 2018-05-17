@@ -37,6 +37,9 @@ module Pundit
     end
   end
 
+  # Error that will be raised if a policy or policy scope constructor is not called correctly.
+  class InvalidConstructorError < Error; end
+
   # Error that will be raised if a controller action has not called the
   # `authorize` or `skip_authorization` methods.
   class AuthorizationNotPerformedError < Error; end
@@ -73,10 +76,13 @@ module Pundit
     # @see https://github.com/elabs/pundit#scopes
     # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
+    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
     def policy_scope(user, scope)
       policy_scope = PolicyFinder.new(scope).scope
       policy_scope.new(user, scope).resolve if policy_scope
+    rescue ArgumentError
+      raise InvalidConstructorError, "Invalid #<#{policy_scope}> constructor is called"
     end
 
     # Retrieves the policy scope for the given record.
@@ -85,9 +91,13 @@ module Pundit
     # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
     # @raise [NotDefinedError] if the policy scope cannot be found
+    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     def policy_scope!(user, scope)
-      PolicyFinder.new(scope).scope!.new(user, scope).resolve
+      policy_scope = PolicyFinder.new(scope).scope!
+      policy_scope.new(user, scope).resolve
+    rescue ArgumentError
+      raise InvalidConstructorError, "Invalid #<#{policy_scope}> constructor is called"
     end
 
     # Retrieves the policy for the given record.
@@ -95,10 +105,13 @@ module Pundit
     # @see https://github.com/elabs/pundit#policies
     # @param user [Object] the user that initiated the action
     # @param record [Object] the object we're retrieving the policy for
+    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Object, nil] instance of policy class with query methods
     def policy(user, record)
       policy = PolicyFinder.new(record).policy
       policy.new(user, record) if policy
+    rescue ArgumentError
+      raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
     end
 
     # Retrieves the policy for the given record.
@@ -107,9 +120,13 @@ module Pundit
     # @param user [Object] the user that initiated the action
     # @param record [Object] the object we're retrieving the policy for
     # @raise [NotDefinedError] if the policy cannot be found
+    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Object] instance of policy class with query methods
     def policy!(user, record)
-      PolicyFinder.new(record).policy!.new(user, record)
+      policy = PolicyFinder.new(record).policy!
+      policy.new(user, record)
+    rescue ArgumentError
+      raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
     end
   end
 
