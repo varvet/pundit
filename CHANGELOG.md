@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Return passed object from `#authorize` method to make chaining possible (#385)
+- Add `pundit_params_for` method to make it easy to customize params fetching. (#502)
+- Return passed object from `#authorize` method to make chaining possible. (#385)
 
 ## 1.1.0 (2016-01-14)
 
