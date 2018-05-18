@@ -67,8 +67,8 @@ describe Pundit do
       expect(Pundit.policy_scope(user, Article)).to be_nil
     end
 
-    it "returns nil if blank object given" do
-      expect(Pundit.policy_scope(user, nil)).to be_nil
+    it "raises an exception if nil object given" do
+      expect { Pundit.policy_scope(user, nil) }.to raise_error(Pundit::NotDefinedError)
     end
 
     it "raises an error with a invalid policy scope constructor" do
@@ -98,7 +98,7 @@ describe Pundit do
     it "throws an exception if the given policy scope is nil" do
       expect do
         Pundit.policy_scope!(user, nil)
-      end.to raise_error(Pundit::NotDefinedError, "unable to find policy scope of nil")
+      end.to raise_error(Pundit::NotDefinedError, "Cannot scope NilClass")
     end
 
     it "raises an error with a invalid policy scope constructor" do
@@ -231,8 +231,8 @@ describe Pundit do
       expect(Pundit.policy(user, Article)).to be_nil
     end
 
-    it "returns nil if the given policy is nil" do
-      expect(Pundit.policy(user, nil)).to be_nil
+    it "returns the specified NilClassPolicy for nil" do
+      expect(Pundit.policy(user, nil)).to be_a NilClassPolicy
     end
 
     describe "with .policy_class set on the model" do
@@ -306,8 +306,8 @@ describe Pundit do
       expect { Pundit.policy!(user, Article) }.to raise_error(Pundit::NotDefinedError)
     end
 
-    it "throws an exception if the given policy is nil" do
-      expect { Pundit.policy!(user, nil) }.to raise_error(Pundit::NotDefinedError, "unable to find policy of nil")
+    it "returns the specified NilClassPolicy for nil" do
+      expect(Pundit.policy!(user, nil)).to be_a NilClassPolicy
     end
 
     it "raises an error with a invalid policy constructor" do
@@ -395,7 +395,7 @@ describe Pundit do
     end
 
     it "raises an error when the given record is nil" do
-      expect { controller.authorize(nil, :destroy?) }.to raise_error(Pundit::NotDefinedError)
+      expect { controller.authorize(nil, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
     it "raises an error with a invalid policy constructor" do
