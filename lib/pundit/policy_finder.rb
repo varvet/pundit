@@ -39,6 +39,8 @@ module Pundit
       klass = find
       klass = klass.constantize if klass.is_a?(String)
       klass
+    rescue NoMethodError
+      raise
     rescue NameError
       nil
     end
