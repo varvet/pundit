@@ -77,8 +77,12 @@ module Customer
       OpenStruct.new(param_key: "customer_post")
     end
 
-    def policy_class
+    def self.policy_class
       PostPolicy
+    end
+
+    def policy_class
+      self.class.policy_class
     end
   end
 end
