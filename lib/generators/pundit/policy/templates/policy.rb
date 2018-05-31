@@ -2,7 +2,7 @@
 class <%= class_name %>Policy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      scope
+      scope.all
     end
   end
 end

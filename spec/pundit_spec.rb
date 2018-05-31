@@ -52,15 +52,15 @@ describe Pundit do
     end
 
     it "returns an instantiated policy scope given an active model class" do
-      expect(Pundit.policy_scope(user, Comment)).to eq Comment
+      expect(Pundit.policy_scope(user, Comment)).to eq CommentScope.new(Comment)
     end
 
     it "returns an instantiated policy scope given an active record relation" do
-      expect(Pundit.policy_scope(user, comments_relation)).to eq comments_relation
+      expect(Pundit.policy_scope(user, comments_relation)).to eq CommentScope.new(comments_relation)
     end
 
     it "returns an instantiated policy scope given an empty active record relation" do
-      expect(Pundit.policy_scope(user, empty_comments_relation)).to eq empty_comments_relation
+      expect(Pundit.policy_scope(user, empty_comments_relation)).to eq CommentScope.new(empty_comments_relation)
     end
 
     it "returns nil if the given policy scope can't be found" do
@@ -84,7 +84,7 @@ describe Pundit do
     end
 
     it "returns an instantiated policy scope given an active model class" do
-      expect(Pundit.policy_scope!(user, Comment)).to eq Comment
+      expect(Pundit.policy_scope!(user, Comment)).to eq CommentScope.new(Comment)
     end
 
     it "throws an exception if the given policy scope can't be found" do

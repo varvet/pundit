@@ -87,10 +87,21 @@ module Customer
   end
 end
 
+class CommentScope
+  attr_reader :original_object
+  def initialize(original_object)
+    @original_object = original_object
+  end
+
+  def ==(other)
+    original_object == other.original_object
+  end
+end
+
 class CommentPolicy < Struct.new(:user, :comment)
   class Scope < Struct.new(:user, :scope)
     def resolve
-      scope
+      CommentScope.new(scope)
     end
   end
 end
