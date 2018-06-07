@@ -421,6 +421,27 @@ class ApplicationPolicy
 end
 ```
 
+## NilClassPolicy
+
+To support a [null object pattern](https://en.wikipedia.org/wiki/Null_Object_pattern)
+you may find that you want to implement a `NilClassPolicy`. This might be useful
+where you want to extend your ApplicationPolicy to allow some tolerance of, for
+example, associations which might be `nil`.
+
+```ruby
+class NilClassPolicy < ApplicationPolicy
+  class Scope < Scope
+    def resolve
+      raise Pundit::NotDefinedError, "Cannot scope NilClass"
+    end
+  end
+
+  def show?
+    false # Nobody can see nothing
+  end
+end
+```
+
 ## Rescuing a denied Authorization in Rails
 
 Pundit raises a `Pundit::NotAuthorizedError` you can

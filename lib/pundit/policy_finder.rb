@@ -42,7 +42,6 @@ module Pundit
     # @raise [NotDefinedError] if scope could not be determined
     #
     def scope!
-      raise NotDefinedError, "unable to find policy scope of nil" if object.nil?
       scope or raise NotDefinedError, "unable to find scope `#{find(object)}::Scope` for `#{object.inspect}`"
     end
 
@@ -50,7 +49,6 @@ module Pundit
     # @raise [NotDefinedError] if policy could not be determined
     #
     def policy!
-      raise NotDefinedError, "unable to find policy of nil" if object.nil?
       policy or raise NotDefinedError, "unable to find policy `#{find(object)}` for `#{object.inspect}`"
     end
 
@@ -69,9 +67,7 @@ module Pundit
   private
 
     def find(subject)
-      if subject.nil?
-        nil
-      elsif subject.is_a?(Array)
+      if subject.is_a?(Array)
         modules = subject.dup
         last = modules.pop
         context = modules.map { |x| find_class_name(x) }.join("::")
