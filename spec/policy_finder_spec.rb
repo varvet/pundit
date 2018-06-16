@@ -61,8 +61,8 @@ describe Pundit::PolicyFinder do
     context "@object is nil" do
       subject { described_class.new(nil) }
 
-      it "returns a NotDefinedError" do
-        expect { subject.scope! }.to raise_error Pundit::NotDefinedError
+      it "returns the NilClass policy's scope class" do
+        expect(subject.scope!).to eq NilClassPolicy::Scope
       end
     end
 

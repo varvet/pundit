@@ -182,15 +182,19 @@ class Controller
   end
 end
 
-class NilClassPolicy
+class NilClassPolicy < Struct.new(:user, :record)
   class Scope
     def initialize(*)
-      raise "I'm only here to be annoying!"
+      raise Pundit::NotDefinedError, "Cannot scope NilClass"
     end
   end
 
-  def initialize(*)
-    raise "I'm only here to be annoying!"
+  def show?
+    false
+  end
+
+  def destroy?
+    false
   end
 end
 
