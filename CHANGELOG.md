@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Allow specification of a `NilClassPolicy`. (#525)
 - Make sure `policy_class` override is called when passed an array. (#475)
 - Raise `InvalidConstructorError` if a policy or policy scope with an invalid constructor is called. (#462)
 - Use `action_name` instead of `params[:action]`. (#419)
