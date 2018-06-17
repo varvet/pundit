@@ -109,7 +109,7 @@ module Pundit
     # @return [Object, nil] instance of policy class with query methods
     def policy(user, record)
       policy = PolicyFinder.new(record).policy
-      policy.new(user, record) if policy
+      policy.new(user, pundit_model(record)) if policy
     rescue ArgumentError
       raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
     end
@@ -124,9 +124,15 @@ module Pundit
     # @return [Object] instance of policy class with query methods
     def policy!(user, record)
       policy = PolicyFinder.new(record).policy!
-      policy.new(user, record)
+      policy.new(user, pundit_model(record)) if policy
     rescue ArgumentError
       raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
+    end
+
+  private
+
+    def pundit_model(record)
+      record.is_a?(Array) ? record.last : record
     end
   end
 

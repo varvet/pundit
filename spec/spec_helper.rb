@@ -155,7 +155,7 @@ end
 class CriteriaPolicy < Struct.new(:user, :criteria); end
 
 module Project
-  class CommentPolicy < Struct.new(:user, :post); end
+  class CommentPolicy < Struct.new(:user, :comment); end
   class CriteriaPolicy < Struct.new(:user, :criteria); end
   class PostPolicy < Struct.new(:user, :post); end
 end
