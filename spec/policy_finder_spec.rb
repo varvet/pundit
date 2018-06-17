@@ -106,5 +106,17 @@ describe Pundit::PolicyFinder do
         expect(subject.param_key).to eq "article"
       end
     end
+
+    context "object is an array" do
+      subject { described_class.new([:project, article]) }
+
+      it "returns the param_key for the last element of the array" do
+        expect(subject.object).not_to respond_to(:model_name)
+        expect(subject.object).not_to be_a Class
+        expect(subject.object).to be_an_instance_of Array
+
+        expect(subject.param_key).to eq "article"
+      end
+    end
   end
 end
