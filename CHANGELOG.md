@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fix `param_key` issue when passed an array. (#529)
 - Only pass last element of "namespace array" to policy and scope. (#529)
 - Allow specification of a `NilClassPolicy`. (#525)
 - Make sure `policy_class` override is called when passed an array. (#475)
