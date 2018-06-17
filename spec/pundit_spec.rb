@@ -63,6 +63,14 @@ describe Pundit do
       expect(Pundit.policy_scope(user, empty_comments_relation)).to eq CommentScope.new(empty_comments_relation)
     end
 
+    it "returns an instantiated policy scope given an array of a symbol and plain model class" do
+      expect(Pundit.policy_scope(user, [:project, Post])).to eq :read
+    end
+
+    it "returns an instantiated policy scope given an array of a symbol and active model class" do
+      expect(Pundit.policy_scope(user, [:project, Comment])).to eq Comment
+    end
+
     it "returns nil if the given policy scope can't be found" do
       expect(Pundit.policy_scope(user, Article)).to be_nil
     end
@@ -99,6 +107,14 @@ describe Pundit do
       expect do
         Pundit.policy_scope!(user, nil)
       end.to raise_error(Pundit::NotDefinedError, "Cannot scope NilClass")
+    end
+
+    it "returns an instantiated policy scope given an array of a symbol and plain model class" do
+      expect(Pundit.policy_scope!(user, [:project, Post])).to eq :read
+    end
+
+    it "returns an instantiated policy scope given an array of a symbol and active model class" do
+      expect(Pundit.policy_scope!(user, [:project, Comment])).to eq Comment
     end
 
     it "raises an error with a invalid policy scope constructor" do

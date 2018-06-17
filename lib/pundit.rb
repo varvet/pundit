@@ -80,7 +80,7 @@ module Pundit
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
     def policy_scope(user, scope)
       policy_scope = PolicyFinder.new(scope).scope
-      policy_scope.new(user, scope).resolve if policy_scope
+      policy_scope.new(user, pundit_model(scope)).resolve if policy_scope
     rescue ArgumentError
       raise InvalidConstructorError, "Invalid #<#{policy_scope}> constructor is called"
     end
@@ -95,7 +95,7 @@ module Pundit
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     def policy_scope!(user, scope)
       policy_scope = PolicyFinder.new(scope).scope!
-      policy_scope.new(user, scope).resolve
+      policy_scope.new(user, pundit_model(scope)).resolve
     rescue ArgumentError
       raise InvalidConstructorError, "Invalid #<#{policy_scope}> constructor is called"
     end
@@ -124,7 +124,7 @@ module Pundit
     # @return [Object] instance of policy class with query methods
     def policy!(user, record)
       policy = PolicyFinder.new(record).policy!
-      policy.new(user, pundit_model(record)) if policy
+      policy.new(user, pundit_model(record))
     rescue ArgumentError
       raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
     end
