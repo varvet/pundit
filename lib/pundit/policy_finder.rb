@@ -55,12 +55,14 @@ module Pundit
     # @return [String] the name of the key this object would have in a params hash
     #
     def param_key
-      if object.respond_to?(:model_name)
-        object.model_name.param_key.to_s
-      elsif object.is_a?(Class)
-        object.to_s.demodulize.underscore
+      model = object.is_a?(Array) ? object.last : object
+
+      if model.respond_to?(:model_name)
+        model.model_name.param_key.to_s
+      elsif model.is_a?(Class)
+        model.to_s.demodulize.underscore
       else
-        object.class.to_s.demodulize.underscore
+        model.class.to_s.demodulize.underscore
       end
     end
 

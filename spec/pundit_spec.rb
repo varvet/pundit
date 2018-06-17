@@ -63,6 +63,14 @@ describe Pundit do
       expect(Pundit.policy_scope(user, empty_comments_relation)).to eq CommentScope.new(empty_comments_relation)
     end
 
+    it "returns an instantiated policy scope given an array of a symbol and plain model class" do
+      expect(Pundit.policy_scope(user, [:project, Post])).to eq :read
+    end
+
+    it "returns an instantiated policy scope given an array of a symbol and active model class" do
+      expect(Pundit.policy_scope(user, [:project, Comment])).to eq Comment
+    end
+
     it "returns nil if the given policy scope can't be found" do
       expect(Pundit.policy_scope(user, Article)).to be_nil
     end
@@ -99,6 +107,14 @@ describe Pundit do
       expect do
         Pundit.policy_scope!(user, nil)
       end.to raise_error(Pundit::NotDefinedError, "Cannot scope NilClass")
+    end
+
+    it "returns an instantiated policy scope given an array of a symbol and plain model class" do
+      expect(Pundit.policy_scope!(user, [:project, Post])).to eq :read
+    end
+
+    it "returns an instantiated policy scope given an array of a symbol and active model class" do
+      expect(Pundit.policy_scope!(user, [:project, Comment])).to eq Comment
     end
 
     it "raises an error with a invalid policy scope constructor" do
@@ -144,35 +160,35 @@ describe Pundit do
       policy = Pundit.policy(user, %i[project criteria])
       expect(policy.class).to eq Project::CriteriaPolicy
       expect(policy.user).to eq user
-      expect(policy.criteria).to eq %i[project criteria]
+      expect(policy.criteria).to eq :criteria
     end
 
     it "returns an instantiated policy given an array of a symbol and plain model instance" do
       policy = Pundit.policy(user, [:project, post])
       expect(policy.class).to eq Project::PostPolicy
       expect(policy.user).to eq user
-      expect(policy.post).to eq [:project, post]
+      expect(policy.post).to eq post
     end
 
     it "returns an instantiated policy given an array of a symbol and a model instance with policy_class override" do
       policy = Pundit.policy(user, [:project, customer_post])
       expect(policy.class).to eq Project::PostPolicy
       expect(policy.user).to eq user
-      expect(policy.post).to eq [:project, customer_post]
+      expect(policy.post).to eq customer_post
     end
 
     it "returns an instantiated policy given an array of a symbol and an active model instance" do
       policy = Pundit.policy(user, [:project, comment])
       expect(policy.class).to eq Project::CommentPolicy
       expect(policy.user).to eq user
-      expect(policy.post).to eq [:project, comment]
+      expect(policy.comment).to eq comment
     end
 
     it "returns an instantiated policy given an array of a symbol and a plain model class" do
       policy = Pundit.policy(user, [:project, Post])
       expect(policy.class).to eq Project::PostPolicy
       expect(policy.user).to eq user
-      expect(policy.post).to eq [:project, Post]
+      expect(policy.post).to eq Post
     end
 
     it "raises an error with a invalid policy constructor" do
@@ -185,14 +201,14 @@ describe Pundit do
       policy = Pundit.policy(user, [:project, Comment])
       expect(policy.class).to eq Project::CommentPolicy
       expect(policy.user).to eq user
-      expect(policy.post).to eq [:project, Comment]
+      expect(policy.comment).to eq Comment
     end
 
     it "returns an instantiated policy given an array of a symbol and a class with policy_class override" do
       policy = Pundit.policy(user, [:project, Customer::Post])
       expect(policy.class).to eq Project::PostPolicy
       expect(policy.user).to eq user
-      expect(policy.post).to eq [:project, Customer::Post]
+      expect(policy.post).to eq Customer::Post
     end
 
     it "returns correct policy class for an array of a multi-word symbols" do
@@ -312,7 +328,7 @@ describe Pundit do
       policy = Pundit.policy!(user, %i[project criteria])
       expect(policy.class).to eq Project::CriteriaPolicy
       expect(policy.user).to eq user
-      expect(policy.criteria).to eq %i[project criteria]
+      expect(policy.criteria).to eq :criteria
     end
 
     it "throws an exception if the given policy can't be found" do
