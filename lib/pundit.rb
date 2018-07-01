@@ -61,10 +61,11 @@ module Pundit
     # @param user [Object] the user that initiated the action
     # @param record [Object] the object we're checking permissions of
     # @param query [Symbol, String] the predicate method to check on the policy (e.g. `:show?`)
+    # @param policy_class [Class] the policy class we want to force use of
     # @raise [NotAuthorizedError] if the given query method returned false
     # @return [Object] Always returns the passed object record
-    def authorize(user, record, query)
-      policy = policy!(user, record)
+    def authorize(user, record, query, policy_class: nil)
+      policy = policy_class ? policy_class.new(user, record) : policy!(user, record)
 
       raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
 
@@ -189,7 +190,7 @@ protected
   # @param record [Object] the object we're checking permissions of
   # @param query [Symbol, String] the predicate method to check on the policy (e.g. `:show?`).
   #   If omitted then this defaults to the Rails controller action name.
-  # @param policy_class [Class] the policy class we wan't to force use of
+  # @param policy_class [Class] the policy class we want to force use of
   # @raise [NotAuthorizedError] if the given query method returned false
   # @return [Object] Always returns the passed object record
   def authorize(record, query = nil, policy_class: nil)
@@ -224,7 +225,7 @@ protected
   #
   # @see https://github.com/elabs/pundit#scopes
   # @param scope [Object] the object we're retrieving the policy scope for
-  # @param policy_scope_class [Class] the policy scope class we wan't to force use of
+  # @param policy_scope_class [Class] the policy scope class we want to force use of
   # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
   def policy_scope(scope, policy_scope_class: nil)
     @_pundit_policy_scoped = true
