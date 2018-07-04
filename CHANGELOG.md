@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `policy_class` option to `authorize` to be able to override the policy. (#441)
+- Add `policy_scope_class` option to `authorize` to be able to override the policy scope. (#441)
 - Fix `param_key` issue when passed an array. (#529)
 - Only pass last element of "namespace array" to policy and scope. (#529)
 - Allow specification of a `NilClassPolicy`. (#525)
