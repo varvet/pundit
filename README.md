@@ -2,7 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/varvet/pundit.svg?branch=master)](https://travis-ci.org/varvet/pundit)
 [![Code Climate](https://codeclimate.com/github/varvet/pundit.svg)](https://codeclimate.com/github/varvet/pundit)
-[![Inline docs](http://inch-ci.org/github/elabs/pundit.svg?branch=master)](http://inch-ci.org/github/elabs/pundit)
+[![Inline docs](http://inch-ci.org/github/varvet/pundit.svg?branch=master)](http://inch-ci.org/github/varvet/pundit)
 [![Gem Version](https://badge.fury.io/rb/pundit.svg)](http://badge.fury.io/rb/pundit)
 
 Pundit provides a set of helpers which guide you in leveraging regular Ruby
@@ -778,7 +778,7 @@ Pundit does not provide a DSL for testing scopes. Just test it like a regular Ru
 - [RailsApps Example Application: Pundit and Devise](https://github.com/RailsApps/rails-devise-pundit)
 - [Migrating to Pundit from CanCan](http://blog.carbonfive.com/2013/10/21/migrating-to-pundit-from-cancan/)
 - [Testing Pundit Policies with RSpec](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/)
-- [Using Pundit outside of a Rails controller](https://github.com/elabs/pundit/pull/136)
+- [Using Pundit outside of a Rails controller](https://github.com/varvet/pundit/pull/136)
 - [Straightforward Rails Authorization with Pundit](http://www.sitepoint.com/straightforward-rails-authorization-with-pundit/)
 
 # License

@@ -74,7 +74,7 @@ module Pundit
 
     # Retrieves the policy scope for the given record.
     #
-    # @see https://github.com/elabs/pundit#scopes
+    # @see https://github.com/varvet/pundit#scopes
     # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
@@ -88,7 +88,7 @@ module Pundit
 
     # Retrieves the policy scope for the given record.
     #
-    # @see https://github.com/elabs/pundit#scopes
+    # @see https://github.com/varvet/pundit#scopes
     # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
     # @raise [NotDefinedError] if the policy scope cannot be found
@@ -103,7 +103,7 @@ module Pundit
 
     # Retrieves the policy for the given record.
     #
-    # @see https://github.com/elabs/pundit#policies
+    # @see https://github.com/varvet/pundit#policies
     # @param user [Object] the user that initiated the action
     # @param record [Object] the object we're retrieving the policy for
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
@@ -117,7 +117,7 @@ module Pundit
 
     # Retrieves the policy for the given record.
     #
-    # @see https://github.com/elabs/pundit#policies
+    # @see https://github.com/varvet/pundit#policies
     # @param user [Object] the user that initiated the action
     # @param record [Object] the object we're retrieving the policy for
     # @raise [NotDefinedError] if the policy cannot be found
@@ -171,7 +171,7 @@ protected
   # `after_action` filter to prevent programmer error in forgetting to call
   # {#authorize} or {#skip_authorization}.
   #
-  # @see https://github.com/elabs/pundit#ensuring-policies-and-scopes-are-used
+  # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
   # @raise [AuthorizationNotPerformedError] if authorization has not been performed
   # @return [void]
   def verify_authorized
@@ -182,7 +182,7 @@ protected
   # `after_action` filter to prevent programmer error in forgetting to call
   # {#policy_scope} or {#skip_policy_scope} in index actions.
   #
-  # @see https://github.com/elabs/pundit#ensuring-policies-and-scopes-are-used
+  # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
   # @raise [AuthorizationNotPerformedError] if policy scoping has not been performed
   # @return [void]
   def verify_policy_scoped
@@ -213,7 +213,7 @@ protected
 
   # Allow this action not to perform authorization.
   #
-  # @see https://github.com/elabs/pundit#ensuring-policies-and-scopes-are-used
+  # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
   # @return [void]
   def skip_authorization
     @_pundit_policy_authorized = true
@@ -221,7 +221,7 @@ protected
 
   # Allow this action not to perform policy scoping.
   #
-  # @see https://github.com/elabs/pundit#ensuring-policies-and-scopes-are-used
+  # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
   # @return [void]
   def skip_policy_scope
     @_pundit_policy_scoped = true
@@ -229,7 +229,7 @@ protected
 
   # Retrieves the policy scope for the given record.
   #
-  # @see https://github.com/elabs/pundit#scopes
+  # @see https://github.com/varvet/pundit#scopes
   # @param scope [Object] the object we're retrieving the policy scope for
   # @param policy_scope_class [Class] the policy scope class we want to force use of
   # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
@@ -240,7 +240,7 @@ protected
 
   # Retrieves the policy for the given record.
   #
-  # @see https://github.com/elabs/pundit#policies
+  # @see https://github.com/varvet/pundit#policies
   # @param record [Object] the object we're retrieving the policy for
   # @return [Object, nil] instance of policy class with query methods
   def policy(record)
@@ -253,7 +253,7 @@ protected
   # what key the record should have in the params hash and retrieves the
   # permitted attributes from the params hash under that key.
   #
-  # @see https://github.com/elabs/pundit#strong-parameters
+  # @see https://github.com/varvet/pundit#strong-parameters
   # @param record [Object] the object we're retrieving permitted attributes for
   # @param action [Symbol, String] the name of the action being performed on the record (e.g. `:update`).
   #   If omitted then this defaults to the Rails controller action name.
@@ -297,7 +297,7 @@ protected
   # Hook method which allows customizing which user is passed to policies and
   # scopes initialized by {#authorize}, {#policy} and {#policy_scope}.
   #
-  # @see https://github.com/elabs/pundit#customize-pundit-user
+  # @see https://github.com/varvet/pundit#customize-pundit-user
   # @return [Object] the user object to be used with pundit
   def pundit_user
     current_user

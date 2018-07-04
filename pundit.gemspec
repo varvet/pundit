@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["jonas.nicklas@gmail.com", "dev@elabs.se"]
   gem.description   = "Object oriented authorization for Rails applications"
   gem.summary       = "OO authorization for Rails"
-  gem.homepage      = "https://github.com/elabs/pundit"
+  gem.homepage      = "https://github.com/varvet/pundit"
   gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split($/)

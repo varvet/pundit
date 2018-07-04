@@ -17,7 +17,7 @@ module Pundit
     end
 
     # @return [nil, Scope{#resolve}] scope class which can resolve to a scope
-    # @see https://github.com/elabs/pundit#scopes
+    # @see https://github.com/varvet/pundit#scopes
     # @example
     #   scope = finder.scope #=> UserPolicy::Scope
     #   scope.resolve #=> <#ActiveRecord::Relation ...>
@@ -27,7 +27,7 @@ module Pundit
     end
 
     # @return [nil, Class] policy class with query methods
-    # @see https://github.com/elabs/pundit#policies
+    # @see https://github.com/varvet/pundit#policies
     # @example
     #   policy = finder.policy #=> UserPolicy
     #   policy.show? #=> true
