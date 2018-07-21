@@ -1,5 +1,9 @@
 # Pundit
 
+## 2.0.0 (2018-07-21)
+
+No changes since beta1
+
 ## 2.0.0.beta1 (2018-07-04)
 
 - Add `policy_class` option to `authorize` to be able to override the policy. (#441)
