@@ -79,7 +79,9 @@ module Pundit
     # @param scope [Object] the object we're retrieving the policy scope for
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
-    def policy_scope(user, scope)
+    def policy_scope(user, scope, policy_scope_class: nil)
+      return policy_scope_class.new(user, scope).resolve if policy_scope_class
+
       policy_scope = PolicyFinder.new(scope).scope
       policy_scope.new(user, pundit_model(scope)).resolve if policy_scope
     rescue ArgumentError
@@ -94,7 +96,9 @@ module Pundit
     # @raise [NotDefinedError] if the policy scope cannot be found
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
-    def policy_scope!(user, scope)
+    def policy_scope!(user, scope, policy_scope_class: nil)
+      return policy_scope_class.new(user, scope).resolve if policy_scope_class
+
       policy_scope = PolicyFinder.new(scope).scope!
       policy_scope.new(user, pundit_model(scope)).resolve
     rescue ArgumentError

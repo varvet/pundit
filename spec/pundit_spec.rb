@@ -79,6 +79,10 @@ describe Pundit do
       expect(Pundit.policy_scope(user, Article)).to be_nil
     end
 
+    it "allows policy scope class to be overriden" do
+      expect(Pundit.policy_scope(user, Post, policy_scope_class: PublicationPolicy::Scope)).to eq :published
+    end
+
     it "raises an exception if nil object given" do
       expect { Pundit.policy_scope(user, nil) }.to raise_error(Pundit::NotDefinedError)
     end
@@ -97,6 +101,10 @@ describe Pundit do
 
     it "returns an instantiated policy scope given an active model class" do
       expect(Pundit.policy_scope!(user, Comment)).to eq CommentScope.new(Comment)
+    end
+
+    it "allows policy scope class to be overriden" do
+      expect(Pundit.policy_scope!(user, Post, policy_scope_class: PublicationPolicy::Scope)).to eq :published
     end
 
     it "throws an exception if the given policy scope can't be found" do

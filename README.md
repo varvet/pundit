@@ -545,6 +545,13 @@ Pundit.policy_scope(user, Post)
 The bang methods will raise an exception if the policy does not exist, whereas
 those without the bang will return nil.
 
+Similar to the `policy_scope` instance method, you can also override the policy scope class:
+
+``` ruby
+Pundit.policy_scope!(user, Post, policy_scope_class: PublicationPolicy::Scope)
+Pundit.policy_scope(user, Post, policy_scope_class: PublicationPolicy::Scope)
+```
+
 ## Customize Pundit user
 
 In some cases your controller might not have access to `current_user`, or your
