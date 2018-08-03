@@ -582,8 +582,8 @@ class AdminController < ApplicationController
     super([:admin, scope])
   end
 
-  def authorize(record, query = nil)
-    super([:admin, record], query)
+  def authorize(record, query = nil, options = {})
+    super([:admin, record], query, options)
   end
 end
 
