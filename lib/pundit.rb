@@ -244,7 +244,7 @@ protected
   # @param record [Object] the object we're retrieving the policy for
   # @return [Object, nil] instance of policy class with query methods
   def policy(record)
-    policies[record] ||= Pundit.policy!(pundit_user, record)
+    policies[[pundit_user, record]] ||= Pundit.policy!(pundit_user, record)
   end
 
   # Retrieves a set of permitted attributes from the policy by instantiating
