@@ -427,9 +427,9 @@ describe Pundit do
     end
 
     it "caches the policy" do
-      expect(controller.policies[post]).to be_nil
+      expect(controller.policies[[user, post]]).to be_nil
       controller.authorize(post)
-      expect(controller.policies[post]).not_to be_nil
+      expect(controller.policies[[user, post]]).not_to be_nil
     end
 
     it "raises an error when the given record is nil" do
@@ -478,7 +478,7 @@ describe Pundit do
 
     it "allows policy to be injected" do
       new_policy = OpenStruct.new
-      controller.policies[post] = new_policy
+      controller.policies[[user, post]] = new_policy
 
       expect(controller.policy(post)).to eq new_policy
     end
