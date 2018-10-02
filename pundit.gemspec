@@ -5,7 +5,7 @@ require "pundit/version"
 Gem::Specification.new do |gem|
   gem.name          = "pundit"
   gem.version       = Pundit::VERSION
-  gem.authors       = ["Jonas Nicklas", "Elabs AB"]
+  gem.authors       = ["Jonas Nicklas", "Varvet AB"]
   gem.email         = ["jonas.nicklas@gmail.com", "dev@elabs.se"]
   gem.description   = "Object oriented authorization for Rails applications"
   gem.summary       = "OO authorization for Rails"
