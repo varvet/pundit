@@ -236,6 +236,18 @@ class WikiPolicy
   end
 end
 
+class Thread
+  def self.all; end
+end
+class ThreadPolicy < Struct.new(:user, :thread)
+  class Scope < Struct.new(:user, :scope)
+    def resolve
+      # deliberate wrong useage of the method
+      scope.all(:unvalid, :parameters)
+    end
+  end
+end
+
 class PostFourFiveSix < Struct.new(:user); end
 
 class CommentFourFiveSix; extend ActiveModel::Naming; end

@@ -16,6 +16,7 @@ describe Pundit do
   let(:tag_four_five_six) { ProjectOneTwoThree::TagFourFiveSix.new(user) }
   let(:avatar_four_five_six) { ProjectOneTwoThree::AvatarFourFiveSix.new }
   let(:wiki) { Wiki.new }
+  let(:thread) { Thread.new }
 
   describe ".authorize" do
     it "infers the policy and authorizes based on it" do
@@ -87,6 +88,12 @@ describe Pundit do
       expect do
         Pundit.policy_scope(user, Wiki)
       end.to raise_error(Pundit::InvalidConstructorError, "Invalid #<WikiPolicy::Scope> constructor is called")
+    end
+
+    it "raises an original error with a policy scope that contains error" do
+      expect do
+        Pundit.policy_scope(user, Thread)
+      end.to raise_error(ArgumentError)
     end
   end
 

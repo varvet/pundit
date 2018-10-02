@@ -80,10 +80,16 @@ module Pundit
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
     def policy_scope(user, scope)
-      policy_scope = PolicyFinder.new(scope).scope
-      policy_scope.new(user, pundit_model(scope)).resolve if policy_scope
-    rescue ArgumentError
-      raise InvalidConstructorError, "Invalid #<#{policy_scope}> constructor is called"
+      policy_scope_class = PolicyFinder.new(scope).scope
+      return unless policy_scope_class
+
+      begin
+        policy_scope = policy_scope_class.new(user, pundit_model(scope))
+      rescue ArgumentError
+        raise InvalidConstructorError, "Invalid #<#{policy_scope_class}> constructor is called"
+      end
+
+      policy_scope.resolve
     end
 
     # Retrieves the policy scope for the given record.
@@ -95,10 +101,16 @@ module Pundit
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     def policy_scope!(user, scope)
-      policy_scope = PolicyFinder.new(scope).scope!
-      policy_scope.new(user, pundit_model(scope)).resolve
-    rescue ArgumentError
-      raise InvalidConstructorError, "Invalid #<#{policy_scope}> constructor is called"
+      policy_scope_class = PolicyFinder.new(scope).scope!
+      return unless policy_scope_class
+
+      begin
+        policy_scope = policy_scope_class.new(user, pundit_model(scope))
+      rescue ArgumentError
+        raise InvalidConstructorError, "Invalid #<#{policy_scope_class}> constructor is called"
+      end
+
+      policy_scope.resolve
     end
 
     # Retrieves the policy for the given record.
