@@ -1,5 +1,9 @@
 # Pundit
 
+## Unreleased
+
+- Improve exception handling for `#policy_scope` and `#policy_scope!`. (#550)
+
 ## 2.0.0 (2018-07-21)
 
 No changes since beta1
