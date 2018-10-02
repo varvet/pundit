@@ -1,4 +1,4 @@
-Copyright (c) 2012 Jonas Nicklas, Elabs AB
+Copyright (c) 2018 Jonas Nicklas, Elabs AB
 
 MIT License
 
