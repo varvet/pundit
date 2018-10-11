@@ -18,6 +18,15 @@ describe Pundit do
   let(:wiki) { Wiki.new }
   let(:thread) { Thread.new }
 
+  describe ".configure" do
+    it "sets the suffix" do
+      Pundit.configure { |c| c.suffix = "Suffix" }
+      expect(Pundit.configuration.suffix).to eql "Suffix"
+
+      Pundit.remove_instance_variable(:@configuration)
+    end
+  end
+
   describe ".authorize" do
     it "infers the policy and authorizes based on it" do
       expect(Pundit.authorize(user, post, :update?)).to be_truthy

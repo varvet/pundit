@@ -599,6 +599,33 @@ class Admin::PostController < AdminController
 end
 ```
 
+## Configuring Custom Policy Names
+
+In very rare occassions the `Policy` suffix may not work well in your
+application domain. To resolve this issue, Pundit allows you to
+configure a different suffix for your application policies so that the
+policy lookup well infer policy names using that suffix rather than
+`Policy`.
+
+```ruby
+Pundit.configure do |config|
+  config.suffix = "Authorization"
+end
+
+class PolicyAuthorization < ApplicationAuthorization
+  def show?
+    user.admin?
+  end
+end
+
+class Admin::PolicyController < AdminController
+  def show
+    policy = Policy.find(params[:id])
+    authorize(policy)
+  end
+end
+```
+
 ## Additional context
 
 Pundit strongly encourages you to model your application in such a way that the

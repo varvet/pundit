@@ -80,7 +80,7 @@ module Pundit
         subject.class.policy_class
       else
         klass = find_class_name(subject)
-        "#{klass}#{SUFFIX}"
+        "#{klass}#{Pundit.configuration.suffix}"
       end
     end
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "pundit/version"
+require "pundit/configuration"
 require "pundit/policy_finder"
 require "active_support/concern"
 require "active_support/core_ext/string/inflections"
@@ -10,8 +11,6 @@ require "active_support/dependencies/autoload"
 
 # @api public
 module Pundit
-  SUFFIX = "Policy".freeze
-
   # @api private
   module Generators; end
 
@@ -54,6 +53,14 @@ module Pundit
   extend ActiveSupport::Concern
 
   class << self
+    def configuration
+      @configuration ||= Configuration.new
+    end
+
+    def configure
+      yield(configuration)
+    end
+
     # Retrieves the policy for the given record, initializing it with the
     # record and user and finally throwing an error if the user is not
     # authorized to perform the given action.
