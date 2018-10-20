@@ -16,10 +16,10 @@ module Pundit
   module Generators; end
 
   # @api private
-  class Error < StandardError; end
+  class PunditError < StandardError; end
 
   # Error that will be raised when authorization has failed
-  class NotAuthorizedError < Error
+  class NotAuthorizedError < PunditError
     attr_reader :query, :record, :policy
 
     def initialize(options = {})
@@ -38,18 +38,18 @@ module Pundit
   end
 
   # Error that will be raised if a policy or policy scope constructor is not called correctly.
-  class InvalidConstructorError < Error; end
+  class InvalidConstructorError < PunditError; end
 
   # Error that will be raised if a controller action has not called the
   # `authorize` or `skip_authorization` methods.
-  class AuthorizationNotPerformedError < Error; end
+  class AuthorizationNotPerformedError < PunditError; end
 
   # Error that will be raised if a controller action has not called the
   # `policy_scope` or `skip_policy_scope` methods.
   class PolicyScopingNotPerformedError < AuthorizationNotPerformedError; end
 
   # Error that will be raised if a policy or policy scope is not defined.
-  class NotDefinedError < Error; end
+  class NotDefinedError < PunditError; end
 
   extend ActiveSupport::Concern
 
