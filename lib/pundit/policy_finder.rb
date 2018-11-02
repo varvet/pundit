@@ -36,8 +36,10 @@ module Pundit
     def policy
       klass = find(object)
 
-      if klass.is_a?(String)
-        klass = klass.safe_constantize
+      klass = if klass.is_a?(String)
+        klass.safe_constantize
+      else
+        klass
       end
 
       klass || Pundit.fallback_policy

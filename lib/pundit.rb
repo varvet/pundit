@@ -61,7 +61,7 @@ module Pundit
     def fallback_policy=(policy)
       @fallback_policy = policy
     end
-    
+
     # Retrieves the policy for the given record, initializing it with the
     # record and user and finally throwing an error if the user is not
     # authorized to perform the given action.
