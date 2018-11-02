@@ -27,6 +27,34 @@ describe Pundit do
       expect(Pundit.authorize(user, post, :create?, policy_class: PublicationPolicy)).to be_truthy
     end
 
+    context "with a missing policy class" do
+      context "with a fallback_policy" do
+        around(:each) do |example|
+          previous_policy = Pundit.fallback_policy
+          Pundit.fallback_policy = NilClassPolicy
+          example.run
+          Pundit.fallback_policy = previous_policy
+        end
+
+        it "authorizes based on the fallback_policy" do
+          expect { Pundit.authorize(user, article, :show?) }.to raise_error(Pundit::NotAuthorizedError)
+        end
+      end
+
+      context "without a fallback_policy" do
+        around(:each) do |example|
+          previous_policy = Pundit.fallback_policy
+          Pundit.fallback_policy = nil
+          example.run
+          Pundit.fallback_policy = previous_policy
+        end
+
+        it "raises an error on a missing policy class" do
+          expect { Pundit.authorize(user, article, :show?) }.to raise_error(Pundit::NotDefinedError)
+        end
+      end
+    end
+
     it "works with anonymous class policies" do
       expect(Pundit.authorize(user, article_tag, :show?)).to be_truthy
       expect { Pundit.authorize(user, article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)

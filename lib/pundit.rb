@@ -54,6 +54,14 @@ module Pundit
   extend ActiveSupport::Concern
 
   class << self
+    def fallback_policy
+      @fallback_policy
+    end
+
+    def fallback_policy=(policy)
+      @fallback_policy = policy
+    end
+    
     # Retrieves the policy for the given record, initializing it with the
     # record and user and finally throwing an error if the user is not
     # authorized to perform the given action.

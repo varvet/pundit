@@ -35,7 +35,12 @@ module Pundit
     #
     def policy
       klass = find(object)
-      klass.is_a?(String) ? klass.safe_constantize : klass
+
+      if klass.is_a?(String)
+        klass = klass.safe_constantize
+      end
+
+      klass || Pundit.fallback_policy
     end
 
     # @return [Scope{#resolve}] scope class which can resolve to a scope

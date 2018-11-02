@@ -47,12 +47,40 @@ describe Pundit::PolicyFinder do
         allow(subject).to receive(:find).and_return nil
         expect(subject.policy).to eq nil
       end
+
+      context "with a fallback_policy" do
+        around(:each) do |example|
+          previous_policy = Pundit.fallback_policy
+          Pundit.fallback_policy = NilClassPolicy
+          example.run
+          Pundit.fallback_policy = previous_policy
+        end
+
+        it "returns the fallback_policy" do
+          allow(subject).to receive(:find).and_return nil
+          expect(subject.policy).to eq NilClassPolicy
+        end
+      end
     end
 
     context "with a string that can't be constantized" do
       it "returns nil" do
         allow(subject).to receive(:find).and_return "FooPolicy"
         expect(subject.policy).to eq nil
+      end
+
+      context "with a fallback_policy" do
+        around(:each) do |example|
+          previous_policy = Pundit.fallback_policy
+          Pundit.fallback_policy = NilClassPolicy
+          example.run
+          Pundit.fallback_policy = previous_policy
+        end
+
+        it "returns the fallback_policy" do
+          allow(subject).to receive(:find).and_return "FooPolicy"
+          expect(subject.policy).to eq NilClassPolicy
+        end
       end
     end
   end
