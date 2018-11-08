@@ -170,7 +170,7 @@ end
 Controller:
 ```ruby
 def show
-  @user = authorize User.find(params[:id])
+  @user = authorize(User.find(params[:id]))
 end
 ```
 
