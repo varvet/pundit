@@ -584,4 +584,13 @@ describe Pundit do
       expect(error.message).to eq "must be logged in"
     end
   end
+
+  describe "Pundit::Errors::Error" do
+    it "does not pollute the global namespace" do
+      Object.send(:include, Pundit)
+
+      expect { Object::Error }.to raise_error(NameError)
+      expect(Pundit::Errors::Error).to be
+    end
+  end
 end

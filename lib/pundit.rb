@@ -8,18 +8,20 @@ require "active_support/core_ext/object/blank"
 require "active_support/core_ext/module/introspection"
 require "active_support/dependencies/autoload"
 
+# @api private
+module Pundit
+  module Errors
+    # Generic error that serves as base for all the other Pundit specific errors raised when
+    # authorization has failed
+    class Error < StandardError; end
+  end
+end
+
 # @api public
 module Pundit
   SUFFIX = "Policy".freeze
 
-  # @api private
-  module Generators; end
-
-  # @api private
-  class Error < StandardError; end
-
-  # Error that will be raised when authorization has failed
-  class NotAuthorizedError < Error
+  class NotAuthorizedError < Pundit::Errors::Error
     attr_reader :query, :record, :policy
 
     def initialize(options = {})
@@ -38,18 +40,21 @@ module Pundit
   end
 
   # Error that will be raised if a policy or policy scope constructor is not called correctly.
-  class InvalidConstructorError < Error; end
+  class InvalidConstructorError < Pundit::Errors::Error; end
 
   # Error that will be raised if a controller action has not called the
   # `authorize` or `skip_authorization` methods.
-  class AuthorizationNotPerformedError < Error; end
+  class AuthorizationNotPerformedError < Pundit::Errors::Error; end
 
   # Error that will be raised if a controller action has not called the
   # `policy_scope` or `skip_policy_scope` methods.
   class PolicyScopingNotPerformedError < AuthorizationNotPerformedError; end
 
   # Error that will be raised if a policy or policy scope is not defined.
-  class NotDefinedError < Error; end
+  class NotDefinedError < Pundit::Errors::Error; end
+
+  # @api private
+  module Generators; end
 
   extend ActiveSupport::Concern
 
