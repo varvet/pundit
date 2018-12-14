@@ -179,9 +179,10 @@ method in both the view and controller. This is especially useful for
 conditionally showing links or buttons in the view:
 
 ``` erb
-<% if policy(@post).update? %>
+<% if policy(Post).update? %>
   <%= link_to "Edit post", edit_post_path(@post) %>
 <% end %>
+
 ```
 ## Headless policies
 
