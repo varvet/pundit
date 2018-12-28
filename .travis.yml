@@ -1,5 +1,4 @@
 language: ruby
-sudo: false
 before_install:
   - gem update --system
   - gem install bundler
@@ -13,9 +12,10 @@ matrix:
     - rvm: 2.3.5
     - rvm: 2.4.2
     - rvm: 2.5.1
+    - rvm: 2.6.0
     - rvm: jruby-9.1.8.0
       env:
         - JRUBY_OPTS="--debug"
-    - rvm: jruby-9.2.0.0
+    - rvm: jruby-9.2.5.0
       env:
         - JRUBY_OPTS="--debug"
