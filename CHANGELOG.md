@@ -10,16 +10,22 @@ No changes since beta1
 
 ## 2.0.0.beta1 (2018-07-04)
 
+### Breaking changes
+
+- Only pass last element of "namespace array" to policy and scope. (#529)
+- Raise `InvalidConstructorError` if a policy or policy scope with an invalid constructor is called. (#462)
+- Return passed object from `#authorize` method to make chaining possible. (#385)
+
+### Other changes
+
 - Add `policy_class` option to `authorize` to be able to override the policy. (#441)
 - Add `policy_scope_class` option to `authorize` to be able to override the policy scope. (#441)
 - Fix `param_key` issue when passed an array. (#529)
-- Only pass last element of "namespace array" to policy and scope. (#529)
 - Allow specification of a `NilClassPolicy`. (#525)
 - Make sure `policy_class` override is called when passed an array. (#475)
-- Raise `InvalidConstructorError` if a policy or policy scope with an invalid constructor is called. (#462)
+
 - Use `action_name` instead of `params[:action]`. (#419)
 - Add `pundit_params_for` method to make it easy to customize params fetching. (#502)
-- Return passed object from `#authorize` method to make chaining possible. (#385)
 
 ## 1.1.0 (2016-01-14)
 
