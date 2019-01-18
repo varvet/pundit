@@ -8,7 +8,6 @@ None
 
 ### Other changes
 
-- Drop official support for Ruby 2.1 and 2.2. (#573)
 - Improve exception handling for `#policy_scope` and `#policy_scope!`. (#550)
 - Add `:policy` metadata to RSpec template. (#566)
 
