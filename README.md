@@ -195,6 +195,10 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
 end
 ```
 
+Note that the headless policy still needs to accept two arguments. The
+second argument will just be the symbol `:dashboard` in this case which
+is what is passed as the record to `authorize` below.
+
 ```ruby
 # In controllers
 authorize :dashboard, :show?
