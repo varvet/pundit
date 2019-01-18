@@ -2,7 +2,14 @@
 
 ## Unreleased
 
+### Breaking changes
+
+- Drop official support for Ruby 2.1 and 2.2. (#573)
+
+### Other changes
+
 - Improve exception handling for `#policy_scope` and `#policy_scope!`. (#550)
+- Add `:policy` metadata to RSpec template. (#566)
 
 ## 2.0.0 (2018-07-21)
 
