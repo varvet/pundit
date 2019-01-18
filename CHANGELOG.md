@@ -1,6 +1,6 @@
 # Pundit
 
-## Unreleased
+## 2.0.1 (2019-01-18)
 
 ### Breaking changes
 
