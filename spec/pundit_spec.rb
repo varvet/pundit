@@ -5,20 +5,9 @@ require "spec_helper"
 describe Pundit do
   let(:user) { double }
   let(:post) { Post.new(user) }
-  let(:customer_post) { Customer::Post.new(user) }
-  let(:post_four_five_six) { PostFourFiveSix.new(user) }
   let(:comment) { Comment.new }
-  let(:comment_four_five_six) { CommentFourFiveSix.new }
   let(:article) { Article.new }
-  let(:controller) { Controller.new(user, "update", {}) }
-  let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
-  let(:comments_relation) { CommentsRelation.new }
-  let(:empty_comments_relation) { CommentsRelation.new(true) }
-  let(:tag_four_five_six) { ProjectOneTwoThree::TagFourFiveSix.new(user) }
-  let(:avatar_four_five_six) { ProjectOneTwoThree::AvatarFourFiveSix.new }
-  let(:wiki) { Wiki.new }
-  let(:thread) { Thread.new }
 
   describe ".authorize" do
     it "infers the policy and authorizes based on it" do
@@ -48,7 +37,7 @@ describe Pundit do
 
     it "raises an error with a invalid policy constructor" do
       expect do
-        Pundit.authorize(user, wiki, :update?)
+        Pundit.authorize(user, Wiki.new, :update?)
       end.to raise_error(Pundit::InvalidConstructorError, "Invalid #<WikiPolicy> constructor is called")
     end
   end
@@ -63,10 +52,12 @@ describe Pundit do
     end
 
     it "returns an instantiated policy scope given an active record relation" do
+      comments_relation = CommentsRelation.new
       expect(Pundit.policy_scope(user, comments_relation)).to eq CommentScope.new(comments_relation)
     end
 
     it "returns an instantiated policy scope given an empty active record relation" do
+      empty_comments_relation = CommentsRelation.new(true)
       expect(Pundit.policy_scope(user, empty_comments_relation)).to eq CommentScope.new(empty_comments_relation)
     end
 
@@ -184,6 +175,7 @@ describe Pundit do
     end
 
     it "returns an instantiated policy given an array of a symbol and a model instance with policy_class override" do
+      customer_post = Customer::Post.new(user)
       policy = Pundit.policy(user, [:project, customer_post])
       expect(policy.class).to eq Project::PostPolicy
       expect(policy.user).to eq user
@@ -230,11 +222,13 @@ describe Pundit do
     end
 
     it "returns correct policy class for an array of a multi-word symbol and a multi-word plain model instance" do
+      post_four_five_six = PostFourFiveSix.new(user)
       policy = Pundit.policy(user, [:project_one_two_three, post_four_five_six])
       expect(policy.class).to eq ProjectOneTwoThree::PostFourFiveSixPolicy
     end
 
     it "returns correct policy class for an array of a multi-word symbol and a multi-word active model instance" do
+      comment_four_five_six = CommentFourFiveSix.new
       policy = Pundit.policy(user, [:project_one_two_three, comment_four_five_six])
       expect(policy.class).to eq ProjectOneTwoThree::CommentFourFiveSixPolicy
     end
@@ -255,6 +249,7 @@ describe Pundit do
     end
 
     it "returns correct policy class for a multi-word scoped plain model instance" do
+      tag_four_five_six = ProjectOneTwoThree::TagFourFiveSix.new(user)
       policy = Pundit.policy(user, tag_four_five_six)
       expect(policy.class).to eq ProjectOneTwoThree::TagFourFiveSixPolicy
     end
@@ -265,6 +260,7 @@ describe Pundit do
     end
 
     it "returns correct policy class for a multi-word scoped active model instance" do
+      avatar_four_five_six = ProjectOneTwoThree::AvatarFourFiveSix.new
       policy = Pundit.policy(user, avatar_four_five_six)
       expect(policy.class).to eq ProjectOneTwoThree::AvatarFourFiveSixPolicy
     end
@@ -280,6 +276,7 @@ describe Pundit do
 
     describe "with .policy_class set on the model" do
       it "returns an instantiated policy given a plain model instance" do
+        artificial_blog = ArtificialBlog.new
         policy = Pundit.policy(user, artificial_blog)
         expect(policy.user).to eq user
         expect(policy.blog).to eq artificial_blog
