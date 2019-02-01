@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Pundit
   # Finds policy and scope classes for given object.
   # @api public
