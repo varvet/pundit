@@ -1,22 +1,10 @@
 require "spec_helper"
 
-describe Pundit do
+describe Pundit::Authorization do
   let(:user) { double }
   let(:post) { Post.new(user) }
-  let(:customer_post) { Customer::Post.new(user) }
-  let(:post_four_five_six) { PostFourFiveSix.new(user) }
-  let(:comment) { Comment.new }
-  let(:comment_four_five_six) { CommentFourFiveSix.new }
-  let(:article) { Article.new }
   let(:controller) { Controller.new(user, "update", {}) }
-  let(:artificial_blog) { ArtificialBlog.new }
-  let(:article_tag) { ArticleTag.new }
-  let(:comments_relation) { CommentsRelation.new }
-  let(:empty_comments_relation) { CommentsRelation.new(true) }
-  let(:tag_four_five_six) { ProjectOneTwoThree::TagFourFiveSix.new(user) }
-  let(:avatar_four_five_six) { ProjectOneTwoThree::AvatarFourFiveSix.new }
   let(:wiki) { Wiki.new }
-  let(:thread) { Thread.new }
 
   describe "#verify_authorized" do
     it "does nothing when authorized" do
@@ -81,6 +69,7 @@ describe Pundit do
     end
 
     it "works with anonymous class policies" do
+      article_tag =  ArticleTag.new
       expect(controller.authorize(article_tag, :show?)).to be_truthy
       expect { controller.authorize(article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
     end
@@ -136,6 +125,7 @@ describe Pundit do
     end
 
     it "throws an exception if the given policy can't be found" do
+      article = Article.new
       expect { controller.policy(article) }.to raise_error(Pundit::NotDefinedError)
     end
 
@@ -194,12 +184,12 @@ describe Pundit do
     end
 
     it "checks policy for permitted attributes for record of a ActiveModel type" do
+      customer_post = Customer::Post.new(user)
       params = ActionController::Parameters.new(customer_post: {
         title: "Hello",
         votes: 5,
         admin: true
       })
-
       action = "update"
 
       expect(Controller.new(user, action, params).permitted_attributes(customer_post).to_h).to eq(
