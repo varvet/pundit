@@ -36,7 +36,7 @@ describe Pundit do
       # rubocop:disable Style/MultilineBlockChain
       expect do
         Pundit.authorize(user, post, :destroy?)
-      end.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this #<Post>") do |error|
+      end.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this Post") do |error|
         expect(error.query).to eq :destroy?
         expect(error.record).to eq post
         expect(error.policy).to eq Pundit.policy(user, post)
