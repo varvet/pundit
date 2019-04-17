@@ -1,5 +1,15 @@
 # Pundit
 
+## Unreleased
+
+### Breaking changes
+
+None
+
+### Other changes
+
+- Return a safer default NotAuthorizedError message. (#583)
+
 ## 2.0.1 (2019-01-18)
 
 ### Breaking changes
