@@ -8,15 +8,17 @@ require "active_support/core_ext/object/blank"
 require "active_support/core_ext/module/introspection"
 require "active_support/dependencies/autoload"
 
+# @api private
+# To avoid name clashes with common Error naming when mixing in Pundit,
+# keep it here with compact class style definition.
+class Pundit::Error < StandardError; end # rubocop:disable Style/ClassAndModuleChildren
+
 # @api public
 module Pundit
   SUFFIX = "Policy".freeze
 
   # @api private
   module Generators; end
-
-  # @api private
-  class Error < StandardError; end
 
   # Error that will be raised when authorization has failed
   class NotAuthorizedError < Error
