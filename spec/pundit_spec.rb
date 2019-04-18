@@ -3,6 +3,7 @@ require "spec_helper"
 describe Pundit do
   let(:user) { double }
   let(:post) { Post.new(user) }
+  let(:product) { Product.new }
   let(:customer_post) { Customer::Post.new(user) }
   let(:post_four_five_six) { PostFourFiveSix.new(user) }
   let(:comment) { Comment.new }
@@ -548,6 +549,26 @@ describe Pundit do
       )
       expect(Controller.new(double, action, params).permitted_attributes(customer_post).to_h).to eq(
         "votes" => 5
+      )
+    end
+
+    it "changes action name from new->create and edit->update" do
+      params = ActionController::Parameters.new(product: {
+        name: "Hello",
+        price: 1234,
+        qty: 1000,
+        admin: true
+      })
+
+      action = "new"
+      expect(Controller.new(user, action, params).permitted_attributes(product).to_h).to eq(
+        "name" => "Hello",
+        "price" => 1234,
+        "qty" => 1000
+      )
+      action = "edit"
+      expect(Controller.new(user, action, params).permitted_attributes(product).to_h).to eq(
+        "qty" => 1000
       )
     end
   end

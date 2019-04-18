@@ -248,6 +248,17 @@ class ThreadPolicy < Struct.new(:user, :thread)
   end
 end
 
+class Product; end
+class ProductPolicy < Struct.new(:user, :product)
+  def permitted_attributes_for_create
+    %i[name price qty]
+  end
+
+  def permitted_attributes_for_update
+    [:qty]
+  end
+end
+
 class PostFourFiveSix < Struct.new(:user); end
 
 class CommentFourFiveSix; extend ActiveModel::Naming; end

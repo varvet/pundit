@@ -272,6 +272,7 @@ protected
   # @return [Hash{String => Object}] the permitted attributes
   def permitted_attributes(record, action = action_name)
     policy = policy(record)
+    action = { new: :create, edit: :update }[action.to_sym] || action
     method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
       "permitted_attributes_for_#{action}"
     else
