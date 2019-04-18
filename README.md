@@ -707,13 +707,15 @@ class PostPolicy < ApplicationPolicy
     [:title, :body]
   end
 
-  def permitted_attributes_for_edit
+  def permitted_attributes_for_update
     [:body]
   end
 end
 ```
 
 If you have defined an action-specific method on your policy for the current action, the `permitted_attributes` helper will call it instead of calling `permitted_attributes` on your controller.
+
+For CRUD convention, `permitted_attributes` will use `permitted_attributes_for_create` for actions `new` and `create`, and `permitted_attributes_for_update` for actions `edit` ad `update`.
 
 If you need to fetch parameters based on namespaces different from the suggested one, override the below method, in your controller, and return an instance of `ActionController::Parameters`.
 
