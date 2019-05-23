@@ -785,6 +785,10 @@ Pundit does not provide a DSL for testing scopes. Just test it like a regular Ru
 - [Using Pundit outside of a Rails controller](https://github.com/varvet/pundit/pull/136)
 - [Straightforward Rails Authorization with Pundit](http://www.sitepoint.com/straightforward-rails-authorization-with-pundit/)
 
+## Other implementations
+
+- [Flask-Pundit](https://github.com/anurag90x/flask-pundit) (Python) is a [Flask](http://flask.pocoo.org/) extension "heavily inspired by" Pundit
+
 # License
 
 Licensed under the MIT license, see the separate LICENSE.txt file.
