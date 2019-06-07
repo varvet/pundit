@@ -79,6 +79,7 @@ Layout/IndentationWidth:
   Enabled: false
 
 Style/TrivialAccessors:
+  Enabled: false
   ExactNameMatch: true
 
 Layout/EndAlignment:
@@ -91,9 +92,6 @@ Lint/HandleExceptions:
   Enabled: false
 
 Style/SpecialGlobalVars:
-  Enabled: false
-
-Style/TrivialAccessors:
   Enabled: false
 
 Layout/IndentHash:
