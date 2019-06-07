@@ -96,7 +96,7 @@ Style/SpecialGlobalVars:
 Style/TrivialAccessors:
   Enabled: false
 
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   Enabled: false
 
 Style/DoubleNegation:
