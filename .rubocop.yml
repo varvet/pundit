@@ -78,9 +78,6 @@ Style/SignalException:
 Layout/IndentationWidth:
   Enabled: false
 
-Style/TrivialAccessors:
-  ExactNameMatch: true
-
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
@@ -95,6 +92,7 @@ Style/SpecialGlobalVars:
 
 Style/TrivialAccessors:
   Enabled: false
+  ExactNameMatch: true
 
 Layout/IndentFirstHashElement:
   Enabled: false
