@@ -101,3 +101,6 @@ Layout/IndentFirstHashElement:
 
 Style/DoubleNegation:
   Enabled: false
+
+Style/SafeNavigation:
+  Enabled: false
