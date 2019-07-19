@@ -10,7 +10,7 @@ require "active_support/dependencies/autoload"
 
 # @api public
 module Pundit
-  SUFFIX = "Policy".freeze
+  SUFFIX = "Policy"
 
   # @api private
   module Generators; end
