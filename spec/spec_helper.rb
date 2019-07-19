@@ -201,9 +201,9 @@ end
 class Controller
   include Pundit
   # Mark protected methods public so they may be called in test
-  # rubocop:disable Layout/AccessModifierIndentation, Style/AccessModifierDeclarations
+  # rubocop:disable Style/AccessModifierDeclarations
   public(*Pundit.protected_instance_methods)
-  # rubocop:enable Layout/AccessModifierIndentation, Style/AccessModifierDeclarations
+  # rubocop:enable Style/AccessModifierDeclarations
 
   attr_reader :current_user, :action_name, :params
 
