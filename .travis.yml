@@ -15,6 +15,7 @@ matrix:
     - rvm: jruby-9.1.8.0
       env:
         - JRUBY_OPTS="--debug"
+      jdk: openjdk8
     - rvm: jruby-9.2.7.0
       env:
         - JRUBY_OPTS="--debug"
