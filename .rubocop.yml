@@ -90,10 +90,6 @@ Lint/HandleExceptions:
 Style/SpecialGlobalVars:
   Enabled: false
 
-Style/TrivialAccessors:
-  Enabled: false
-  ExactNameMatch: true
-
 Layout/IndentFirstHashElement:
   Enabled: false
 
