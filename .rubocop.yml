@@ -90,8 +90,5 @@ Lint/HandleExceptions:
 Style/SpecialGlobalVars:
   Enabled: false
 
-Layout/IndentHash:
-  Enabled: false
-
 Style/DoubleNegation:
   Enabled: false
