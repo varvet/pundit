@@ -42,12 +42,6 @@ Style/StringLiterals:
 Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 
-Layout/ClosingParenthesisIndentation:
-  Enabled: false
-
-Style/OneLineConditional:
-  Enabled: false
-
 Style/AndOr:
   Enabled: false
 
@@ -75,20 +69,8 @@ Style/PercentLiteralDelimiters:
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
 
-Style/SignalException:
-  Enabled: false
-
-Layout/IndentationWidth:
-  Enabled: false
-
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
-
-Layout/DefEndAlignment:
-  Enabled: false
-
-Lint/HandleExceptions:
-  Enabled: false
 
 Style/DoubleNegation:
   Enabled: false
