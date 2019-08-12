@@ -54,6 +54,9 @@ Style/AndOr:
 Style/Not:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
 Documentation:
   Enabled: false # TODO: Enable again once we have more docs
 
