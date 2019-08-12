@@ -17,8 +17,8 @@ matrix:
     # - rvm: 2.5.7
     # - rvm: 2.6.5
     # - rvm: 2.7.0-preview3
-    - name: "jruby-9.1.8.0 on OpenJDK 8"
-      rvm: jruby-9.1.8.0
+    - name: "jruby-9.1.17.0 on OpenJDK 8"
+      rvm: jruby-9.1.17.0
       env:
         - JRUBY_OPTS="--debug"
       jdk: openjdk8
