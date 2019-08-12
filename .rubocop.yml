@@ -90,8 +90,5 @@ Layout/DefEndAlignment:
 Lint/HandleExceptions:
   Enabled: false
 
-Style/SpecialGlobalVars:
-  Enabled: false
-
 Style/DoubleNegation:
   Enabled: false
