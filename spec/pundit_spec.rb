@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Pundit do
@@ -518,11 +520,13 @@ describe Pundit do
 
   describe "#permitted_attributes" do
     it "checks policy for permitted attributes" do
-      params = ActionController::Parameters.new(post: {
-        title: "Hello",
-        votes: 5,
-        admin: true
-      })
+      params = ActionController::Parameters.new(
+        post: {
+          title: "Hello",
+          votes: 5,
+          admin: true
+        }
+      )
 
       action = "update"
 
@@ -534,11 +538,13 @@ describe Pundit do
     end
 
     it "checks policy for permitted attributes for record of a ActiveModel type" do
-      params = ActionController::Parameters.new(customer_post: {
-        title: "Hello",
-        votes: 5,
-        admin: true
-      })
+      params = ActionController::Parameters.new(
+        customer_post: {
+          title: "Hello",
+          votes: 5,
+          admin: true
+        }
+      )
 
       action = "update"
 
@@ -554,24 +560,28 @@ describe Pundit do
 
   describe "#permitted_attributes_for_action" do
     it "is checked if it is defined in the policy" do
-      params = ActionController::Parameters.new(post: {
-        title: "Hello",
-        body: "blah",
-        votes: 5,
-        admin: true
-      })
+      params = ActionController::Parameters.new(
+        post: {
+          title: "Hello",
+          body: "blah",
+          votes: 5,
+          admin: true
+        }
+      )
 
       action = "revise"
       expect(Controller.new(user, action, params).permitted_attributes(post).to_h).to eq("body" => "blah")
     end
 
     it "can be explicitly set" do
-      params = ActionController::Parameters.new(post: {
-        title: "Hello",
-        body: "blah",
-        votes: 5,
-        admin: true
-      })
+      params = ActionController::Parameters.new(
+        post: {
+          title: "Hello",
+          body: "blah",
+          votes: 5,
+          admin: true
+        }
+      )
 
       action = "update"
       expect(Controller.new(user, action, params).permitted_attributes(post, :revise).to_h).to eq("body" => "blah")

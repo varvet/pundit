@@ -30,32 +30,8 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-Style/StructInheritance:
-  Enabled: false
-
 Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
-
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
-
-Style/StringLiteralsInInterpolation:
-  EnforcedStyle: double_quotes
-
-Layout/ClosingParenthesisIndentation:
-  Enabled: false
-
-Style/OneLineConditional:
-  Enabled: false
-
-Style/AndOr:
-  Enabled: false
-
-Style/Not:
-  Enabled: false
-
-Documentation:
-  Enabled: false # TODO: Enable again once we have more docs
 
 Layout/CaseIndentation:
   EnforcedStyle: case
@@ -64,40 +40,37 @@ Layout/CaseIndentation:
     - end
   IndentOneStep: true
 
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
     '%w': "[]"
     '%W': "[]"
 
-Layout/AccessModifierIndentation:
-  EnforcedStyle: outdent
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
 
-Style/SignalException:
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Style/StructInheritance:
   Enabled: false
 
-Layout/IndentationWidth:
+Style/AndOr:
   Enabled: false
 
-Style/TrivialAccessors:
-  ExactNameMatch: true
-
-Layout/EndAlignment:
-  EnforcedStyleAlignWith: variable
-
-Layout/DefEndAlignment:
-  Enabled: false
-
-Lint/HandleExceptions:
-  Enabled: false
-
-Style/SpecialGlobalVars:
-  Enabled: false
-
-Style/TrivialAccessors:
-  Enabled: false
-
-Layout/IndentHash:
+Style/Not:
   Enabled: false
 
 Style/DoubleNegation:
   Enabled: false
+
+Documentation:
+  Enabled: false # TODO: Enable again once we have more docs
