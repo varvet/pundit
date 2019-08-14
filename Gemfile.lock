@@ -3,6 +3,7 @@ PATH
   specs:
     pundit (2.1.0)
       activesupport (>= 3.0.0)
+      pry
 
 GEM
   remote: https://rubygems.org/
@@ -104,7 +105,6 @@ DEPENDENCIES
   actionpack (>= 3.0.0)
   activemodel (>= 3.0.0)
   bundler
-  pry
   pundit!
   rake
   rspec (>= 3.0.0)
@@ -116,4 +116,4 @@ RUBY VERSION
    ruby 2.6.3p62
 
 BUNDLED WITH
-   2.0.2
+   2.1.4

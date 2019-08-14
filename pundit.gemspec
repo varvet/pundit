@@ -23,10 +23,16 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "actionpack", ">= 3.0.0"
   gem.add_development_dependency "activemodel", ">= 3.0.0"
   gem.add_development_dependency "bundler"
-  gem.add_development_dependency "pry"
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec", ">= 3.0.0"
   gem.add_development_dependency "rubocop", "0.74.0"
   gem.add_development_dependency "simplecov", ">= 0.17.0"
   gem.add_development_dependency "yard"
+
+  if RUBY_PLATFORM =~ /java/
+    gem.platform = "java"
+    gem.add_dependency "pry-debugger-jruby"
+  else
+    gem.add_dependency "pry"
+  end
 end

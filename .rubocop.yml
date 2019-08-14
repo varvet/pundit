@@ -7,6 +7,7 @@ AllCops:
 Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
+    - "pundit.gemspec"
 
 Metrics/MethodLength:
   Max: 40
