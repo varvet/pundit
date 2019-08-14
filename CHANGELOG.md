@@ -1,5 +1,11 @@
 # Pundit
 
+## Unreleased
+
+### Removed
+
+- Dropped support for Ruby end-of-life versions: 2.1 and 2.2.
+
 ## 2.1.0 (2019-08-14)
 
 ### Fixed
