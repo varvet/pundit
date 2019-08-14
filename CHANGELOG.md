@@ -1,12 +1,10 @@
 # Pundit
 
-## Unreleased
+### Fixed
 
-### Breaking changes
+- Avoid name clashes with the Error class. (#590)
 
-None
-
-### Other changes
+### Changed
 
 - Return a safer default NotAuthorizedError message. (#583)
 
