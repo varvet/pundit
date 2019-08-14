@@ -1,5 +1,7 @@
 # Pundit
 
+## 2.1.0 (2019-08-14)
+
 ### Fixed
 
 - Avoid name clashes with the Error class. (#590)
