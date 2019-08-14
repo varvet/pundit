@@ -1,9 +1,6 @@
 AllCops:
-  DisplayCopNames: true
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.3
   Exclude:
-    - "gemfiles/**/*"
-    - "vendor/**/*"
     - "lib/generators/**/*"
 
 Metrics/BlockLength:
@@ -45,9 +42,6 @@ Layout/AccessModifierIndentation:
 
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
-
-Style/FrozenStringLiteralComment:
-  Enabled: true
 
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:

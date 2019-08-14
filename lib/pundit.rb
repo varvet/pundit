@@ -15,7 +15,7 @@ class Pundit::Error < StandardError; end # rubocop:disable Style/ClassAndModuleC
 
 # @api public
 module Pundit
-  SUFFIX = "Policy".freeze
+  SUFFIX = "Policy"
 
   # @api private
   module Generators; end
@@ -124,7 +124,7 @@ module Pundit
     # @return [Object, nil] instance of policy class with query methods
     def policy(user, record)
       policy = PolicyFinder.new(record).policy
-      policy.new(user, pundit_model(record)) if policy
+      policy&.new(user, pundit_model(record))
     rescue ArgumentError
       raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
     end
