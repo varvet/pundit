@@ -1,6 +1,4 @@
 language: ruby
-before_install:
-  - gem install bundler
 
 matrix:
   include:
