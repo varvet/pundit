@@ -1,13 +1,11 @@
 language: ruby
 before_install:
-  - gem install bundler -v 1.17.3
+  - gem install bundler
 
 matrix:
   include:
     - rvm: 2.5.3 # Pre-installed Ruby version
       script: bundle exec rake rubocop # ONLY lint once, first
-    - rvm: 2.1
-    - rvm: 2.2
     - rvm: 2.3.5
     - rvm: 2.4.6
     - rvm: 2.5.5
