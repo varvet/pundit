@@ -1,11 +1,11 @@
 language: ruby
-before_install:
-  - gem install bundler
 
 matrix:
   include:
     - name: "RuboCop lint on pre-installed Ruby version"
       rvm: 2.5.3 # Pre-installed Ruby version
+      before_install:
+        - gem install bundler
       script: bundle exec rake rubocop # ONLY lint once, first
     - rvm: 2.3.5
     - rvm: 2.4.6
