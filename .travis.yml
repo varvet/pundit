@@ -4,16 +4,19 @@ before_install:
 
 matrix:
   include:
-    - rvm: 2.5.3 # Pre-installed Ruby version
+    - name: "RuboCop lint on pre-installed Ruby version"
+      rvm: 2.5.3 # Pre-installed Ruby version
       script: bundle exec rake rubocop # ONLY lint once, first
     - rvm: 2.3.5
     - rvm: 2.4.6
     - rvm: 2.5.5
     - rvm: 2.6.3
-    - rvm: jruby-9.1.8.0
+    - name: "jruby-9.1.8.0 on OpenJDK 8"
+      rvm: jruby-9.1.8.0
       env:
         - JRUBY_OPTS="--debug"
       jdk: openjdk8
     - rvm: jruby-9.2.8.0
       env:
         - JRUBY_OPTS="--debug"
+
