@@ -68,7 +68,7 @@ module Pundit
       end
     end
 
-  private
+    private
 
     def find(subject)
       if subject.is_a?(Array)

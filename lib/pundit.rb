@@ -144,7 +144,7 @@ module Pundit
       raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
     end
 
-  private
+    private
 
     def pundit_model(record)
       record.is_a?(Array) ? record.last : record
@@ -167,7 +167,7 @@ module Pundit
     end
   end
 
-protected
+  protected
 
   # @return [Boolean] whether authorization has been performed, i.e. whether
   #                   one {#authorize} or {#skip_authorization} has been called
@@ -317,7 +317,7 @@ protected
     current_user
   end
 
-private
+  private
 
   def pundit_policy_scope(scope)
     policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
