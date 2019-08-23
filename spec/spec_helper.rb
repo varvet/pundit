@@ -11,22 +11,6 @@ require "active_support/core_ext"
 require "active_model/naming"
 require "action_controller/metal/strong_parameters"
 
-I18n.enforce_available_locales = false
-
-module PunditSpecHelper
-  extend RSpec::Matchers::DSL
-
-  matcher :be_truthy do
-    match do |actual|
-      actual
-    end
-  end
-end
-
-RSpec.configure do |config|
-  config.include PunditSpecHelper
-end
-
 class PostPolicy < Struct.new(:user, :post)
   class Scope < Struct.new(:user, :scope)
     def resolve

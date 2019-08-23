@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "active_support/core_ext/array/conversions"
-
 module Pundit
   module RSpec
     module Matchers
@@ -74,17 +72,9 @@ module Pundit
 end
 
 RSpec.configure do |config|
-  if RSpec::Core::Version::STRING.split(".").first.to_i >= 3
-    config.include(
-      Pundit::RSpec::PolicyExampleGroup,
-      type: :policy,
-      file_path: %r{spec/policies}
-    )
-  else
-    config.include(
-      Pundit::RSpec::PolicyExampleGroup,
-      type: :policy,
-      example_group: { file_path: %r{spec/policies} }
-    )
-  end
+  config.include(
+    Pundit::RSpec::PolicyExampleGroup,
+    type: :policy,
+    file_path: %r{spec/policies}
+  )
 end
