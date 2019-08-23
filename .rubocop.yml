@@ -1,7 +1,7 @@
 AllCops:
   TargetRubyVersion: 2.3
   Exclude:
-    - "lib/generators/**/*"
+    - "lib/generators/**/templates/**/*"
 
 Metrics/BlockLength:
   Exclude:
