@@ -23,7 +23,7 @@ Sponsored by:
 ## Installation
 
 ``` ruby
-gem "pundit"
+gem 'pundit'
 ```
 
 Include Pundit in your application controller:
