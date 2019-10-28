@@ -767,6 +767,12 @@ describe PostPolicy do
       expect(subject).to permit(User.new(admin: false), Post.new(published: false))
     end
   end
+
+  permissions :custom_with_args? do
+    it "is successful if correct args are passed" do
+      expect(subject).to permit(User.new(admin: false), Post.new(published: false), false)
+    end
+  end
 end
 ```
 

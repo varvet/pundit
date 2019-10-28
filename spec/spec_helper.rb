@@ -30,6 +30,14 @@ class PostPolicy < Struct.new(:user, :post)
     true
   end
 
+  def custom_action?(flag)
+    flag
+  end
+
+  def two_arguments?(flag1, flag2)
+    flag1 && flag2
+  end
+
   def permitted_attributes
     if post.user == user
       %i[title votes]

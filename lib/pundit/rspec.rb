@@ -6,17 +6,17 @@ module Pundit
       extend ::RSpec::Matchers::DSL
 
       # rubocop:disable Metrics/BlockLength
-      matcher :permit do |user, record|
+      matcher :permit do |user, record, *args|
         match_proc = lambda do |policy|
           @violating_permissions = permissions.find_all do |permission|
-            !policy.new(user, record).public_send(permission)
+            !policy.new(user, record).public_send(permission, *args)
           end
           @violating_permissions.empty?
         end
 
         match_when_negated_proc = lambda do |policy|
           @violating_permissions = permissions.find_all do |permission|
-            policy.new(user, record).public_send(permission)
+            policy.new(user, record).public_send(permission, *args)
           end
           @violating_permissions.empty?
         end

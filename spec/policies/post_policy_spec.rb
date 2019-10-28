@@ -19,4 +19,32 @@ describe PostPolicy do
       end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
   end
+
+  permissions :custom_action? do
+    context "passing in extra values" do
+      context "argument is true" do
+        it "is successful" do
+          should permit(user, own_post, true)
+        end
+      end
+      context "argument is false" do
+        it "fails" do
+          should_not permit(user, own_post, false)
+        end
+      end
+    end
+  end
+
+  permissions :two_arguments? do
+    context "both arguments are true" do
+      it "is successful" do
+        should permit(user, own_post, true, true)
+      end
+    end
+    context "one argument is false" do
+      it "fails" do
+        should_not permit(user, own_post, true, false)
+      end
+    end
+  end
 end
