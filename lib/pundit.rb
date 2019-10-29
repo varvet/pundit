@@ -214,6 +214,8 @@ protected
   # @raise [NotAuthorizedError] if the given query method returned false
   # @return [Object] Always returns the passed object record
   def authorize(record, query = nil, policy_class: nil)
+    raise NotAuthorizedError unless record
+
     query ||= "#{action_name}?"
 
     @_pundit_policy_authorized = true
