@@ -25,6 +25,14 @@ describe Pundit do
       expect(Pundit.authorize(user, post, :update?)).to be_truthy
     end
 
+    it "returns the record on successful authorization" do
+      expect(Pundit.authorize(user, post, :update?)).to be(post)
+    end
+
+    it "returns the record when passed record with namespace " do
+      expect(Pundit.authorize(user, [:project, comment], :update?)).to be(comment)
+    end
+
     it "can be given a different policy class" do
       expect(Pundit.authorize(user, post, :create?, policy_class: PublicationPolicy)).to be_truthy
     end
@@ -411,6 +419,10 @@ describe Pundit do
 
     it "returns the record on successful authorization" do
       expect(controller.authorize(post)).to be(post)
+    end
+
+    it "returns the record when passed record with namespace " do
+      expect(Pundit.authorize(user, [:project, comment], :update?)).to be(comment)
     end
 
     it "can be given a different permission to check" do

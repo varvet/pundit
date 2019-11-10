@@ -71,7 +71,7 @@ module Pundit
 
       raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
 
-      record
+      record.is_a?(Array) ? record.last : record
     end
 
     # Retrieves the policy scope for the given record.
@@ -222,7 +222,7 @@ protected
 
     raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
 
-    record
+    record.is_a?(Array) ? record.last : record
   end
 
   # Allow this action not to perform authorization.

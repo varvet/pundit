@@ -158,6 +158,10 @@ class CriteriaPolicy < Struct.new(:user, :criteria); end
 
 module Project
   class CommentPolicy < Struct.new(:user, :comment)
+    def update?
+      true
+    end
+
     class Scope < Struct.new(:user, :scope)
       def resolve
         scope
