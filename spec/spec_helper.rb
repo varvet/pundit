@@ -178,6 +178,14 @@ module Project
       end
     end
   end
+
+  module Admin
+    class CommentPolicy < Struct.new(:user, :comment)
+      def update?
+        true
+      end
+    end
+  end
 end
 
 class DenierPolicy < Struct.new(:user, :record)

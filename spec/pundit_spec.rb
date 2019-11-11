@@ -33,6 +33,26 @@ describe Pundit do
       expect(Pundit.authorize(user, [:project, comment], :update?)).to be(comment)
     end
 
+    it "returns the record when passed record with nested namespace " do
+      expect(Pundit.authorize(user, [:project, :admin, comment], :update?)).to be(comment)
+    end
+
+    it "can use headless policy" do
+      expect(Pundit.authorize(user, :publication, :create?)).to be_truthy
+    end
+
+    it "returns the policy name symbol when passed record with headless policy" do
+      expect(Pundit.authorize(user, :publication, :create?)).to be(:publication)
+    end
+
+    it "can use without a particular instance" do
+      expect(Pundit.authorize(user, Post, :show?)).to be_truthy
+    end
+
+    it "returns the class when passed record not a particular instance" do
+      expect(Pundit.authorize(user, Post, :show?)).to be(Post)
+    end
+
     it "can be given a different policy class" do
       expect(Pundit.authorize(user, post, :create?, policy_class: PublicationPolicy)).to be_truthy
     end
@@ -422,7 +442,27 @@ describe Pundit do
     end
 
     it "returns the record when passed record with namespace " do
-      expect(Pundit.authorize(user, [:project, comment], :update?)).to be(comment)
+      expect(controller.authorize([:project, comment], :update?)).to be(comment)
+    end
+
+    it "returns the record when passed record with nested namespace " do
+      expect(controller.authorize([:project, :admin, comment], :update?)).to be(comment)
+    end
+
+    it "can use headless policy" do
+      expect(controller.authorize(:publication, :create?)).to be_truthy
+    end
+
+    it "returns the policy name symbol when passed record with headless policy" do
+      expect(controller.authorize(:publication, :create?)).to be(:publication)
+    end
+
+    it "can use without a particular instance" do
+      expect(controller.authorize(Post, :show?)).to be_truthy
+    end
+
+    it "returns the class when passed record not a particular instance" do
+      expect(controller.authorize(Post, :show?)).to be(Post)
     end
 
     it "can be given a different permission to check" do
