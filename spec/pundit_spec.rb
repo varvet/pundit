@@ -26,15 +26,15 @@ describe Pundit do
     end
 
     it "returns the record on successful authorization" do
-      expect(Pundit.authorize(user, post, :update?)).to be(post)
+      expect(Pundit.authorize(user, post, :update?)).to eq(post)
     end
 
     it "returns the record when passed record with namespace " do
-      expect(Pundit.authorize(user, [:project, comment], :update?)).to be(comment)
+      expect(Pundit.authorize(user, [:project, comment], :update?)).to eq(comment)
     end
 
     it "returns the record when passed record with nested namespace " do
-      expect(Pundit.authorize(user, [:project, :admin, comment], :update?)).to be(comment)
+      expect(Pundit.authorize(user, [:project, :admin, comment], :update?)).to eq(comment)
     end
 
     it "can use headless policy" do
@@ -42,7 +42,7 @@ describe Pundit do
     end
 
     it "returns the policy name symbol when passed record with headless policy" do
-      expect(Pundit.authorize(user, :publication, :create?)).to be(:publication)
+      expect(Pundit.authorize(user, :publication, :create?)).to eq(:publication)
     end
 
     it "can use without a particular instance" do
@@ -50,7 +50,7 @@ describe Pundit do
     end
 
     it "returns the class when passed record not a particular instance" do
-      expect(Pundit.authorize(user, Post, :show?)).to be(Post)
+      expect(Pundit.authorize(user, Post, :show?)).to eq(Post)
     end
 
     it "can be given a different policy class" do
@@ -438,15 +438,15 @@ describe Pundit do
     end
 
     it "returns the record on successful authorization" do
-      expect(controller.authorize(post)).to be(post)
+      expect(controller.authorize(post)).to eq(post)
     end
 
     it "returns the record when passed record with namespace " do
-      expect(controller.authorize([:project, comment], :update?)).to be(comment)
+      expect(controller.authorize([:project, comment], :update?)).to eq(comment)
     end
 
     it "returns the record when passed record with nested namespace " do
-      expect(controller.authorize([:project, :admin, comment], :update?)).to be(comment)
+      expect(controller.authorize([:project, :admin, comment], :update?)).to eq(comment)
     end
 
     it "can use headless policy" do
@@ -454,7 +454,7 @@ describe Pundit do
     end
 
     it "returns the policy name symbol when passed record with headless policy" do
-      expect(controller.authorize(:publication, :create?)).to be(:publication)
+      expect(controller.authorize(:publication, :create?)).to eq(:publication)
     end
 
     it "can use without a particular instance" do
@@ -462,7 +462,7 @@ describe Pundit do
     end
 
     it "returns the class when passed record not a particular instance" do
-      expect(controller.authorize(Post, :show?)).to be(Post)
+      expect(controller.authorize(Post, :show?)).to eq(Post)
     end
 
     it "can be given a different permission to check" do
