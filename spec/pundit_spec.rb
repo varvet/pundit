@@ -37,16 +37,8 @@ describe Pundit do
       expect(Pundit.authorize(user, [:project, :admin, comment], :update?)).to eq(comment)
     end
 
-    it "can use headless policy" do
-      expect(Pundit.authorize(user, :publication, :create?)).to be_truthy
-    end
-
     it "returns the policy name symbol when passed record with headless policy" do
       expect(Pundit.authorize(user, :publication, :create?)).to eq(:publication)
-    end
-
-    it "can use without a particular instance" do
-      expect(Pundit.authorize(user, Post, :show?)).to be_truthy
     end
 
     it "returns the class when passed record not a particular instance" do
@@ -449,16 +441,8 @@ describe Pundit do
       expect(controller.authorize([:project, :admin, comment], :update?)).to eq(comment)
     end
 
-    it "can use headless policy" do
-      expect(controller.authorize(:publication, :create?)).to be_truthy
-    end
-
     it "returns the policy name symbol when passed record with headless policy" do
       expect(controller.authorize(:publication, :create?)).to eq(:publication)
-    end
-
-    it "can use without a particular instance" do
-      expect(controller.authorize(Post, :show?)).to be_truthy
     end
 
     it "returns the class when passed record not a particular instance" do
