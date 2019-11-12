@@ -220,8 +220,6 @@ define a class called a policy scope. It can look something like this:
 ``` ruby
 class PostPolicy < ApplicationPolicy
   class Scope
-    attr_reader :user, :scope
-
     def initialize(user, scope)
       @user  = user
       @scope = scope
@@ -234,6 +232,10 @@ class PostPolicy < ApplicationPolicy
         scope.where(published: true)
       end
     end
+
+    private
+
+    attr_reader :user, :scope
   end
 
   def update?
