@@ -2,10 +2,15 @@
 
 ## Unreleased
 
+### Fixed
+
+- `.authorize` and `#authorize` return the instance, even for namespaced
+  policies (#626)
+
 ### Removed
 
-- Dropped support for Ruby end-of-life versions: 2.1 and 2.2.
-- Dropped support for RSpec 2
+- Dropped support for Ruby end-of-life versions: 2.1 and 2.2. (#604)
+- Dropped support for RSpec 2 (#615)
 
 ## 2.1.0 (2019-08-14)
 
