@@ -165,12 +165,17 @@ def admin_list
 end
 ```
 
-`authorize` returns the object passed to it, so you can chain it like this:
+`authorize` returns the instance passed to it, so you can chain it like this:
 
 Controller:
 ```ruby
 def show
   @user = authorize User.find(params[:id])
+end
+
+# return the record even for namespaced policies
+def show
+  @user = authorize [:admin, User.find(params[:id])]
 end
 ```
 
@@ -599,8 +604,7 @@ class Admin::PostController < AdminController
   end
 
   def show
-    post = Post.find(params[:id])
-    authorize(post)
+    post = authorize Post.find(params[:id])
   end
 end
 ```
