@@ -158,6 +158,10 @@ class CriteriaPolicy < Struct.new(:user, :criteria); end
 
 module Project
   class CommentPolicy < Struct.new(:user, :comment)
+    def update?
+      true
+    end
+
     class Scope < Struct.new(:user, :scope)
       def resolve
         scope
@@ -171,6 +175,14 @@ module Project
     class Scope < Struct.new(:user, :scope)
       def resolve
         scope.read
+      end
+    end
+  end
+
+  module Admin
+    class CommentPolicy < Struct.new(:user, :comment)
+      def update?
+        true
       end
     end
   end
