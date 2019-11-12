@@ -24,37 +24,100 @@ describe Pundit::PolicyFinder do
   end
 
   describe "#policy" do
-    subject { described_class.new(post) }
+    context "with an instance" do
+      it "returns the associated policy" do
+        object = described_class.new(post)
 
-    it "returns a policy" do
-      expect(subject.policy).to eq PostPolicy
+        expect(object.policy).to eq PostPolicy
+      end
     end
 
-    context "with a string" do
-      it "returns a policy" do
-        allow(subject).to receive(:find).and_return "PostPolicy"
-        expect(subject.policy).to eq PostPolicy
+    context "with an array of symbols" do
+      it "returns the associated namespaced policy" do
+        object = described_class.new(%i[project post])
+
+        expect(object.policy).to eq Project::PostPolicy
+      end
+    end
+
+    context "with an array of a symbol and an instance" do
+      it "returns the associated namespaced policy" do
+        object = described_class.new([:project, post])
+
+        expect(object.policy).to eq Project::PostPolicy
+      end
+    end
+
+    context "with an array of a symbol and a class with a specified policy class" do
+      it "returns the associated namespaced policy" do
+        object = described_class.new([:project, Customer::Post])
+
+        expect(object.policy).to eq Project::PostPolicy
+      end
+    end
+
+    context "with an array of a symbol and a class with a specified model name" do
+      it "returns the associated namespaced policy" do
+        object = described_class.new([:project, CommentsRelation])
+
+        expect(object.policy).to eq Project::CommentPolicy
       end
     end
 
     context "with a class" do
-      it "returns a policy" do
-        allow(subject).to receive(:find).and_return PostPolicy
-        expect(subject.policy).to eq PostPolicy
+      it "returns the associated policy" do
+        object = described_class.new(Post)
+
+        expect(object.policy).to eq PostPolicy
+      end
+    end
+
+    context "with a class which has a specified policy class" do
+      it "returns the associated policy" do
+        object = described_class.new(Customer::Post)
+
+        expect(object.policy).to eq PostPolicy
+      end
+    end
+
+    context "with an instance which has a specified policy class" do
+      it "returns the associated policy" do
+        object = described_class.new(Customer::Post.new(user))
+
+        expect(object.policy).to eq PostPolicy
+      end
+    end
+
+    context "with a class which has a specified model name" do
+      it "returns the associated policy" do
+        object = described_class.new(CommentsRelation)
+
+        expect(object.policy).to eq CommentPolicy
+      end
+    end
+
+    context "with an instance which has a specified policy class" do
+      it "returns the associated policy" do
+        object = described_class.new(CommentsRelation.new)
+
+        expect(object.policy).to eq CommentPolicy
       end
     end
 
     context "with nil" do
-      it "returns nil" do
-        allow(subject).to receive(:find).and_return nil
-        expect(subject.policy).to eq nil
+      it "returns a NilClassPolicy" do
+        object = described_class.new(nil)
+
+        expect(object.policy).to eq NilClassPolicy
       end
     end
 
-    context "with a string that can't be constantized" do
+    context "with a class that doesn't have an associated policy" do
       it "returns nil" do
-        allow(subject).to receive(:find).and_return "FooPolicy"
-        expect(subject.policy).to eq nil
+        class Foo; end
+        object = described_class.new(Foo)
+
+        expect(object.policy).to eq nil
       end
     end
   end
