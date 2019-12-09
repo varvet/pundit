@@ -30,6 +30,10 @@ changes.
 - Dropped support for Ruby end-of-life versions: 2.4, 2.5 and JRuby 9.1 (#676)
 - Dropped support for RSpec 2 (#615)
 
+### Deprecated
+
+- Deprecate `include Pundit` in favor of `include Pundit::Authorization` (#621)
+
 ## 2.1.0 (2019-08-14)
 
 ### Fixed
