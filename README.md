@@ -398,6 +398,16 @@ class Post
 end
 ```
 
+Alternatively, you can declare an instance method:
+
+``` ruby
+class Post
+  def policy_class
+    PostablePolicy
+  end
+end
+```
+
 ## Just plain old Ruby
 
 As you can see, Pundit doesn't do anything you couldn't have easily done
