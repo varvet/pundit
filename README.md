@@ -31,7 +31,7 @@ Include Pundit in your application controller:
 ``` ruby
 class ApplicationController < ActionController::Base
   include Pundit
-  protect_from_forgery
+  protect_from_forgery # (Note: you don't need to explicitly add protect_from_forgery for rails 5.2 and above. It will be included in ActionController::Base)
 end
 ```
 
