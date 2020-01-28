@@ -549,7 +549,7 @@ class ProjectPolicy < ApplicationPolicy
   def create?
     if user.has_paid_subscription?
       if user.project_limit_reached?
-        raise Pundit::NotAuthorizedError, reason: 'user.project_limit_reached', record: user, query: :create
+        raise Pundit::NotAuthorizedError, reason: 'user.project_limit_reached'
       else
         true
       end
@@ -563,7 +563,7 @@ end
 Then you can get this error message in exception handler:
 ```ruby
 rescue_from Pundit::NotAuthorizedError do |e|
-  flash[:error] = I18n.t("errors.#{e.reason}", scope: "pundit", default: e.message)
+  flash[:error] = e.reason ? I18n.t("errors.#{e.reason}", scope: "pundit") : e.message
   redirect_to(request.referrer || root_path)
 end
 ```
