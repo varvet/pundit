@@ -31,7 +31,6 @@ Include Pundit in your application controller:
 ``` ruby
 class ApplicationController < ActionController::Base
   include Pundit
-  protect_from_forgery
 end
 ```
 
@@ -493,7 +492,6 @@ method in every controller.
 
 ```ruby
 class ApplicationController < ActionController::Base
-  protect_from_forgery
   include Pundit
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
