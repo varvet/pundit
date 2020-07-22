@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe PostPolicy do
+RSpec.describe PostPolicy do
   let(:user) { double }
   let(:own_post) { double(user: user) }
   let(:other_post) { double(user: double) }

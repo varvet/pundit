@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Pundit do
+RSpec.describe Pundit do
   let(:user) { double }
   let(:post) { Post.new(user) }
   let(:customer_post) { Customer::Post.new(user) }
