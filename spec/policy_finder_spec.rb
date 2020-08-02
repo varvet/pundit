@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Pundit::PolicyFinder do
+RSpec.describe Pundit::PolicyFinder do
   let(:user) { double }
   let(:post) { Post.new(user) }
   let(:comment) { CommentFourFiveSix.new }
