@@ -302,13 +302,11 @@ def index
 end
 ```
 
-Just as with your policy, this will automatically infer that you want to use
-the `PostPolicy::Scope` class, it will instantiate this class and call
-`resolve` on the instance. In this case it is a shortcut for doing:
+In this case it is a shortcut for doing:
 
 ``` ruby
 def index
-  @posts = PostPolicy::Scope.new(current_user, Post).resolve
+  @publications = PublicationPolicy::Scope.new(current_user, Post).resolve
 end
 ```
 
