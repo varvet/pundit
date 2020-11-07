@@ -25,4 +25,7 @@ matrix:
     - rvm: jruby-9.2.8.0
       env:
         - JRUBY_OPTS="--debug"
+    - rvm: truffleruby-head
+
+
 
