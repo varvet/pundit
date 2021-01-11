@@ -1,67 +1,49 @@
 AllCops:
   TargetRubyVersion: 2.4
   Exclude:
-    - "lib/generators/**/templates/**/*"
-
+  - lib/generators/**/templates/**/*
 Metrics/BlockLength:
   Exclude:
-    - "**/*_spec.rb"
-
+  - "**/*_spec.rb"
 Metrics/MethodLength:
   Max: 40
-
 Metrics/ModuleLength:
   Max: 200
   Exclude:
-    - "**/*_spec.rb"
-
-Metrics/LineLength:
-  Max: 120
-
+  - "**/*_spec.rb"
 Metrics/AbcSize:
   Enabled: false
-
 Metrics/CyclomaticComplexity:
   Enabled: false
-
 Metrics/PerceivedComplexity:
   Enabled: false
-
-Layout/AlignParameters:
-  EnforcedStyle: with_fixed_indentation
-
 Layout/CaseIndentation:
   EnforcedStyle: case
   SupportedStyles:
-    - case
-    - end
+  - case
+  - end
   IndentOneStep: true
-
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
-
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
-    '%w': "[]"
-    '%W': "[]"
-
+    "%w": "[]"
+    "%W": "[]"
 Style/StringLiterals:
   EnforcedStyle: double_quotes
-
 Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
-
 Style/StructInheritance:
   Enabled: false
-
 Style/AndOr:
   Enabled: false
-
 Style/Not:
   Enabled: false
-
 Style/DoubleNegation:
   Enabled: false
-
-Documentation:
-  Enabled: false # TODO: Enable again once we have more docs
+Layout/LineLength:
+  Max: 120
+Style/Documentation:
+  Enabled: false
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
