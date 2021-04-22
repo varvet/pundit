@@ -60,7 +60,7 @@ class PostPolicy
   end
 
   def update?
-    user.admin? or not post.published?
+    user.admin? || !post.published?
   end
 end
 ```
