@@ -17,7 +17,7 @@ matrix:
         - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
     - rvm: 2.7.3
     - rvm: 3.0.1
-    - rvm: jruby-9.2.15.0
+    - rvm: jruby-9.2.17.0
       env:
         - JRUBY_OPTS="--debug"
     - rvm: truffleruby-head
