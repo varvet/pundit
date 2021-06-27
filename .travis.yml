@@ -1,28 +1,25 @@
 language: ruby
+dist: focal
 
 matrix:
   include:
     - name: "RuboCop lint on pre-installed Ruby version"
-      rvm: 2.5.3 # Pre-installed Ruby version
+      rvm: 2.7.1 # Pre-installed Ruby version
       before_install:
         - gem install bundler
       script: bundle exec rake rubocop # ONLY lint once, first
-    - rvm: 2.4.9
+    - rvm: 2.6.7
       before_script:
         - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         - chmod +x ./cc-test-reporter
         - ./cc-test-reporter before-build
       after_script:
         - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-    - rvm: 2.5.7
-    - rvm: 2.6.5
-    - rvm: 2.7.0-preview3
-    - name: "jruby-9.1.8.0 on OpenJDK 8"
-      rvm: jruby-9.1.8.0
+    - rvm: 2.7.3
+    - rvm: 3.0.1
+    - rvm: jruby-9.2.17.0
       env:
         - JRUBY_OPTS="--debug"
-      jdk: openjdk8
-    - rvm: jruby-9.2.15.0
-      env:
-        - JRUBY_OPTS="--debug"
-
+    - rvm: truffleruby-head
+  allow_failures:
+    - rvm: truffleruby-head

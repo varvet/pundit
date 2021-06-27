@@ -60,7 +60,7 @@ class PostPolicy
   end
 
   def update?
-    user.admin? or not post.published?
+    user.admin? || !post.published?
   end
 end
 ```
@@ -693,9 +693,8 @@ end
 
 ## Strong parameters
 
-In Rails 4 (or Rails 3.2 with the
-[strong_parameters](https://github.com/rails/strong_parameters) gem),
-mass-assignment protection is handled in the controller.  With Pundit you can
+In Rails,
+mass-assignment protection is handled in the controller. With Pundit you can
 control which attributes a user has access to update via your policies. You can
 set up a `permitted_attributes` method in your policy like this:
 

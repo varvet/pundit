@@ -15,6 +15,7 @@
 
 - Dropped support for Ruby end-of-life versions: 2.1 and 2.2. (#604)
 - Dropped support for Ruby end-of-life versions: 2.3 (#633)
+- Dropped support for Ruby end-of-life versions: 2.4, 2.5 and JRuby 9.1 (#676)
 - Dropped support for RSpec 2 (#615)
 
 ## 2.1.0 (2019-08-14)
