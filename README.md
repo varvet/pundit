@@ -566,11 +566,11 @@ class ProjectPolicy < ApplicationPolicy
 end
 ```
 
-Then you can get this error message in exception handler:
+Then you can get this error message in an exception handler:
 ```ruby
 rescue_from Pundit::NotAuthorizedError do |e|
-  message = e.reason ? I18n.t("pundit.errors.#{e.reason}") : e.message
-  flash[:error] = message, scope: "pundit", default: :default
+  message = e.reason ? I18n.t("pundit.errors.#{e.reason}", scope: "pundit", default: :default) : e.message
+  flash[:error] = message
   redirect_to(request.referrer || root_path)
 end
 ```
