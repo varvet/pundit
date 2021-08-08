@@ -1,9 +1,9 @@
 require '<%= File.exists?('spec/rails_helper.rb') ? 'rails_helper' : 'spec_helper' %>'
 
 RSpec.describe <%= class_name %>Policy, type: :policy do
-  let(:user) { User.new }
-
   subject { described_class }
+
+  let(:user) { User.new }
 
   permissions ".scope" do
     pending "add some examples to (or delete) #{__FILE__}"
