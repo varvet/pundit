@@ -544,46 +544,6 @@ en:
 Of course, this is just an example. Pundit is agnostic as to how you implement
 your error messaging.
 
-## Multiple error messages per one policy action
-
-If there are multiple reasons that authorization can be denied, you can show different messages by raising exceptions in your policy:
-
-In your policy class raise `Pundit::NotAuthorizedError` with custom error message or I18n key in `reason` argument:
-
-```ruby
-class ProjectPolicy < ApplicationPolicy
-  def create?
-    if user.has_paid_subscription?
-      if user.project_limit_reached?
-        raise Pundit::NotAuthorizedError, reason: 'user.project_limit_reached'
-      else
-        true
-      end
-    else
-      raise Pundit::NotAuthorizedError, reason: 'user.paid_subscription_required'
-    end
-  end
-end
-```
-
-Then you can get this error message in exception handler:
-```ruby
-rescue_from Pundit::NotAuthorizedError do |e|
-  message = e.reason ? I18n.t("pundit.errors.#{e.reason}") : e.message
-  flash[:error] = message, scope: "pundit", default: :default
-  redirect_to(request.referrer || root_path)
-end
-```
-
-```yaml
-en:
-  pundit:
-    errors:
-      user:
-        paid_subscription_required: 'Paid subscription is required'
-        project_limit_reached: 'Project limit is reached'
-```
-
 ## Manually retrieving policies and scopes
 
 Sometimes you want to retrieve a policy for a record outside the controller or
