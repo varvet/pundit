@@ -22,7 +22,7 @@ module Pundit
 
   # Error that will be raised when authorization has failed
   class NotAuthorizedError < Error
-    attr_reader :query, :record, :policy, :reason
+    attr_reader :query, :record, :policy
 
     def initialize(options = {})
       if options.is_a? String
@@ -31,7 +31,6 @@ module Pundit
         @query  = options[:query]
         @record = options[:record]
         @policy = options[:policy]
-        @reason = options[:reason]
 
         message = options.fetch(:message) { "not allowed to #{query} this #{record.class}" }
       end
