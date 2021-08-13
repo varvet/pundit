@@ -80,6 +80,7 @@ end
 
 class CommentScope
   attr_reader :original_object
+
   def initialize(original_object)
     @original_object = original_object
   end
@@ -114,7 +115,7 @@ class Comment
 end
 
 class CommentsRelation
-  def initialize(empty = false)
+  def initialize(empty = false) # rubocop:disable Style/OptionalBooleanParameter
     @empty = empty
   end
 
@@ -127,11 +128,11 @@ class CommentsRelation
   end
 end
 
-class Article; end
+class Article; end # rubocop:disable Lint/EmptyClass
 
 class BlogPolicy < Struct.new(:user, :blog); end
 
-class Blog; end
+class Blog; end # rubocop:disable Lint/EmptyClass
 
 class ArtificialBlog < Blog
   def self.policy_class
@@ -227,7 +228,8 @@ class NilClassPolicy < Struct.new(:user, :record)
   end
 end
 
-class Wiki; end
+class Wiki; end # rubocop:disable Lint/EmptyClass
+
 class WikiPolicy
   class Scope
     # deliberate typo method
@@ -238,6 +240,7 @@ end
 class Thread
   def self.all; end
 end
+
 class ThreadPolicy < Struct.new(:user, :thread)
   class Scope < Struct.new(:user, :scope)
     def resolve

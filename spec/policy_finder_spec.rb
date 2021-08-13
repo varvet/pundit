@@ -113,9 +113,10 @@ RSpec.describe Pundit::PolicyFinder do
     end
 
     context "with a class that doesn't have an associated policy" do
+      class self::Foo; end # rubocop:disable Lint/ConstantDefinitionInBlock, Lint/EmptyClass, Style/ClassAndModuleChildren
+
       it "returns nil" do
-        class Foo; end
-        object = described_class.new(Foo)
+        object = described_class.new(self.class::Foo)
 
         expect(object.policy).to eq nil
       end

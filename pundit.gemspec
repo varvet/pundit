@@ -13,6 +13,7 @@ Gem::Specification.new do |gem|
   gem.summary       = "OO authorization for Rails"
   gem.homepage      = "https://github.com/varvet/pundit"
   gem.license       = "MIT"
+  gem.required_ruby_version = ">= 2.5"
 
   gem.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
@@ -26,7 +27,9 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "pry"
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec", ">= 3.0.0"
-  gem.add_development_dependency "rubocop", "0.74.0"
+  gem.add_development_dependency "rubocop", ">= 1.19.0"
+  gem.add_development_dependency "rubocop-rake"
+  gem.add_development_dependency "rubocop-rspec"
   gem.add_development_dependency "simplecov", ">= 0.17.0"
   gem.add_development_dependency "yard"
 end
