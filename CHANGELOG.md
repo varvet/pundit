@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 2.1.1 (2021-08-13)
+
+Friday 13th-release!
+
+Careful! The bugfix below (#626) could break existing code. If you rely on the
+return value for `authorize` and namespaced policies you might need to do some
+changes.
+
 ### Fixed
 
 - `.authorize` and `#authorize` return the instance, even for namespaced
