@@ -169,6 +169,16 @@ module Pundit
 
   protected
 
+  # @return [void] called by authorize after the policy is queried for purposes
+  #                like logging, etc.
+  def after_pundit_authorize_resolution(query:, record:, policy:, user:)
+  end
+
+  # @return [void] called by policy_scope after the policy scope is resolved for
+  #                purposes like logging, etc.
+  def after_pundit_policy_scope_resolution(policy_scope:, user:, scope:)
+  end
+
   # @return [Boolean] whether authorization has been performed, i.e. whether
   #                   one {#authorize} or {#skip_authorization} has been called
   def pundit_policy_authorized?
@@ -220,6 +230,8 @@ module Pundit
 
     policy = policy_class ? policy_class.new(pundit_user, record) : policy(record)
 
+    after_pundit_authorize_resolution query: query, record: record, policy: policy, user: pundit_user
+
     raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
 
     record.is_a?(Array) ? record.last : record
@@ -249,7 +261,9 @@ module Pundit
   # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
   def policy_scope(scope, policy_scope_class: nil)
     @_pundit_policy_scoped = true
-    policy_scope_class ? policy_scope_class.new(pundit_user, scope).resolve : pundit_policy_scope(scope)
+    policy_scope = policy_scope_class ? policy_scope_class.new(pundit_user, scope).resolve : pundit_policy_scope(scope)
+    after_pundit_policy_scope_resolution policy_scope: policy_scope, user: pundit_user, scope: scope
+    policy_scope
   end
 
   # Retrieves the policy for the given record.
