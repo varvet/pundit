@@ -49,6 +49,11 @@ RSpec.describe Pundit do
       expect(Pundit.authorize(user, post, :create?, policy_class: PublicationPolicy)).to be_truthy
     end
 
+    it "can be given a different policy class using namespaces" do
+      expect(PublicationPolicy).to receive(:new).with(user, comment).and_call_original
+      expect(Pundit.authorize(user, [:project, comment], :create?, policy_class: PublicationPolicy)).to be_truthy
+    end
+
     it "works with anonymous class policies" do
       expect(Pundit.authorize(user, article_tag, :show?)).to be_truthy
       expect { Pundit.authorize(user, article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
@@ -456,6 +461,11 @@ RSpec.describe Pundit do
 
     it "can be given a different policy class" do
       expect(controller.authorize(post, :create?, policy_class: PublicationPolicy)).to be_truthy
+    end
+
+    it "can be given a different policy class using namespaces" do
+      expect(PublicationPolicy).to receive(:new).with(user, comment).and_call_original
+      expect(controller.authorize([:project, comment], :create?, policy_class: PublicationPolicy)).to eql(comment)
     end
 
     it "works with anonymous class policies" do
