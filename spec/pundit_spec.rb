@@ -49,6 +49,11 @@ RSpec.describe Pundit do
       expect(Pundit.authorize(user, post, :create?, policy_class: PublicationPolicy)).to be_truthy
     end
 
+    it "can be given a different policy class using namespaces" do
+      expect(PublicationPolicy).to receive(:new).with(user, comment).and_call_original
+      expect(Pundit.authorize(user, [:project, comment], :create?, policy_class: PublicationPolicy)).to be_truthy
+    end
+
     it "works with anonymous class policies" do
       expect(Pundit.authorize(user, article_tag, :show?)).to be_truthy
       expect { Pundit.authorize(user, article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
@@ -62,6 +67,18 @@ RSpec.describe Pundit do
         expect(error.query).to eq :destroy?
         expect(error.record).to eq post
         expect(error.policy).to eq Pundit.policy(user, post)
+      end
+      # rubocop:enable Style/MultilineBlockChain
+    end
+
+    it "raises an error with a the record, query and action when the record is namespaced" do
+      # rubocop:disable Style/MultilineBlockChain
+      expect do
+        Pundit.authorize(user, [:project, :admin, comment], :destroy?)
+      end.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this Comment") do |error|
+        expect(error.query).to eq :destroy?
+        expect(error.record).to eq comment
+        expect(error.policy).to eq Pundit.policy(user, [:project, :admin, comment])
       end
       # rubocop:enable Style/MultilineBlockChain
     end
@@ -456,6 +473,11 @@ RSpec.describe Pundit do
 
     it "can be given a different policy class" do
       expect(controller.authorize(post, :create?, policy_class: PublicationPolicy)).to be_truthy
+    end
+
+    it "can be given a different policy class using namespaces" do
+      expect(PublicationPolicy).to receive(:new).with(user, comment).and_call_original
+      expect(controller.authorize([:project, comment], :create?, policy_class: PublicationPolicy)).to eql(comment)
     end
 
     it "works with anonymous class policies" do

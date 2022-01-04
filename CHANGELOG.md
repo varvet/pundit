@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Using `policy_class` and a namespaced record now passes only the record when instantiating the policy. (#697, #689, #694, #666)
+
 ## 2.1.1 (2021-08-13)
 
 Friday 13th-release!
