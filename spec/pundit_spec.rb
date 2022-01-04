@@ -398,18 +398,23 @@ RSpec.describe Pundit do
   describe ".included" do
     it "includes Authorization module" do
       klass = Class.new
-      klass.include Pundit
+
+      ActiveSupport::Deprecation.silence do
+        klass.include Pundit
+      end
 
       expect(klass).to include Pundit::Authorization
     end
 
     it "warns about deprecation" do
-      allow(Pundit).to receive(:warn)
-
       klass = Class.new
-      klass.include Pundit
+      allow(ActiveSupport::Deprecation).to receive(:warn)
 
-      expect(Pundit).to have_received(:warn).with start_with("[DEPRECATION]")
+      ActiveSupport::Deprecation.silence do
+        klass.include Pundit
+      end
+
+      expect(ActiveSupport::Deprecation).to have_received(:warn).with start_with("'include Pundit' is deprecated")
     end
   end
 
