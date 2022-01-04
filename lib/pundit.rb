@@ -61,17 +61,23 @@ module Pundit
     # authorized to perform the given action.
     #
     # @param user [Object] the user that initiated the action
-    # @param record [Object] the object we're checking permissions of
+    # @param possibly_namespaced_record [Object, Array] the object we're checking permissions of
     # @param query [Symbol, String] the predicate method to check on the policy (e.g. `:show?`)
     # @param policy_class [Class] the policy class we want to force use of
+    # @param cache [#[], #[]=] a Hash-like object to cache the found policy instance in
     # @raise [NotAuthorizedError] if the given query method returned false
     # @return [Object] Always returns the passed object record
-    def authorize(user, record, query, policy_class: nil)
-      policy = policy_class ? policy_class.new(user, pundit_model(record)) : policy!(user, record)
+    def authorize(user, possibly_namespaced_record, query, policy_class: nil, cache: {})
+      record = pundit_model(possibly_namespaced_record)
+      policy = if policy_class
+        policy_class.new(user, record)
+      else
+        cache[possibly_namespaced_record] ||= policy!(user, possibly_namespaced_record)
+      end
 
       raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
 
-      record.is_a?(Array) ? record.last : record
+      record
     end
 
     # Retrieves the policy scope for the given record.
@@ -207,7 +213,7 @@ module Pundit
   # and current user and finally throwing an error if the user is not
   # authorized to perform the given action.
   #
-  # @param record [Object] the object we're checking permissions of
+  # @param record [Object, Array] the object we're checking permissions of
   # @param query [Symbol, String] the predicate method to check on the policy (e.g. `:show?`).
   #   If omitted then this defaults to the Rails controller action name.
   # @param policy_class [Class] the policy class we want to force use of
@@ -218,12 +224,7 @@ module Pundit
 
     @_pundit_policy_authorized = true
 
-    actual_record = record.is_a?(Array) ? record.last : record
-    policy = policy_class ? policy_class.new(pundit_user, actual_record) : policy(record)
-
-    raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
-
-    actual_record
+    Pundit.authorize(pundit_user, record, query, policy_class: policy_class, cache: policies)
   end
 
   # Allow this action not to perform authorization.

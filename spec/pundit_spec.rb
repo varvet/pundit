@@ -71,6 +71,18 @@ RSpec.describe Pundit do
       # rubocop:enable Style/MultilineBlockChain
     end
 
+    it "raises an error with a the record, query and action when the record is namespaced" do
+      # rubocop:disable Style/MultilineBlockChain
+      expect do
+        Pundit.authorize(user, [:project, :admin, comment], :destroy?)
+      end.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this Comment") do |error|
+        expect(error.query).to eq :destroy?
+        expect(error.record).to eq comment
+        expect(error.policy).to eq Pundit.policy(user, [:project, :admin, comment])
+      end
+      # rubocop:enable Style/MultilineBlockChain
+    end
+
     it "raises an error with a invalid policy constructor" do
       expect do
         Pundit.authorize(user, wiki, :update?)
