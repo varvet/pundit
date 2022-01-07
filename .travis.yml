@@ -4,7 +4,7 @@ dist: focal
 matrix:
   include:
     - name: "RuboCop lint on pre-installed Ruby version"
-      rvm: 2.7.1 # Pre-installed Ruby version
+      rvm: 2.7.1 # Pre-installed Ruby version (https://docs.travis-ci.com/user/reference/focal/#ruby-support)
       before_install:
         - gem install bundler
       script: bundle exec rake rubocop # ONLY lint once, first
