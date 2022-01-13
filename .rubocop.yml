@@ -2,6 +2,8 @@ AllCops:
   TargetRubyVersion: 2.6
   Exclude:
     - "lib/generators/**/templates/**/*"
+  SuggestExtensions: false
+  NewCops: disable
 
 Metrics/BlockLength:
   Exclude:
@@ -15,7 +17,7 @@ Metrics/ModuleLength:
   Exclude:
     - "**/*_spec.rb"
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
 Metrics/AbcSize:
@@ -27,7 +29,7 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
 Layout/CaseIndentation:
@@ -63,5 +65,5 @@ Style/Not:
 Style/DoubleNegation:
   Enabled: false
 
-Documentation:
+Style/Documentation:
   Enabled: false # TODO: Enable again once we have more docs
