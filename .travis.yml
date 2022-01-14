@@ -18,6 +18,8 @@ matrix:
     - rvm: 2.7.3
     - rvm: 3.0.1
     - rvm: jruby-9.2.17.0
+      before_install:
+        - yes | gem update --system
       env:
         - JRUBY_OPTS="--debug"
     - rvm: truffleruby-head
