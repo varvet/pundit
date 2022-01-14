@@ -1,0 +1,59 @@
+# This file was generated on 2022-01-10T22:24:10+00:00 from the rspec-dev repo.
+# DO NOT modify it by hand as your changes will get lost the next time it is generated.
+
+name: RSpec CI
+on:
+  push:
+    branches:
+      - 'main'
+      - '*-maintenance'
+      - '*-dev'
+  pull_request:
+    branches:
+      - '*'
+env:
+  RSPEC_CI: true
+  # This tells rspec-rails what branch to run in ci
+  RSPEC_VERSION: '= 3.11.0.pre'
+jobs:
+  rubocop:
+    name: Rubocop
+    runs-on: 'ubuntu-20.04'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # 'bundle install' and cache
+          ruby-version: 2.7
+      - run: bundle exec rubocop
+
+  test:
+    name: Ruby ${{ matrix.ruby }} ${{ matrix.name_extra || '' }}
+    runs-on: ${{ matrix.os || 'ubuntu-20.04' }}
+    strategy:
+      matrix:
+        ruby:
+          - '3.1'
+          - '3.0'
+          - 2.7
+          - 2.6
+        env:
+          -
+            DIFF_LCS_VERSION: "> 1.4.3"
+        include:
+          - ruby: ruby-head
+            env:
+              RUBY_HEAD: true
+          - ruby: jruby-9.2.13.0
+            env:
+              JRUBY_OPTS: "--dev"
+      fail-fast: false
+    continue-on-error: ${{ matrix.allow_failure || endsWith(matrix.ruby, 'head') }}
+    env: ${{ matrix.env }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # 'bundle install' and cache
+          ruby-version: ${{ matrix.ruby }}
+      - run: bundle exec rake
