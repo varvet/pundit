@@ -29,6 +29,9 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Gemspec/RequiredRubyVersion:
+ Enabled: false
+
 Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
