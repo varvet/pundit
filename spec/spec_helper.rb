@@ -80,6 +80,7 @@ end
 
 class CommentScope
   attr_reader :original_object
+
   def initialize(original_object)
     @original_object = original_object
   end
@@ -232,6 +233,7 @@ class NilClassPolicy < Struct.new(:user, :record)
 end
 
 class Wiki; end
+
 class WikiPolicy
   class Scope
     # deliberate typo method
@@ -242,6 +244,7 @@ end
 class Thread
   def self.all; end
 end
+
 class ThreadPolicy < Struct.new(:user, :thread)
   class Scope < Struct.new(:user, :scope)
     def resolve

@@ -27,7 +27,7 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
 Layout/CaseIndentation:
@@ -65,3 +65,9 @@ Style/DoubleNegation:
 
 Documentation:
   Enabled: false # TODO: Enable again once we have more docs
+
+Lint/ConstantDefinitionInBlock:
+  Enabled: false
+
+Style/OptionalBooleanParameter:
+  Enabled: false
