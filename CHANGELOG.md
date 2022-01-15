@@ -6,6 +6,10 @@
 
 - Using `policy_class` and a namespaced record now passes only the record when instantiating the policy. (#697, #689, #694, #666)
 
+### Changed
+
+- Use `scope.none` by default in `ApplicationPolicy` scope. (#711)
+
 ### Deprecated
 
 - Deprecate `include Pundit` in favor of `include Pundit::Authorization` (#621)

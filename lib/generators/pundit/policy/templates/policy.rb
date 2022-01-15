@@ -2,7 +2,7 @@
 class <%= class_name %>Policy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      scope.all
+      raise NotImplementedError, 'You need to implement this before using the scope'
     end
   end
 end
