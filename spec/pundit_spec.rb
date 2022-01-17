@@ -12,8 +12,8 @@ RSpec.describe Pundit do
   let(:article) { Article.new }
   let(:artificial_blog) { ArtificialBlog.new }
   let(:article_tag) { ArticleTag.new }
-  let(:comments_relation) { CommentsRelation.new }
-  let(:empty_comments_relation) { CommentsRelation.new(true) }
+  let(:comments_relation) { CommentsRelation.new(empty: false) }
+  let(:empty_comments_relation) { CommentsRelation.new(empty: true) }
   let(:tag_four_five_six) { ProjectOneTwoThree::TagFourFiveSix.new(user) }
   let(:avatar_four_five_six) { ProjectOneTwoThree::AvatarFourFiveSix.new }
   let(:wiki) { Wiki.new }

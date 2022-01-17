@@ -2,6 +2,7 @@
 
 require "spec_helper"
 
+class Foo; end
 RSpec.describe Pundit::PolicyFinder do
   let(:user) { double }
   let(:post) { Post.new(user) }
@@ -114,7 +115,6 @@ RSpec.describe Pundit::PolicyFinder do
 
     context "with a class that doesn't have an associated policy" do
       it "returns nil" do
-        class Foo; end
         object = described_class.new(Foo)
 
         expect(object.policy).to eq nil

@@ -26,7 +26,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "pry"
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec", ">= 3.0.0"
-  gem.add_development_dependency "rubocop", "0.74.0"
+  gem.add_development_dependency "rubocop", "1.24.0"
   gem.add_development_dependency "simplecov", ">= 0.17.0"
   gem.add_development_dependency "yard"
 end
