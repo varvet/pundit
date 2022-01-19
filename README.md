@@ -26,11 +26,11 @@ Sponsored by:
 gem "pundit"
 ```
 
-Include `Pundit::Authorization` in your application controller:
+Include `Pundit` in your application controller:
 
 ``` ruby
 class ApplicationController < ActionController::Base
-  include Pundit::Authorization
+  include Pundit
 end
 ```
 
