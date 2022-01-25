@@ -194,8 +194,17 @@ you can retrieve it by passing a symbol.
 
 ```ruby
 # app/policies/dashboard_policy.rb
-class DashboardPolicy < Struct.new(:user, :dashboard)
-  # ...
+class DashboardPolicy
+  attr_reader :user
+
+  # _record in this example will just be :dashboard
+  def initialize(user, _record)
+    @user = user
+  end
+
+  def show?
+    user.admin?
+  end
 end
 ```
 
