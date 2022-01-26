@@ -11,7 +11,7 @@ scalable authorization system.
 
 Links:
 
-- [API documentation](http://www.rubydoc.info/gems/pundit)
+- [API documentation for the most recent version](http://www.rubydoc.info/gems/pundit)
 - [Source Code](https://github.com/varvet/pundit)
 - [Contributing](https://github.com/varvet/pundit/blob/master/CONTRIBUTING.md)
 - [Code of Conduct](https://github.com/varvet/pundit/blob/master/CODE_OF_CONDUCT.md)
@@ -21,6 +21,8 @@ Sponsored by:
 [<img src="https://www.varvet.com/images/wordmark-red.svg" alt="Varvet" height="50px"/>](https://www.varvet.com)
 
 ## Installation
+
+> **Please note** that the README on GitHub is accurate with the _latest code on GitHub_. You are most likely using a released version of Pundit, so please refer to the [documentation for the latest released version of Pundit](https://www.rubydoc.info/gems/pundit).
 
 ``` ruby
 gem "pundit"
