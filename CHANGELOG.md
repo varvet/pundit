@@ -6,6 +6,10 @@
 
 - Using `policy_class` and a namespaced record now passes only the record when instantiating the policy. (#697, #689, #694, #666)
 
+### Changed
+
+- Require users to explicitly define Scope#resolve in generated policies (#711, #722)
+
 ### Deprecated
 
 - Deprecate `include Pundit` in favor of `include Pundit::Authorization` (#621)

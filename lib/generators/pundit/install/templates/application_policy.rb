@@ -43,7 +43,7 @@ class ApplicationPolicy
     end
 
     def resolve
-      scope.all
+      raise NotImplementedError, "You must define #resolve in #{self.class}"
     end
 
     private

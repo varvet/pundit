@@ -24,6 +24,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "activemodel", ">= 3.0.0"
   gem.add_development_dependency "bundler"
   gem.add_development_dependency "pry"
+  gem.add_development_dependency "railties", ">= 3.0.0"
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec", ">= 3.0.0"
   gem.add_development_dependency "rubocop", "1.24.0"
