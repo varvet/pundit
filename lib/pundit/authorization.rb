@@ -70,9 +70,10 @@ module Pundit
     # Allow this action not to perform authorization.
     #
     # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
+    # @param reason [Symbol, String] optional reason why the authorization was skipped
     # @return [void]
-    def skip_authorization
-      @_pundit_policy_authorized = :skipped
+    def skip_authorization(reason = :skipped)
+      @_pundit_policy_authorized = reason
     end
 
     # Allow this action not to perform policy scoping.

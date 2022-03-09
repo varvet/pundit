@@ -123,6 +123,11 @@ describe Pundit::Authorization do
       controller.skip_authorization
       expect { controller.verify_authorized }.not_to raise_error
     end
+
+    it "tracks why authorization verification was disabled" do
+      controller.skip_authorization(:api_key)
+      expect(controller.instance_variable_get(:@_pundit_policy_authorized)).to be == :api_key
+    end
   end
 
   describe "#skip_policy_scope" do
