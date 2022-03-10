@@ -55,7 +55,7 @@ module Pundit
   class NotDefinedError < Error; end
 
   def self.included(base)
-    ActiveSupport::Deprecation.warn <<~WARNING.strip_heredoc
+    ActiveSupport::Deprecation.warn <<~WARNING
       'include Pundit' is deprecated. Please use 'include Pundit::Authorization' instead.
     WARNING
     base.include Authorization
