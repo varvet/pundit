@@ -15,10 +15,21 @@ module Pundit
 
     protected
 
+    # @return [Symbol | Boolean] how policy authorization was performed (or not).
+    def pundit_policy_authorized
+      @_pundit_policy_authorized
+    end
+
     # @return [Boolean] whether authorization has been performed, i.e. whether
     #                   one {#authorize} or {#skip_authorization} has been called
     def pundit_policy_authorized?
       !!@_pundit_policy_authorized
+    end
+
+    # @return [Symbol | Boolean] how policy scope authorization was performed
+    #                            (or not).
+    def pundit_policy_scoped
+      @_pundit_policy_scoped
     end
 
     # @return [Boolean] whether policy scoping has been performed, i.e. whether

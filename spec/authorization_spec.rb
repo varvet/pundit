@@ -16,10 +16,12 @@ describe Pundit::Authorization do
     it "does nothing when authorized" do
       controller.authorize(post)
       controller.verify_authorized
+      expect(controller.pundit_policy_authorized).to be true
     end
 
     it "raises an exception when not authorized" do
       expect { controller.verify_authorized }.to raise_error(Pundit::AuthorizationNotPerformedError)
+      expect(controller.pundit_policy_authorized).to_not be true
     end
   end
 
@@ -27,10 +29,12 @@ describe Pundit::Authorization do
     it "does nothing when policy_scope is used" do
       controller.policy_scope(Post)
       controller.verify_policy_scoped
+      expect(controller.pundit_policy_scoped).to be true
     end
 
     it "raises an exception when policy_scope is not used" do
       expect { controller.verify_policy_scoped }.to raise_error(Pundit::PolicyScopingNotPerformedError)
+      expect(controller.pundit_policy_scoped).to_not be true
     end
   end
 
@@ -122,6 +126,7 @@ describe Pundit::Authorization do
     it "disables authorization verification" do
       controller.skip_authorization
       expect { controller.verify_authorized }.not_to raise_error
+      expect(controller.pundit_policy_authorized).to be == :skipped
     end
   end
 
@@ -129,6 +134,7 @@ describe Pundit::Authorization do
     it "disables policy scope verification" do
       controller.skip_policy_scope
       expect { controller.verify_policy_scoped }.not_to raise_error
+      expect(controller.pundit_policy_scoped).to be == :skipped
     end
   end
 
