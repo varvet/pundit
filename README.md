@@ -24,8 +24,8 @@ Sponsored by:
 
 > **Please note** that the README on GitHub is accurate with the _latest code on GitHub_. You are most likely using a released version of Pundit, so please refer to the [documentation for the latest released version of Pundit](https://www.rubydoc.info/gems/pundit).
 
-``` ruby
-gem "pundit"
+``` sh
+bundle add pundit
 ```
 
 Include `Pundit::Authorization` in your application controller:
