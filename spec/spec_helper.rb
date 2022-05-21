@@ -216,6 +216,22 @@ class Controller
   end
 end
 
+class PostsView
+  include Pundit::Authorization
+  include Pundit::Helper
+  # Mark protected methods public so they may be called in test
+  # rubocop:disable Style/AccessModifierDeclarations
+  public(*Pundit::Authorization.private_instance_methods)
+  # rubocop:enable Style/AccessModifierDeclarations
+
+  attr_reader :current_user, :posts
+
+  def initialize(current_user, posts)
+    @current_user = current_user
+    @posts = posts
+  end
+end
+
 class NilClassPolicy < Struct.new(:user, :record)
   class Scope
     def initialize(*)
