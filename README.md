@@ -692,7 +692,7 @@ You can now retrieve these attributes from the policy:
 class PostsController < ApplicationController
   def update
     @post = Post.find(params[:id])
-    if @post.update_attributes(post_params)
+    if @post.update(post_params)
       redirect_to @post
     else
       render :edit
@@ -714,7 +714,7 @@ However, this is a bit cumbersome, so Pundit provides a convenient helper method
 class PostsController < ApplicationController
   def update
     @post = Post.find(params[:id])
-    if @post.update_attributes(permitted_attributes(@post))
+    if @post.update(permitted_attributes(@post))
       redirect_to @post
     else
       render :edit
