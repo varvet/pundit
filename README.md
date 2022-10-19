@@ -802,6 +802,16 @@ An alternative approach to Pundit policy specs is scoping them to a user context
 
 Pundit does not provide a DSL for testing scopes. Just test it like a regular Ruby class!
 
+### Linting with RuboCop RSpec
+
+When you lint your RSpec spec files with `rubocop-rspec`, it will fail to properly detect RSpec constructs that Pundit defines, `permissions`.
+Make sure to use `rubocop-rspec` 2.0 or newer and add the following to your `.rubocop.yml`:
+
+```yaml
+inherit_gem:
+  pundit: config/rubocop-rspec.yml
+```
+
 # External Resources
 
 - [RailsApps Example Application: Pundit and Devise](https://github.com/RailsApps/rails-devise-pundit)
