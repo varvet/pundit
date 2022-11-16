@@ -103,7 +103,7 @@ module Pundit
         raise InvalidConstructorError, "Invalid #<#{policy_scope_class}> constructor is called"
       end
 
-      policy_scope.resolve
+      scope.where(id: policy_scope.resolve)
     end
 
     # Retrieves the policy scope for the given record.
@@ -124,7 +124,7 @@ module Pundit
         raise InvalidConstructorError, "Invalid #<#{policy_scope_class}> constructor is called"
       end
 
-      policy_scope.resolve
+      scope.where(id: policy_scope.resolve)
     end
 
     # Retrieves the policy for the given record.
