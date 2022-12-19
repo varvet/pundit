@@ -1,5 +1,11 @@
 # Pundit
 
+## 2.3.0 (2022-12-19)
+
+### Added
+
+- add support for rubocop-rspec syntax extensions (#745)
+
 ## 2.2.0 (2022-02-11)
 
 ### Fixed
