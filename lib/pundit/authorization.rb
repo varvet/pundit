@@ -101,11 +101,11 @@ module Pundit
     # @param policy_class [Class] the policy class we want to force use of
     # @return [Object, nil] instance of policy class with query methods
     def policy(record, policy_class: nil)
-      policies[{policy_class: policy_class, record: record}] ||= if policy_class
-                                                                   policy_class.new(pundit_user, record)
-                                                                 else
-                                                                   Pundit.policy!(pundit_user, record)
-                                                                 end
+      policies[{ policy_class: policy_class, record: record }] ||= if policy_class
+        policy_class.new(pundit_user, record)
+      else
+        Pundit.policy!(pundit_user, record)
+      end
     end
 
     # Retrieves a set of permitted attributes from the policy by instantiating
@@ -121,7 +121,7 @@ module Pundit
     # @param policy_class [Class] the policy class we want to force use of
     # @return [Hash{String => Object}] the permitted attributes
     def permitted_attributes(record, action = action_name, policy_class: nil)
-      policy = policy(record)
+      policy = policy(record, policy_class: policy_class)
       method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
         "permitted_attributes_for_#{action}"
       else

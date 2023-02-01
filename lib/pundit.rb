@@ -78,7 +78,8 @@ module Pundit
       policy = if policy_class
         policy_class.new(user, record)
       else
-        cache[{policy_class: policy_class, record: possibly_namespaced_record}] ||= policy!(user, possibly_namespaced_record)
+        cache[{ policy_class: policy_class,
+                record: possibly_namespaced_record }] ||= policy!(user, possibly_namespaced_record)
       end
 
       raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
