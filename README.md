@@ -783,6 +783,14 @@ describe PostPolicy do
 end
 ```
 
+You can customize the description used for the `permit` matcher:
+
+``` ruby
+Pundit::RSpec::Matchers.description do
+  "permit the user"
+end
+```
+
 An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
 [excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/) and implemented in the third party [pundit-matchers](https://github.com/punditcommunity/pundit-matchers) gem.
 
