@@ -786,10 +786,33 @@ end
 You can customize the description used for the `permit` matcher:
 
 ``` ruby
-Pundit::RSpec::Matchers.description do
+Pundit::RSpec::Matchers.description =
   "permit the user"
+```
+
+given the spec
+
+```ruby
+permissions :update?, :show? do
+  it { expect(policy).to permit(user, record) }
 end
 ```
+
+will change the output from
+
+```
+update? and show?
+  is expected to permit #<User id: 105> and #<User id: 106>
+```
+
+to
+
+```
+update? and show?
+  is expected to permit the user
+```
+
+which may be desirable when distributing policy specs as documentation.
 
 An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
 [excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/) and implemented in the third party [pundit-matchers](https://github.com/punditcommunity/pundit-matchers) gem.
