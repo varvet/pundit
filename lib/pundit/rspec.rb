@@ -5,8 +5,14 @@ module Pundit
     module Matchers
       extend ::RSpec::Matchers::DSL
 
-      def self.description(&block)
-        @description = block.call
+      def self.default_description=(default_description)
+        @default_description = default_description
+      end
+
+      def self.default_description
+        return @default_description if instance_variable_defined?(:@default_description)
+
+        nil
       end
 
       # rubocop:disable Metrics/BlockLength
@@ -38,11 +44,7 @@ module Pundit
         end
 
         description do
-          if Pundit::RSpec::Matchers.instance_variable_defined?(:@description)
-            Pundit::RSpec::Matchers.instance_variable_get(:@description)
-          else
-            super()
-          end
+          Pundit::RSpec::Matchers.default_description || super()
         end
 
         if respond_to?(:match_when_negated)
