@@ -19,6 +19,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
+  gem.metadata      = { "rubygems_mfa_required" => "true" }
+
   gem.add_dependency "activesupport", ">= 3.0.0"
   gem.add_development_dependency "actionpack", ">= 3.0.0"
   gem.add_development_dependency "activemodel", ">= 3.0.0"
