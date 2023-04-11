@@ -408,13 +408,9 @@ RSpec.describe Pundit do
 
     it "warns about deprecation" do
       klass = Class.new
-      allow(ActiveSupport::Deprecation).to receive(:warn)
-
-      ActiveSupport::Deprecation.silence do
+      expect do
         klass.include Pundit
-      end
-
-      expect(ActiveSupport::Deprecation).to have_received(:warn).with start_with("'include Pundit' is deprecated")
+      end.to output(a_string_starting_with("'include Pundit' is deprecated")).to_stderr
     end
   end
 
