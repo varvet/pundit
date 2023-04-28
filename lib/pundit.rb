@@ -73,7 +73,7 @@ module Pundit
     # @param cache [#[], #[]=] a Hash-like object to cache the found policy instance in
     # @raise [NotAuthorizedError] if the given query method returned false
     # @return [Object] Always returns the passed object record
-    def authorize(user, possibly_namespaced_record, query, policy_class: nil, cache: {})
+    def authorize(user, possibly_namespaced_record, query, policy_class: nil, cache: {}, **kwargs)
       record = pundit_model(possibly_namespaced_record)
       policy = if policy_class
         policy_class.new(user, record)
@@ -81,7 +81,7 @@ module Pundit
         cache[possibly_namespaced_record] ||= policy!(user, possibly_namespaced_record)
       end
 
-      raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
+      raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query, **kwargs)
 
       record
     end

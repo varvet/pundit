@@ -59,12 +59,12 @@ module Pundit
     # @param policy_class [Class] the policy class we want to force use of
     # @raise [NotAuthorizedError] if the given query method returned false
     # @return [Object] Always returns the passed object record
-    def authorize(record, query = nil, policy_class: nil)
+    def authorize(record, query = nil, policy_class: nil, **kwargs)
       query ||= "#{action_name}?"
 
       @_pundit_policy_authorized = true
 
-      Pundit.authorize(pundit_user, record, query, policy_class: policy_class, cache: policies)
+      Pundit.authorize(pundit_user, record, query, policy_class: policy_class, cache: policies, **kwargs)
     end
 
     # Allow this action not to perform authorization.
