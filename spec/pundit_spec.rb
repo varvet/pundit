@@ -399,9 +399,9 @@ RSpec.describe Pundit do
     it "includes Authorization module" do
       klass = Class.new
 
-      ActiveSupport::Deprecation.silence do
+      expect do
         klass.include Pundit
-      end
+      end.to output.to_stderr
 
       expect(klass).to include Pundit::Authorization
     end
