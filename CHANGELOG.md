@@ -1,5 +1,11 @@
 # Pundit
 
+## Unreleased
+
+### Fixed
+
+- Policy generator now works on Ruby 3.2 (#754)
+
 ## 2.3.0 (2022-12-19)
 
 ### Added
