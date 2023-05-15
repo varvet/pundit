@@ -161,7 +161,10 @@ module Pundit
     private
 
     def pundit_model(record)
-      record.is_a?(Array) ? record.last : record
+      return record.last if record.is_a?(Array)
+      return record.name.demodulize.safe_constantize if record.is_a?(Module)
+
+      record
     end
   end
 
