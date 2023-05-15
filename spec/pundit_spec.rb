@@ -395,6 +395,31 @@ RSpec.describe Pundit do
     end
   end
 
+  describe ".pundit_model" do
+    context "when record is an array" do
+      it "returns an arrays last element" do
+        record = [1, 2, 3]
+        expect(described_class.send(:pundit_model, record)).to eq(3)
+      end
+    end
+
+    context "when record is a module" do
+      it "returns the module name" do
+        module_name = Pundit.name
+
+        expect(described_class.send(:pundit_model, module_name)).to eq(Pundit.name)
+      end
+    end
+
+    context "when record is neither an array or module" do
+      it "returns a record" do
+        record = "Pundit"
+
+        expect(described_class.send(:pundit_model, record)).to eq(record)
+      end
+    end
+  end
+
   describe ".included" do
     it "includes Authorization module" do
       klass = Class.new
