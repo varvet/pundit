@@ -1,5 +1,9 @@
 # Pundit
 
+### Fixed
+
+- Now returns the correct model class when testing modules (#770)
+
 ## Unreleased
 
 ### Fixed
