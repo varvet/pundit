@@ -541,7 +541,7 @@ class ApplicationController < ActionController::Base
    policy_name = exception.policy.class.to_s.underscore
 
    flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
-   redirect_back(fallback_url: root_path)
+   redirect_back(fallback_location: root_path)
  end
 end
 ```
