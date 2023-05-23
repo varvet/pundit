@@ -8,6 +8,7 @@ describe Pundit::Authorization do
   let(:post) { Post.new(user) }
   let(:customer_post) { Customer::Post.new(user) }
   let(:comment) { Comment.new }
+  let(:admin_post) { Project::Admin::Post.new(user) }
   let(:article) { Article.new }
   let(:article_tag) { ArticleTag.new }
   let(:wiki) { Wiki.new }
@@ -116,6 +117,39 @@ describe Pundit::Authorization do
     it "raises an error with a invalid policy constructor" do
       expect { controller.authorize(wiki, :destroy?) }.to raise_error(Pundit::InvalidConstructorError)
     end
+
+    context "when passed a record with the admin namespace" do
+      it "returns the record when the permission check passes" do
+        allow(controller).to receive(:authorize).with(admin_post, :update?).and_return(admin_post)
+        expect(controller.authorize(admin_post, :update?)).to eq(admin_post)
+      end
+
+      it "raises an exception when the permission check fails" do
+        allow(controller).to receive(:authorize).with(admin_post, :update?).and_raise(Pundit::NotAuthorizedError)
+        expect { controller.authorize(admin_post, :update?) }.to raise_error(Pundit::NotAuthorizedError)
+      end
+    end
+
+    context "when called in a controller" do
+      let(:controller) { Controller.new(user, "update", {}) }
+
+      before do
+        allow(controller).to receive(:kind_of?).with(Controller).and_return(true)
+        allow(controller).to receive(:current_user).and_return(user)
+      end
+
+      it "uses the Admin namespace for policy calls" do
+        expect(controller).to receive(:authorize).with(admin_post, :update?).and_return(admin_post)
+        expect(controller.authorize(admin_post, :update?)).to eq(admin_post)
+      end
+
+      it "allows overriding the policy class" do
+        allow(controller).to receive(:policy_class).and_return(Project::Admin::CommentPolicy)
+        expect(controller).to receive(:authorize).with(admin_post, :update?,
+                                                       policy_class: Project::Admin::Post).and_return(admin_post)
+        expect(controller.authorize(admin_post, :update?, policy_class: Project::Admin::Post)).to eq(admin_post)
+      end
+    end
   end
 
   describe "#skip_authorization" do
@@ -158,6 +192,45 @@ describe Pundit::Authorization do
       controller.policies[post] = new_policy
 
       expect(controller.policy(post)).to eq new_policy
+    end
+
+    context "when the policy is overriden" do
+      before do
+        allow(controller).to receive(:policy) do |record|
+          case record
+            when Post
+              PostPolicy.new(user, record)
+            when Blog
+              BlogPolicy.new(user, record)
+            else
+              raise Pundit::NotDefinedError, "Policy not defined for record: #{record.class}"
+          end
+        end
+      end
+
+      it "returns the correct overriden policy for a Post record" do
+        post = Post.new(user)
+
+        policy = controller.policy(post)
+        expect(policy).to be_instance_of(PostPolicy)
+        expect(policy.user).to eq(user)
+        expect(policy.post).to eq(post)
+      end
+
+      it "returns the correct overriden policy for a Blog record" do
+        blog = Blog.new
+
+        policy = controller.policy(blog)
+        expect(policy).to be_instance_of(BlogPolicy)
+        expect(policy.user).to eq(user)
+        expect(policy.blog).to eq(blog)
+      end
+
+      it "raises an error if the given policy can't be found" do
+        record = Article.new
+
+        expect { controller.policy(record) }.to raise_error(Pundit::NotDefinedError)
+      end
     end
   end
 
