@@ -121,9 +121,9 @@ describe Pundit::Authorization do
     context "when called in a controller" do
       it "uses the Admin namespace for policy calls" do
         policy = Project::Admin::CommentPolicy.new(user, comment)
-    
+
         expect(controller.authorize(admin_comment, :update?)).to eq(policy)
-      end     
+      end
     end
   end
 
@@ -171,7 +171,7 @@ describe Pundit::Authorization do
 
     it "uses the Admin namespace for policy calls" do
       policy = Project::Admin::CommentPolicy.new(user, comment)
-    
+
       expect(policy.update?).to eq(true)
     end
 
