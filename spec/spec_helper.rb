@@ -183,6 +183,10 @@ module Project
 
   module Admin
     class CommentPolicy < Struct.new(:user, :comment)
+      def self.policy_class
+        CommentPolicy
+      end
+
       def update?
         true
       end
