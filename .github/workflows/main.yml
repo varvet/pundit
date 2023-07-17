@@ -70,11 +70,6 @@ jobs:
       run: bundle exec rspec
       env:
         COVERAGE: 1
-    - name: Archive code coverage results
-      uses: actions/upload-artifact@v3
-      with:
-        name: code-coverage-report
-        path: coverage
     - name: Upload code coverage to Code Climate
       run: |
         ./cc-test-reporter after-build \
