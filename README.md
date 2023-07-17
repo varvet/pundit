@@ -1,6 +1,5 @@
 # Pundit
 
-[![Build Status](https://app.travis-ci.com/varvet/pundit.svg?branch=main)](https://app.travis-ci.com/varvet/pundit)
 [![Code Climate](https://codeclimate.com/github/varvet/pundit.svg)](https://codeclimate.com/github/varvet/pundit)
 [![Inline docs](http://inch-ci.org/github/varvet/pundit.svg?branch=master)](http://inch-ci.org/github/varvet/pundit)
 [![Gem Version](https://badge.fury.io/rb/pundit.svg)](http://badge.fury.io/rb/pundit)
