@@ -2,7 +2,7 @@
 
 [![Main](https://github.com/varvet/pundit/actions/workflows/main.yml/badge.svg)](https://github.com/varvet/pundit/actions/workflows/main.yml)
 [![Code Climate](https://codeclimate.com/github/varvet/pundit.svg)](https://codeclimate.com/github/varvet/pundit)
-[![Inline docs](http://inch-ci.org/github/varvet/pundit.svg?branch=master)](http://inch-ci.org/github/varvet/pundit)
+[![Inline docs](http://inch-ci.org/github/varvet/pundit.svg?branch=main)](http://inch-ci.org/github/varvet/pundit)
 [![Gem Version](https://badge.fury.io/rb/pundit.svg)](http://badge.fury.io/rb/pundit)
 
 Pundit provides a set of helpers which guide you in leveraging regular Ruby
@@ -13,8 +13,8 @@ Links:
 
 - [API documentation for the most recent version](http://www.rubydoc.info/gems/pundit)
 - [Source Code](https://github.com/varvet/pundit)
-- [Contributing](https://github.com/varvet/pundit/blob/master/CONTRIBUTING.md)
-- [Code of Conduct](https://github.com/varvet/pundit/blob/master/CODE_OF_CONDUCT.md)
+- [Contributing](https://github.com/varvet/pundit/blob/main/CONTRIBUTING.md)
+- [Code of Conduct](https://github.com/varvet/pundit/blob/main/CODE_OF_CONDUCT.md)
 
 Sponsored by:
 
