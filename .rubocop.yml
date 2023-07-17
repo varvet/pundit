@@ -2,6 +2,9 @@ AllCops:
   TargetRubyVersion: 2.6
   Exclude:
     - "lib/generators/**/templates/**/*"
+    <% `git status --ignored --porcelain`.lines.grep(/^!! /).each do |path| %>
+    - <%= path.sub(/^!! /, '').sub(/\/$/, '/**/*') %>
+    <% end %>
   SuggestExtensions: false
   NewCops: disable
 
