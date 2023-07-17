@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Nothing.
+
+## 2.3.1 (2023-07-17)
+
 ### Fixed
 
 - Use `Kernel.warn` instead of `ActiveSupport::Deprecation.warn` for deprecations (#764)
