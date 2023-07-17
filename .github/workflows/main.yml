@@ -90,8 +90,8 @@ jobs:
       with:
         rubygems: default
         ruby-version: 'ruby'
-    - name: bundle install
-      run: bundle install
+        bundler-cache: false
+    - run: bundle install
     - name: Run RuboCop
       run: bundle exec rubocop
 
