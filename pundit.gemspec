@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.name          = "pundit"
   gem.version       = Pundit::VERSION
   gem.authors       = ["Jonas Nicklas", "Varvet AB"]
-  gem.email         = ["jonas.nicklas@gmail.com", "dev@elabs.se"]
+  gem.email         = ["jonas.nicklas@gmail.com", "info@varvet.com"]
   gem.description   = "Object oriented authorization for Rails applications"
   gem.summary       = "OO authorization for Rails"
   gem.homepage      = "https://github.com/varvet/pundit"
