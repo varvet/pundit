@@ -81,7 +81,7 @@ jobs:
           --coverage-input-type simplecov \
           ./coverage/.resultset.json
 
-  lint:
+  rubocop:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -94,3 +94,17 @@ jobs:
       run: bundle install
     - name: Run RuboCop
       run: bundle exec rubocop
+
+  required-checks:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - test
+      - matrix-test
+      - rubocop
+    steps:
+      - name: failure
+        if: ${{ failure() || contains(needs.*.result, 'failure') }}
+        run: exit 1
+      - name: success
+        run: exit 0
