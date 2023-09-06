@@ -1,9 +1,6 @@
 ## Security issues
 
-If you have found a security related issue, please do not file an issue on
-GitHub or send a PR addressing the issue. Contact
-[Jonas](mailto:jonas.nicklas@gmail.com) directly. You will be given public
-credit for your disclosure.
+If you have found a security related issue, please do not file an issue on GitHub or send a PR addressing the issue. Refer to [SECURITY.md](./SECURITY.md) for instructions.
 
 ## Reporting issues
 
@@ -23,7 +20,7 @@ Pundit version, OS version and any stack traces you have are very valuable.
 - **Document any change in behaviour**. Make sure the README and any other
   relevant documentation are kept up-to-date.
 
-- **Create topic branches**. Please don't ask us to pull from your master branch.
+- **Create topic branches**. Please don't ask us to pull from your main branch.
 
 - **One pull request per feature**. If you want to do more than one thing, send
   multiple pull requests.

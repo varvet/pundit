@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-require "simplecov"
-SimpleCov.start do
-  add_filter "/spec/"
+if ENV["COVERAGE"]
+  require "simplecov"
+  SimpleCov.start do
+    add_filter "/spec/"
+  end
 end
 
 require "pundit"

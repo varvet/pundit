@@ -55,8 +55,10 @@ module Pundit
   class NotDefinedError < Error; end
 
   def self.included(base)
-    ActiveSupport::Deprecation.warn <<~WARNING
+    location = caller_locations(1, 1).first
+    warn <<~WARNING
       'include Pundit' is deprecated. Please use 'include Pundit::Authorization' instead.
+       (called from #{location.label} at #{location.path}:#{location.lineno})
     WARNING
     base.include Authorization
   end

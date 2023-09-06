@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.name          = "pundit"
   gem.version       = Pundit::VERSION
   gem.authors       = ["Jonas Nicklas", "Varvet AB"]
-  gem.email         = ["jonas.nicklas@gmail.com", "dev@elabs.se"]
+  gem.email         = ["jonas.nicklas@gmail.com", "info@varvet.com"]
   gem.description   = "Object oriented authorization for Rails applications"
   gem.summary       = "OO authorization for Rails"
   gem.homepage      = "https://github.com/varvet/pundit"
@@ -19,6 +19,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
+  gem.metadata      = { "rubygems_mfa_required" => "true" }
+
   gem.add_dependency "activesupport", ">= 3.0.0"
   gem.add_development_dependency "actionpack", ">= 3.0.0"
   gem.add_development_dependency "activemodel", ">= 3.0.0"
@@ -27,7 +29,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "railties", ">= 3.0.0"
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec", ">= 3.0.0"
-  gem.add_development_dependency "rubocop", "1.24.0"
+  gem.add_development_dependency "rubocop"
   gem.add_development_dependency "simplecov", ">= 0.17.0"
   gem.add_development_dependency "yard"
 end

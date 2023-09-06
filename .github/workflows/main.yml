@@ -1,0 +1,105 @@
+name: Main
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+env:
+  CC_TEST_REPORTER_ID: "ac477089fe20ab4fc7e0d304cab75f72d73d58a7596d366935d18fcc7d51f8f9"
+
+  # `github.ref` points to the *merge commit* when running tests on a pull request, which will be a commit
+  # that doesn't exists in our code base. Since this workflow triggers from a PR, we use the HEAD SHA instead.
+  #
+  # NOTE: These are both used by Code Climate (cc-test-reporter).
+  GIT_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+  GIT_BRANCH: ${{ github.head_ref }}
+
+jobs:
+  matrix-test:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.allow-failure || false }}
+    strategy:
+      fail-fast: true
+      matrix:
+        ruby-version:
+          - '3.0'
+          - '3.1'
+          - 'jruby-9.3.10'
+          - 'jruby'
+        include: # HEAD-versions
+          - ruby-version: 'head'
+            allow-failure: true
+          - ruby-version: 'jruby-head'
+            allow-failure: true
+          - ruby-version: 'truffleruby-head'
+            allow-failure: true
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        rubygems: latest
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true
+    - name: Run tests
+      run: bundle exec rspec
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        rubygems: latest
+        ruby-version: 'ruby'
+        bundler-cache: true
+    - name: "Download cc-test-reporter from codeclimate.com"
+      run: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+    - name: "Report to Code Climate that we will send a coverage report."
+      run: ./cc-test-reporter before-build
+    - name: Run tests
+      run: bundle exec rspec
+      env:
+        COVERAGE: 1
+    - name: Upload code coverage to Code Climate
+      run: |
+        ./cc-test-reporter after-build \
+          --coverage-input-type simplecov \
+          ./coverage/.resultset.json
+
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        rubygems: default
+        ruby-version: 'ruby'
+        bundler-cache: false
+    - run: bundle install
+    - name: Run RuboCop
+      run: bundle exec rubocop
+
+  required-checks:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - test
+      - matrix-test
+      - rubocop
+    steps:
+      - name: failure
+        if: ${{ failure() || contains(needs.*.result, 'failure') }}
+        run: exit 1
+      - name: success
+        run: exit 0

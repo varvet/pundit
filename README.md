@@ -1,20 +1,20 @@
 # Pundit
 
-[![Build Status](https://secure.travis-ci.org/varvet/pundit.svg?branch=master)](https://travis-ci.org/varvet/pundit)
+[![Main](https://github.com/varvet/pundit/actions/workflows/main.yml/badge.svg)](https://github.com/varvet/pundit/actions/workflows/main.yml)
 [![Code Climate](https://codeclimate.com/github/varvet/pundit.svg)](https://codeclimate.com/github/varvet/pundit)
-[![Inline docs](http://inch-ci.org/github/varvet/pundit.svg?branch=master)](http://inch-ci.org/github/varvet/pundit)
+[![Inline docs](http://inch-ci.org/github/varvet/pundit.svg?branch=main)](http://inch-ci.org/github/varvet/pundit)
 [![Gem Version](https://badge.fury.io/rb/pundit.svg)](http://badge.fury.io/rb/pundit)
 
 Pundit provides a set of helpers which guide you in leveraging regular Ruby
-classes and object oriented design patterns to build a simple, robust and
+classes and object oriented design patterns to build a straightforward, robust, and
 scalable authorization system.
 
 Links:
 
 - [API documentation for the most recent version](http://www.rubydoc.info/gems/pundit)
 - [Source Code](https://github.com/varvet/pundit)
-- [Contributing](https://github.com/varvet/pundit/blob/master/CONTRIBUTING.md)
-- [Code of Conduct](https://github.com/varvet/pundit/blob/master/CODE_OF_CONDUCT.md)
+- [Contributing](https://github.com/varvet/pundit/blob/main/CONTRIBUTING.md)
+- [Code of Conduct](https://github.com/varvet/pundit/blob/main/CODE_OF_CONDUCT.md)
 
 Sponsored by:
 
@@ -49,8 +49,8 @@ can pick up any classes in the new `app/policies/` directory.
 ## Policies
 
 Pundit is focused around the notion of policy classes. We suggest that you put
-these classes in `app/policies`. This is a simple example that allows updating
-a post if the user is an admin, or if the post is unpublished:
+these classes in `app/policies`. This is an example that allows updating a post
+if the user is an admin, or if the post is unpublished:
 
 ``` ruby
 class PostPolicy
@@ -67,7 +67,7 @@ class PostPolicy
 end
 ```
 
-As you can see, this is just a plain Ruby class. Pundit makes the following
+As you can see, this is a plain Ruby class. Pundit makes the following
 assumptions about this class:
 
 - The class has the same name as some kind of model class, only suffixed
@@ -199,7 +199,7 @@ you can retrieve it by passing a symbol.
 class DashboardPolicy
   attr_reader :user
 
-  # _record in this example will just be :dashboard
+  # `_record` in this example will be :dashboard
   def initialize(user, _record)
     @user = user
   end
@@ -211,7 +211,7 @@ end
 ```
 
 Note that the headless policy still needs to accept two arguments. The
-second argument will just be the symbol `:dashboard` in this case which
+second argument will be the symbol `:dashboard` in this case, which
 is what is passed as the record to `authorize` below.
 
 ```ruby
@@ -374,7 +374,7 @@ these filters without affecting how your app works in any way.**
 
 Some people have found this feature confusing, while many others
 find it extremely helpful. If you fall into the category of people who find it
-confusing then you do not need to use it. Pundit will work just fine without
+confusing then you do not need to use it. Pundit will work fine without
 using `verify_authorized` and `verify_policy_scoped`.
 
 ### Conditional verification
@@ -419,20 +419,13 @@ class Post
 end
 ```
 
-## Just plain old Ruby
+## Plain old Ruby
 
-As you can see, Pundit doesn't do anything you couldn't have easily done
-yourself.  It's a very small library, it just provides a few neat helpers.
-Together these give you the power of building a well structured, fully working
-authorization system without using any special DSLs or funky syntax or
-anything.
+Pundit is a very small library on purpose, and it doesn't do anything you can't do yourself. There's no secret sauce here. It does as little as possible, and then gets out of your way.
 
-Remember that all of the policy and scope classes are just plain Ruby classes,
-which means you can use the same mechanisms you always use to DRY things up.
-Encapsulate a set of permissions into a module and include them in multiple
-policies. Use `alias_method` to make some permissions behave the same as
-others. Inherit from a base set of permissions. Use metaprogramming if you
-really have to.
+With the few but powerful helpers available in Pundit, you have the power to build a well structured, fully working authorization system without using any special DSLs or funky syntax.
+
+Remember that all of the policy and scope classes are plain Ruby classes, which means you can use the same mechanisms you always use to DRY things up. Encapsulate a set of permissions into a module and include them in multiple policies. Use `alias_method` to make some permissions behave the same as others. Inherit from a base set of permissions. Use metaprogramming if you really have to.
 
 ## Generator
 
@@ -541,7 +534,7 @@ class ApplicationController < ActionController::Base
    policy_name = exception.policy.class.to_s.underscore
 
    flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
-   redirect_back(fallback_url: root_path)
+   redirect_back(fallback_location: root_path)
  end
 end
 ```
@@ -555,8 +548,7 @@ en:
      create?: 'You cannot create posts!'
 ```
 
-Of course, this is just an example. Pundit is agnostic as to how you implement
-your error messaging.
+This is an example. Pundit is agnostic as to how you implement your error messaging.
 
 ## Manually retrieving policies and scopes
 
@@ -578,9 +570,7 @@ those without the bang will return nil.
 
 ## Customize Pundit user
 
-In some cases your controller might not have access to `current_user`, or your
-`current_user` is not the method that should be invoked by Pundit. Simply
-define a method in your controller called `pundit_user`.
+On occasion, your controller may be unable to access `current_user`, or the method that should be invoked by Pundit may not be `current_user`. To address this, you can define a method in your controller named `pundit_user`.
 
 ```ruby
 def pundit_user
@@ -796,11 +786,11 @@ end
 ```
 
 An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
-[excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/) and implemented in the third party [pundit-matchers](https://github.com/chrisalley/pundit-matchers) gem.
+[excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/) and implemented in the third party [pundit-matchers](https://github.com/punditcommunity/pundit-matchers) gem.
 
 ### Scope Specs
 
-Pundit does not provide a DSL for testing scopes. Just test it like a regular Ruby class!
+Pundit does not provide a DSL for testing scopes. Test them like you would a regular Ruby class!
 
 ### Linting with RuboCop RSpec
 

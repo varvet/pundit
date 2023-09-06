@@ -1,5 +1,16 @@
 # Pundit
 
+## Unreleased
+
+Nothing.
+
+## 2.3.1 (2023-07-17)
+
+### Fixed
+
+- Use `Kernel.warn` instead of `ActiveSupport::Deprecation.warn` for deprecations (#764)
+- Policy generator now works on Ruby 3.2 (#754)
+
 ## 2.3.0 (2022-12-19)
 
 ### Added
