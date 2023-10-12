@@ -35,7 +35,7 @@ RSpec.describe "generators" do
       describe "#resolve" do
         it "raises a descriptive error" do
           scope = WidgetPolicy::Scope.new(double("User"), double("User.all"))
-          expect { scope.resolve }.to raise_error(NotImplementedError, /WidgetPolicy::Scope/)
+          expect { scope.resolve }.to raise_error(NoMethodError, /WidgetPolicy::Scope/)
         end
       end
     end
