@@ -25,12 +25,12 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allow-failure || false }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         ruby-version:
           - '3.0'
           - '3.1'
-          - 'jruby-9.3.10'
+          - 'jruby-9.3.10' # oldest supported jruby
           - 'jruby'
         include: # HEAD-versions
           - ruby-version: 'head'
