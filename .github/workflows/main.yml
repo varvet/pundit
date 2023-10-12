@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allow-failure || false }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         ruby-version:
           - '3.0'
