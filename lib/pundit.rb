@@ -99,13 +99,7 @@ module Pundit
       policy_scope_class = PolicyFinder.new(scope).scope
       return unless policy_scope_class
 
-      begin
-        policy_scope = policy_scope_class.new(user, pundit_model(scope))
-      rescue ArgumentError
-        raise InvalidConstructorError, "Invalid #<#{policy_scope_class}> constructor is called"
-      end
-
-      policy_scope.resolve
+      pundit_model_policy_scope(user, pundit_model(scope), policy_scope_class)
     end
 
     # Retrieves the policy scope for the given record.
@@ -118,15 +112,7 @@ module Pundit
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     def policy_scope!(user, scope)
       policy_scope_class = PolicyFinder.new(scope).scope!
-      return unless policy_scope_class
-
-      begin
-        policy_scope = policy_scope_class.new(user, pundit_model(scope))
-      rescue ArgumentError
-        raise InvalidConstructorError, "Invalid #<#{policy_scope_class}> constructor is called"
-      end
-
-      policy_scope.resolve
+      pundit_model_policy_scope(user, pundit_model(scope), policy_scope_class)
     end
 
     # Retrieves the policy for the given record.
@@ -138,9 +124,9 @@ module Pundit
     # @return [Object, nil] instance of policy class with query methods
     def policy(user, record)
       policy = PolicyFinder.new(record).policy
-      policy&.new(user, pundit_model(record))
-    rescue ArgumentError
-      raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
+      return unless policy
+
+      pundit_model_policy(user, pundit_model(record), policy)
     end
 
     # Retrieves the policy for the given record.
@@ -153,15 +139,29 @@ module Pundit
     # @return [Object] instance of policy class with query methods
     def policy!(user, record)
       policy = PolicyFinder.new(record).policy!
-      policy.new(user, pundit_model(record))
-    rescue ArgumentError
-      raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
+      pundit_model_policy(user, pundit_model(record), policy)
     end
 
     private
 
     def pundit_model(record)
       record.is_a?(Array) ? record.last : record
+    end
+
+    def pundit_model_policy_scope(user, scope, policy_scope_class)
+      begin
+        policy_scope = policy_scope_class.new(user, scope)
+      rescue ArgumentError
+        raise InvalidConstructorError, "Invalid #<#{policy_scope_class}> constructor is called"
+      end
+
+      policy_scope.resolve
+    end
+
+    def pundit_model_policy(user, record, policy)
+      policy.new(user, record)
+    rescue ArgumentError
+      raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
     end
   end
 
