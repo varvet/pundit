@@ -362,8 +362,15 @@ authorize individual instances.
 ``` ruby
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
-  after_action :verify_authorized, except: :index
-  after_action :verify_policy_scoped, only: :index
+  after_action :verify_pundit_authorization
+
+  def verify_pundit_authorization
+    if action_name == "index"
+      verify_policy_scoped
+    else
+      verify_authorized
+    end
+  end
 end
 ```
 
