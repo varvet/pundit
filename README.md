@@ -279,7 +279,7 @@ generator, or create your own base class to inherit from:
 
 ``` ruby
 class PostPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
       if user.admin?
         scope.all
@@ -476,7 +476,7 @@ example, associations which might be `nil`.
 
 ```ruby
 class NilClassPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
       raise Pundit::NotDefinedError, "Cannot scope NilClass"
     end
