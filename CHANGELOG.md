@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Update `ApplicationPolicy`` generator to qualify the `Scope` class name (#792)
+
 - Policy generator uses `NoMethodError` to indicate `#resolve` is not implemented (#776)
 
 ## 2.3.1 (2023-07-17)
