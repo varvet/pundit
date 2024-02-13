@@ -1,7 +1,7 @@
 # Pundit
 
 [![Main](https://github.com/varvet/pundit/actions/workflows/main.yml/badge.svg)](https://github.com/varvet/pundit/actions/workflows/main.yml)
-[![Code Climate](https://codeclimate.com/github/varvet/pundit.svg)](https://codeclimate.com/github/varvet/pundit)
+[![Code Climate](https://api.codeclimate.com/v1/badges/a940030f96c9fb43046a/maintainability)](https://codeclimate.com/github/varvet/pundit/maintainability)
 [![Inline docs](http://inch-ci.org/github/varvet/pundit.svg?branch=main)](http://inch-ci.org/github/varvet/pundit)
 [![Gem Version](https://badge.fury.io/rb/pundit.svg)](http://badge.fury.io/rb/pundit)
 
@@ -279,7 +279,7 @@ generator, or create your own base class to inherit from:
 
 ``` ruby
 class PostPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
       if user.admin?
         scope.all
@@ -476,7 +476,7 @@ example, associations which might be `nil`.
 
 ```ruby
 class NilClassPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
       raise Pundit::NotDefinedError, "Cannot scope NilClass"
     end
