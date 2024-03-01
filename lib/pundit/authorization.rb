@@ -64,7 +64,7 @@ module Pundit
 
       @_pundit_policy_authorized = true
 
-      Pundit.authorize(pundit_user, record, query, policy_class: policy_class, cache: policies)
+      Pundit.authorize(pundit_user, record, query, policy_class:, cache: policies)
     end
 
     # Allow this action not to perform authorization.

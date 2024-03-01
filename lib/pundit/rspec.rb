@@ -55,7 +55,7 @@ module Pundit
 
     module DSL
       def permissions(*list, &block)
-        describe(list.to_sentence, permissions: list, caller: caller) { instance_eval(&block) }
+        describe(list.to_sentence, permissions: list, caller:) { instance_eval(&block) }
       end
     end
 

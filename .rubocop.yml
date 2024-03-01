@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.1
   Exclude:
     - "lib/generators/**/templates/**/*"
     <% `git status --ignored --porcelain`.lines.grep(/^!! /).each do |path| %>
