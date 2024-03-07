@@ -116,8 +116,8 @@ module Pundit
 
     private
 
-    def policy_finder(...)
-      PolicyFinder.new(...)
+    def policy_finder(*args, **kwargs, &block)
+      PolicyFinder.new(*args, **kwargs, &block)
     end
 
     def pundit_model(record)
