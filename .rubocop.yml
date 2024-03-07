@@ -23,15 +23,6 @@ Metrics/ModuleLength:
 Layout/LineLength:
   Max: 120
 
-Metrics/AbcSize:
-  Enabled: false
-
-Metrics/CyclomaticComplexity:
-  Enabled: false
-
-Metrics/PerceivedComplexity:
-  Enabled: false
-
 Gemspec/RequiredRubyVersion:
  Enabled: false
 
@@ -60,12 +51,6 @@ Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 
 Style/StructInheritance:
-  Enabled: false
-
-Style/AndOr:
-  Enabled: false
-
-Style/Not:
   Enabled: false
 
 Style/DoubleNegation:
