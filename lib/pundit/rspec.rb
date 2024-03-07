@@ -5,6 +5,16 @@ module Pundit
     module Matchers
       extend ::RSpec::Matchers::DSL
 
+      def self.default_description=(default_description)
+        @default_description = default_description
+      end
+
+      def self.default_description
+        return @default_description if instance_variable_defined?(:@default_description)
+
+        nil
+      end
+
       # rubocop:disable Metrics/BlockLength
       matcher :permit do |user, record|
         match_proc = lambda do |policy|
@@ -31,6 +41,10 @@ module Pundit
           was_were = @violating_permissions.count > 1 ? "were" : "was"
           "Expected #{policy} not to grant #{permissions.to_sentence} on " \
           "#{record} but #{@violating_permissions.to_sentence} #{was_were} granted"
+        end
+
+        description do
+          Pundit::RSpec::Matchers.default_description || super()
         end
 
         if respond_to?(:match_when_negated)
