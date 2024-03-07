@@ -15,7 +15,7 @@ module Pundit
 
     protected
 
-    # @return [Pundit::Core] a new instance of {Pundit::Core} with the current user
+    # @return [Pundit::Context] a new instance of {Pundit::Context} with the current user
     def pundit
       @pundit ||= Pundit::Context.new(
         user: pundit_user,
