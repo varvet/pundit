@@ -73,3 +73,6 @@ Style/DoubleNegation:
 
 Style/Documentation:
   Enabled: false # TODO: Enable again once we have more docs
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
