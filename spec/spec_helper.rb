@@ -185,12 +185,26 @@ module Project
 
   module Admin
     class CommentPolicy < Struct.new(:user, :comment)
+      def self.policy_class
+        CommentPolicy
+      end
+
       def update?
         true
       end
 
       def destroy?
         false
+      end
+    end
+
+    class Post < Post
+      def model_name
+        OpenStruct.new(param_key: "admin_post")
+      end
+
+      def self.policy_class
+        PostPolicy
       end
     end
   end
