@@ -8,6 +8,7 @@ require "active_support/core_ext/object/blank"
 require "active_support/core_ext/module/introspection"
 require "active_support/dependencies/autoload"
 require "pundit/authorization"
+require "pundit/railtie" if defined?(Rails)
 
 # @api private
 # To avoid name clashes with common Error naming when mixing in Pundit,

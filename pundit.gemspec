@@ -25,6 +25,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "actionpack", ">= 3.0.0"
   gem.add_development_dependency "activemodel", ">= 3.0.0"
   gem.add_development_dependency "bundler"
+  gem.add_development_dependency "generator_spec"
   gem.add_development_dependency "pry"
   gem.add_development_dependency "railties", ">= 3.0.0"
   gem.add_development_dependency "rake"
