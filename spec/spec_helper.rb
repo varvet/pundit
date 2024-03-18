@@ -17,6 +17,7 @@ require "active_support"
 require "active_support/core_ext"
 require "active_model/naming"
 require "action_controller/metal/strong_parameters"
+require "generator_spec"
 
 class PostPolicy < Struct.new(:user, :post)
   class Scope < Struct.new(:user, :scope)

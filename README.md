@@ -434,6 +434,21 @@ Use the supplied generator to generate policies:
 ``` sh
 rails g pundit:policy post
 ```
+The scaffold command:
+```sh
+rails g scaffold Post
+```
+will also generate a policy and a scaffolded controller with Pundit's authorization method calls for actions.
+```sh
+...
+      invoke  scaffold_controller
+      create    app/controllers/posts_controller.rb
+...
+      invoke  policy
+      create    app/policies/post_policy.rb
+      invoke    rspec
+      create      spec/policies/post_policy_spec.rb
+```
 
 ## Closed systems
 
