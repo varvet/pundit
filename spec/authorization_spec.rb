@@ -12,6 +12,15 @@ describe Pundit::Authorization do
   let(:article_tag) { ArticleTag.new }
   let(:wiki) { Wiki.new }
 
+  describe "keeping context" do
+    context "policy_class" do
+      it "is kept between authorize and policy calls" do
+        expect(controller.authorize(post, :create?, policy_class: PublicationPolicy)).to be_truthy
+        expect(controller.policy(post).class).to be PublicationPolicy
+      end
+    end
+  end
+
   describe "#verify_authorized" do
     it "does nothing when authorized" do
       controller.authorize(post)
