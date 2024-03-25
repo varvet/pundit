@@ -55,7 +55,7 @@ module Pundit
       policy_scope.resolve
     end
 
-    # Retrieves the policy scope for the given record.
+    # Retrieves the policy scope for the given record. Raises if not found.
     #
     # @see https://github.com/varvet/pundit#scopes
     # @param user [Object] the user that initiated the action
@@ -90,7 +90,7 @@ module Pundit
       raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
     end
 
-    # Retrieves the policy for the given record.
+    # Retrieves the policy for the given record. Raises if not found.
     #
     # @see https://github.com/varvet/pundit#policies
     # @param user [Object] the user that initiated the action
