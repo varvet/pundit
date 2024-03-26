@@ -34,7 +34,7 @@ module Pundit
     def authorize(possibly_namespaced_record, query:, policy_class:)
       record = pundit_model(possibly_namespaced_record)
       policy = if policy_class
-        policy_class.new(user, record)
+        policy_cache[possibly_namespaced_record] ||= policy_class.new(user, record)
       else
         policy_cache[possibly_namespaced_record] ||= policy!(possibly_namespaced_record)
       end
@@ -93,7 +93,7 @@ module Pundit
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Object, nil] instance of policy class with query methods
     def policy(record)
-      policy = policy_finder(record).policy
+      policy = policy_cache[record] || policy_finder(record).policy
       policy&.new(user, pundit_model(record))
     rescue ArgumentError
       raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
@@ -108,7 +108,7 @@ module Pundit
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Object] instance of policy class with query methods
     def policy!(record)
-      policy = policy_finder(record).policy!
+      policy = policy_cache[record] || policy_finder(record).policy!
       policy.new(user, pundit_model(record))
     rescue ArgumentError
       raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
