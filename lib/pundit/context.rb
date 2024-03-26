@@ -27,9 +27,7 @@ module Pundit
       policy = if policy_class
         policy_class.new(user, record)
       else
-        policy_cache.fetch(possibly_namespaced_record) do
-          policy!(possibly_namespaced_record)
-        end
+        policy!(possibly_namespaced_record)
       end
 
       raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
@@ -86,10 +84,7 @@ module Pundit
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Object, nil] instance of policy class with query methods
     def policy(record)
-      policy = policy_finder(record).policy
-      policy&.new(user, pundit_model(record))
-    rescue ArgumentError
-      raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
+      cached_policy(record, &:policy)
     end
 
     # Retrieves the policy for the given record. Raises if not found.
@@ -101,13 +96,23 @@ module Pundit
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Object] instance of policy class with query methods
     def policy!(record)
-      policy = policy_finder(record).policy!
-      policy.new(user, pundit_model(record))
-    rescue ArgumentError
-      raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
+      cached_policy(record, &:policy!)
     end
 
     private
+
+    def cached_policy(record)
+      policy_cache.fetch(record) do
+        policy = yield policy_finder(record)
+        next unless policy
+
+        begin
+          policy.new(user, pundit_model(record))
+        rescue ArgumentError
+          raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
+        end
+      end
+    end
 
     def policy_finder(record)
       PolicyFinder.new(record)

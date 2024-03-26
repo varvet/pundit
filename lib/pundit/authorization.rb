@@ -106,9 +106,9 @@ module Pundit
     #
     # @see https://github.com/varvet/pundit#policies
     # @param record [Object] the object we're retrieving the policy for
-    # @return [Object, nil] instance of policy class with query methods
+    # @return [Object] instance of policy class with query methods
     def policy(record)
-      policies[record] ||= pundit.policy!(record)
+      pundit.policy!(record)
     end
 
     # Retrieves a set of permitted attributes from the policy by instantiating
