@@ -9,6 +9,8 @@ require "active_support/core_ext/module/introspection"
 require "active_support/dependencies/autoload"
 require "pundit/authorization"
 require "pundit/context"
+require "pundit/cache_store/null_store"
+require "pundit/cache_store/hash_store"
 
 # @api private
 # To avoid name clashes with common Error naming when mixing in Pundit,
@@ -66,8 +68,14 @@ module Pundit
 
   class << self
     # @see [Pundit::Context#authorize]
-    def authorize(user, record, query, policy_class: nil, cache: {})
-      Context.new(user: user, policy_cache: cache).authorize(record, query: query, policy_class: policy_class)
+    def authorize(user, record, query, policy_class: nil, cache: nil)
+      context = if cache
+        Context.new(user: user, policy_cache: cache)
+      else
+        Context.new(user: user)
+      end
+
+      context.authorize(record, query: query, policy_class: policy_class)
     end
 
     # @see [Pundit::Context#policy_scope]
