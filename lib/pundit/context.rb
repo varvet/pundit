@@ -2,7 +2,7 @@
 
 module Pundit
   class Context
-    def initialize(user:, policy_cache: {})
+    def initialize(user:, policy_cache: CacheStore::NullStore.instance)
       @user = user
       @policy_cache = policy_cache
     end
@@ -27,7 +27,9 @@ module Pundit
       policy = if policy_class
         policy_class.new(user, record)
       else
-        policy_cache[possibly_namespaced_record] ||= policy!(possibly_namespaced_record)
+        policy_cache.fetch(possibly_namespaced_record) do
+          policy!(possibly_namespaced_record)
+        end
       end
 
       raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
