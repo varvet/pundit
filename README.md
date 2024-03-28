@@ -9,16 +9,14 @@ Pundit provides a set of helpers which guide you in leveraging regular Ruby
 classes and object oriented design patterns to build a straightforward, robust, and
 scalable authorization system.
 
-Links:
+## Links:
 
 - [API documentation for the most recent version](http://www.rubydoc.info/gems/pundit)
 - [Source Code](https://github.com/varvet/pundit)
 - [Contributing](https://github.com/varvet/pundit/blob/main/CONTRIBUTING.md)
 - [Code of Conduct](https://github.com/varvet/pundit/blob/main/CODE_OF_CONDUCT.md)
 
-Sponsored by:
-
-[<img src="https://www.varvet.com/images/wordmark-red.svg" alt="Varvet" height="50px"/>](https://www.varvet.com)
+<strong>Sponsored by:</strong> <a href="https://www.varvet.com">Varvet<br><br><img src="https://github.com/varvet/pundit/assets/99166/aa9efa0a-6903-4037-abee-1824edc57f1a" alt="Varvet logo" height="120"></div>
 
 ## Installation
 
