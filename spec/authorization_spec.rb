@@ -3,10 +3,13 @@
 require "spec_helper"
 
 describe Pundit::Authorization do
-  let(:controller) { Controller.new(user, "update", {}) }
+  def to_params(*args, **kwargs, &block)
+    ActionController::Parameters.new(*args, **kwargs, &block)
+  end
+
+  let(:controller) { Controller.new(user, "update", to_params({})) }
   let(:user) { double }
   let(:post) { Post.new(user) }
-  let(:customer_post) { Customer::Post.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
   let(:article_tag) { ArticleTag.new }
@@ -188,7 +191,7 @@ describe Pundit::Authorization do
 
   describe "#permitted_attributes" do
     it "checks policy for permitted attributes" do
-      params = ActionController::Parameters.new(
+      params = to_params(
         post: {
           title: "Hello",
           votes: 5,
@@ -206,7 +209,8 @@ describe Pundit::Authorization do
     end
 
     it "checks policy for permitted attributes for record of a ActiveModel type" do
-      params = ActionController::Parameters.new(
+      customer_post = Customer::Post.new(user)
+      params = to_params(
         customer_post: {
           title: "Hello",
           votes: 5,
@@ -224,11 +228,23 @@ describe Pundit::Authorization do
         "votes" => 5
       )
     end
+
+    it "goes through the policy cache" do
+      params = to_params(post: { title: "Hello" })
+      user = double
+      post = Post.new(user)
+      controller = Controller.new(user, "update", params)
+
+      expect do
+        expect(controller.permitted_attributes(post)).to be_truthy
+        expect(controller.permitted_attributes(post)).to be_truthy
+      end.to change { PostPolicy.instances }.by(1)
+    end
   end
 
   describe "#permitted_attributes_for_action" do
     it "is checked if it is defined in the policy" do
-      params = ActionController::Parameters.new(
+      params = to_params(
         post: {
           title: "Hello",
           body: "blah",
@@ -242,7 +258,7 @@ describe Pundit::Authorization do
     end
 
     it "can be explicitly set" do
-      params = ActionController::Parameters.new(
+      params = to_params(
         post: {
           title: "Hello",
           body: "blah",
