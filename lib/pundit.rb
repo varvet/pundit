@@ -10,7 +10,7 @@ require "active_support/dependencies/autoload"
 require "pundit/authorization"
 require "pundit/context"
 require "pundit/cache_store/null_store"
-require "pundit/cache_store/hash_store"
+require "pundit/cache_store/legacy_store"
 
 # @api private
 # To avoid name clashes with common Error naming when mixing in Pundit,

@@ -84,7 +84,7 @@ module Pundit
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Object, nil] instance of policy class with query methods
     def policy(record)
-      cached_policy(record, &:policy)
+      cached_find(record, &:policy)
     end
 
     # Retrieves the policy for the given record. Raises if not found.
@@ -96,20 +96,22 @@ module Pundit
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Object] instance of policy class with query methods
     def policy!(record)
-      cached_policy(record, &:policy!)
+      cached_find(record, &:policy!)
     end
 
     private
 
-    def cached_policy(record)
-      policy_cache.fetch(record) do
-        policy = yield policy_finder(record)
-        next unless policy
+    def cached_find(record)
+      policy_cache.fetch(user: user, record: record) do
+        klass = yield policy_finder(record)
+        next unless klass
+
+        model = pundit_model(record)
 
         begin
-          policy.new(user, pundit_model(record))
+          klass.new(user, model)
         rescue ArgumentError
-          raise InvalidConstructorError, "Invalid #<#{policy}> constructor is called"
+          raise InvalidConstructorError, "Invalid #<#{klass}> constructor is called"
         end
       end
     end

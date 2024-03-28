@@ -19,7 +19,7 @@ module Pundit
     def pundit
       @pundit ||= Pundit::Context.new(
         user: pundit_user,
-        policy_cache: Pundit::CacheStore::HashStore.new(policies)
+        policy_cache: Pundit::CacheStore::LegacyStore.new(policies)
       )
     end
 

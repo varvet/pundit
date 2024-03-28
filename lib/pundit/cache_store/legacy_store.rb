@@ -3,13 +3,14 @@
 module Pundit
   module CacheStore
     # @api private
-    class HashStore
+    class LegacyStore
       def initialize(hash = {})
         @store = hash
       end
 
-      def fetch(key)
-        @store[key] ||= yield
+      def fetch(user:, record:)
+        _ = user
+        @store[record] ||= yield
       end
     end
   end
