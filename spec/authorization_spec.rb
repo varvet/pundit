@@ -8,6 +8,7 @@ describe Pundit::Authorization do
   let(:post) { Post.new(user) }
   let(:customer_post) { Customer::Post.new(user) }
   let(:comment) { Comment.new }
+  let(:admin_comment) { Project::Admin::CommentPolicy.new(user, comment) }
   let(:article) { Article.new }
   let(:article_tag) { ArticleTag.new }
   let(:wiki) { Wiki.new }
@@ -116,6 +117,14 @@ describe Pundit::Authorization do
     it "raises an error with a invalid policy constructor" do
       expect { controller.authorize(wiki, :destroy?) }.to raise_error(Pundit::InvalidConstructorError)
     end
+
+    context "when called in a controller" do
+      it "uses the Admin namespace for policy calls" do
+        policy = Project::Admin::CommentPolicy.new(user, comment)
+
+        expect(controller.authorize(admin_comment, :update?)).to eq(policy)
+      end
+    end
   end
 
   describe "#skip_authorization" do
@@ -158,6 +167,38 @@ describe Pundit::Authorization do
       controller.policies[post] = new_policy
 
       expect(controller.policy(post)).to eq new_policy
+    end
+
+    it "uses the Admin namespace for policy calls" do
+      policy = Project::Admin::CommentPolicy.new(user, comment)
+
+      expect(policy.update?).to eq(true)
+    end
+
+    context "when the policy is overriden" do
+      it "returns the correct overriden policy for a Post record" do
+        post = Post.new(user)
+
+        policy = controller.policy(post)
+        expect(policy).to be_instance_of(PostPolicy)
+        expect(policy.user).to eq(user)
+        expect(policy.post).to eq(post)
+      end
+
+      it "returns the correct overriden policy for a Blog record" do
+        blog = Blog.new
+
+        policy = controller.policy(blog)
+        expect(policy).to be_instance_of(BlogPolicy)
+        expect(policy.user).to eq(user)
+        expect(policy.blog).to eq(blog)
+      end
+
+      it "raises an error if the given policy can't be found" do
+        record = Article.new
+
+        expect { controller.policy(record) }.to raise_error(Pundit::NotDefinedError)
+      end
     end
   end
 

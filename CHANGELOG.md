@@ -1,5 +1,9 @@
 # Pundit
 
+### Added
+
+- Adds tests to cover policy overrides and when authorize is called in other namespaces (#772)
+
 ## Unreleased
 
 - Dropped support for Ruby 3.0 (#796)
