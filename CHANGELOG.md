@@ -2,10 +2,18 @@
 
 ## Unreleased
 
-- Dropped support for Ruby 3.0 (#796)
+## 2.3.2 (2024-05-08)
+
+- Refactor: First pass of Pundit::Context (#797)
+
+## Changed
 
 - Update `ApplicationPolicy` generator to qualify the `Scope` class name (#792)
 - Policy generator uses `NoMethodError` to indicate `#resolve` is not implemented (#776)
+
+## Deprecated
+
+- Dropped support for Ruby 3.0 (#796)
 
 ## 2.3.1 (2023-07-17)
 
