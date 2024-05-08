@@ -5,14 +5,14 @@ module Pundit
     module Matchers
       extend ::RSpec::Matchers::DSL
 
-      def self.default_description=(default_description)
-        @default_description = default_description
-      end
+      class << self
+        attr_writer :description
 
-      def self.default_description
-        return @default_description if instance_variable_defined?(:@default_description)
+        def description(user, record)
+          return @description.call(user, record) if defined?(@description) && @description.respond_to?(:call)
 
-        nil
+          @description
+        end
       end
 
       # rubocop:disable Metrics/BlockLength
@@ -44,7 +44,7 @@ module Pundit
         end
 
         description do
-          Pundit::RSpec::Matchers.default_description || super()
+          Pundit::RSpec::Matchers.description(user, record) || super()
         end
 
         if respond_to?(:match_when_negated)
