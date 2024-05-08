@@ -15,6 +15,14 @@ module Pundit
 
     protected
 
+    # @return [Pundit::Context] a new instance of {Pundit::Context} with the current user
+    def pundit
+      @pundit ||= Pundit::Context.new(
+        user: pundit_user,
+        policy_cache: Pundit::CacheStore::LegacyStore.new(policies)
+      )
+    end
+
     # @return [Boolean] whether authorization has been performed, i.e. whether
     #                   one {#authorize} or {#skip_authorization} has been called
     def pundit_policy_authorized?
@@ -64,7 +72,7 @@ module Pundit
 
       @_pundit_policy_authorized = true
 
-      Pundit.authorize(pundit_user, record, query, policy_class: policy_class, cache: policies)
+      pundit.authorize(record, query: query, policy_class: policy_class)
     end
 
     # Allow this action not to perform authorization.
@@ -98,9 +106,9 @@ module Pundit
     #
     # @see https://github.com/varvet/pundit#policies
     # @param record [Object] the object we're retrieving the policy for
-    # @return [Object, nil] instance of policy class with query methods
+    # @return [Object] instance of policy class with query methods
     def policy(record)
-      policies[record] ||= Pundit.policy!(pundit_user, record)
+      pundit.policy!(record)
     end
 
     # Retrieves a set of permitted attributes from the policy by instantiating
@@ -162,7 +170,7 @@ module Pundit
     private
 
     def pundit_policy_scope(scope)
-      policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
+      policy_scopes[scope] ||= pundit.policy_scope!(scope)
     end
   end
 end

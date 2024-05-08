@@ -18,12 +18,55 @@ require "active_support/core_ext"
 require "active_model/naming"
 require "action_controller/metal/strong_parameters"
 
-class PostPolicy < Struct.new(:user, :post)
-  class Scope < Struct.new(:user, :scope)
+module InstanceTracking
+  module ClassMethods
+    def instances
+      @instances || 0
+    end
+
+    attr_writer :instances
+  end
+
+  def self.prepended(other)
+    other.extend(ClassMethods)
+  end
+
+  def initialize(*args, **kwargs, &block)
+    self.class.instances += 1
+    super(*args, **kwargs, &block)
+  end
+end
+
+class BasePolicy
+  prepend InstanceTracking
+
+  class BaseScope
+    prepend InstanceTracking
+
+    def initialize(user, scope)
+      @user = user
+      @scope = scope
+    end
+
+    attr_reader :user, :scope
+  end
+
+  def initialize(user, record)
+    @user = user
+    @record = record
+  end
+
+  attr_reader :user, :record
+end
+
+class PostPolicy < BasePolicy
+  class Scope < BaseScope
     def resolve
       scope.published
     end
   end
+
+  alias post record
 
   def update?
     post.user == user
@@ -50,7 +93,13 @@ class PostPolicy < Struct.new(:user, :post)
   end
 end
 
-class Post < Struct.new(:user)
+class Post
+  def initialize(user = nil)
+    @user = user
+  end
+
+  attr_reader :user
+
   def self.published
     :published
   end
@@ -69,7 +118,7 @@ class Post < Struct.new(:user)
 end
 
 module Customer
-  class Post < Post
+  class Post < ::Post
     def model_name
       OpenStruct.new(param_key: "customer_post")
     end
@@ -92,16 +141,18 @@ class CommentScope
   end
 end
 
-class CommentPolicy < Struct.new(:user, :comment)
-  class Scope < Struct.new(:user, :scope)
+class CommentPolicy < BasePolicy
+  class Scope < BaseScope
     def resolve
       CommentScope.new(scope)
     end
   end
+
+  alias comment record
 end
 
-class PublicationPolicy < Struct.new(:user, :publication)
-  class Scope < Struct.new(:user, :scope)
+class PublicationPolicy < BasePolicy
+  class Scope < BaseScope
     def resolve
       scope.published
     end
@@ -132,7 +183,9 @@ end
 
 class Article; end
 
-class BlogPolicy < Struct.new(:user, :blog); end
+class BlogPolicy < BasePolicy
+  alias blog record
+end
 
 class Blog; end
 
@@ -142,7 +195,7 @@ class ArtificialBlog < Blog
   end
 end
 
-class ArticleTagOtherNamePolicy < Struct.new(:user, :tag)
+class ArticleTagOtherNamePolicy < BasePolicy
   def show?
     true
   end
@@ -150,6 +203,8 @@ class ArticleTagOtherNamePolicy < Struct.new(:user, :tag)
   def destroy?
     false
   end
+
+  alias tag record
 end
 
 class ArticleTag
@@ -158,33 +213,41 @@ class ArticleTag
   end
 end
 
-class CriteriaPolicy < Struct.new(:user, :criteria); end
+class CriteriaPolicy < BasePolicy
+  alias criteria record
+end
 
 module Project
-  class CommentPolicy < Struct.new(:user, :comment)
-    def update?
-      true
-    end
-
-    class Scope < Struct.new(:user, :scope)
+  class CommentPolicy < BasePolicy
+    class Scope < BaseScope
       def resolve
         scope
       end
     end
+
+    def update?
+      true
+    end
+
+    alias comment record
   end
 
-  class CriteriaPolicy < Struct.new(:user, :criteria); end
+  class CriteriaPolicy < BasePolicy
+    alias criteria record
+  end
 
-  class PostPolicy < Struct.new(:user, :post)
-    class Scope < Struct.new(:user, :scope)
+  class PostPolicy < BasePolicy
+    class Scope < BaseScope
       def resolve
         scope.read
       end
     end
+
+    alias post record
   end
 
   module Admin
-    class CommentPolicy < Struct.new(:user, :comment)
+    class CommentPolicy < BasePolicy
       def update?
         true
       end
@@ -196,7 +259,7 @@ module Project
   end
 end
 
-class DenierPolicy < Struct.new(:user, :record)
+class DenierPolicy < BasePolicy
   def update?
     false
   end
@@ -218,7 +281,7 @@ class Controller
   end
 end
 
-class NilClassPolicy < Struct.new(:user, :record)
+class NilClassPolicy < BasePolicy
   class Scope
     def initialize(*)
       raise Pundit::NotDefinedError, "Cannot scope NilClass"
@@ -247,8 +310,8 @@ class Thread
   def self.all; end
 end
 
-class ThreadPolicy < Struct.new(:user, :thread)
-  class Scope < Struct.new(:user, :scope)
+class ThreadPolicy < BasePolicy
+  class Scope < BaseScope
     def resolve
       # deliberate wrong useage of the method
       scope.all(:unvalid, :parameters)
@@ -256,22 +319,34 @@ class ThreadPolicy < Struct.new(:user, :thread)
   end
 end
 
-class PostFourFiveSix < Struct.new(:user); end
+class PostFourFiveSix
+  def initialize(user)
+    @user = user
+  end
+
+  attr_reader(:user)
+end
 
 class CommentFourFiveSix; extend ActiveModel::Naming; end
 
 module ProjectOneTwoThree
-  class CommentFourFiveSixPolicy < Struct.new(:user, :post); end
+  class CommentFourFiveSixPolicy < BasePolicy; end
 
-  class CriteriaFourFiveSixPolicy < Struct.new(:user, :criteria); end
+  class CriteriaFourFiveSixPolicy < BasePolicy; end
 
-  class PostFourFiveSixPolicy < Struct.new(:user, :post); end
+  class PostFourFiveSixPolicy < BasePolicy; end
 
-  class TagFourFiveSix < Struct.new(:user); end
+  class TagFourFiveSix
+    def initialize(user)
+      @user = user
+    end
 
-  class TagFourFiveSixPolicy < Struct.new(:user, :tag); end
+    attr_reader(:user)
+  end
+
+  class TagFourFiveSixPolicy < BasePolicy; end
 
   class AvatarFourFiveSix; extend ActiveModel::Naming; end
 
-  class AvatarFourFiveSixPolicy < Struct.new(:user, :avatar); end
+  class AvatarFourFiveSixPolicy < BasePolicy; end
 end

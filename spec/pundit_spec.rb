@@ -64,7 +64,11 @@ RSpec.describe Pundit do
       end.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this Post") do |error|
         expect(error.query).to eq :destroy?
         expect(error.record).to eq post
-        expect(error.policy).to eq Pundit.policy(user, post)
+        expect(error.policy).to have_attributes(
+          user: user,
+          record: post
+        )
+        expect(error.policy).to be_a(PostPolicy)
       end
       # rubocop:enable Style/MultilineBlockChain
     end
@@ -76,7 +80,11 @@ RSpec.describe Pundit do
       end.to raise_error(Pundit::NotAuthorizedError, "not allowed to destroy? this Comment") do |error|
         expect(error.query).to eq :destroy?
         expect(error.record).to eq comment
-        expect(error.policy).to eq Pundit.policy(user, [:project, :admin, comment])
+        expect(error.policy).to have_attributes(
+          user: user,
+          record: comment
+        )
+        expect(error.policy).to be_a(Project::Admin::CommentPolicy)
       end
       # rubocop:enable Style/MultilineBlockChain
     end
