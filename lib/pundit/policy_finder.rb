@@ -56,7 +56,7 @@ module Pundit
 
     # @return [String] the name of the key this object would have in a params hash
     #
-    def param_key
+    def param_key # rubocop:disable Metrics/AbcSize
       model = object.is_a?(Array) ? object.last : object
 
       if model.respond_to?(:model_name)

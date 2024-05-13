@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.1
   Exclude:
     - "lib/generators/**/templates/**/*"
     <% `git status --ignored --porcelain`.lines.grep(/^!! /).each do |path| %>
@@ -22,15 +22,6 @@ Metrics/ModuleLength:
 
 Layout/LineLength:
   Max: 120
-
-Metrics/AbcSize:
-  Enabled: false
-
-Metrics/CyclomaticComplexity:
-  Enabled: false
-
-Metrics/PerceivedComplexity:
-  Enabled: false
 
 Gemspec/RequiredRubyVersion:
  Enabled: false
@@ -62,14 +53,11 @@ Style/StringLiteralsInInterpolation:
 Style/StructInheritance:
   Enabled: false
 
-Style/AndOr:
-  Enabled: false
-
-Style/Not:
-  Enabled: false
-
 Style/DoubleNegation:
   Enabled: false
 
 Style/Documentation:
   Enabled: false # TODO: Enable again once we have more docs
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never

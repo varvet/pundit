@@ -1,7 +1,7 @@
 # Pundit
 
 [![Main](https://github.com/varvet/pundit/actions/workflows/main.yml/badge.svg)](https://github.com/varvet/pundit/actions/workflows/main.yml)
-[![Code Climate](https://codeclimate.com/github/varvet/pundit.svg)](https://codeclimate.com/github/varvet/pundit)
+[![Code Climate](https://api.codeclimate.com/v1/badges/a940030f96c9fb43046a/maintainability)](https://codeclimate.com/github/varvet/pundit/maintainability)
 [![Inline docs](http://inch-ci.org/github/varvet/pundit.svg?branch=main)](http://inch-ci.org/github/varvet/pundit)
 [![Gem Version](https://badge.fury.io/rb/pundit.svg)](http://badge.fury.io/rb/pundit)
 
@@ -9,16 +9,14 @@ Pundit provides a set of helpers which guide you in leveraging regular Ruby
 classes and object oriented design patterns to build a straightforward, robust, and
 scalable authorization system.
 
-Links:
+## Links:
 
 - [API documentation for the most recent version](http://www.rubydoc.info/gems/pundit)
 - [Source Code](https://github.com/varvet/pundit)
 - [Contributing](https://github.com/varvet/pundit/blob/main/CONTRIBUTING.md)
 - [Code of Conduct](https://github.com/varvet/pundit/blob/main/CODE_OF_CONDUCT.md)
 
-Sponsored by:
-
-[<img src="https://www.varvet.com/images/wordmark-red.svg" alt="Varvet" height="50px"/>](https://www.varvet.com)
+<strong>Sponsored by:</strong> <a href="https://www.varvet.com">Varvet<br><br><img src="https://github.com/varvet/pundit/assets/99166/aa9efa0a-6903-4037-abee-1824edc57f1a" alt="Varvet logo" height="120"></div>
 
 ## Installation
 
@@ -279,7 +277,7 @@ generator, or create your own base class to inherit from:
 
 ``` ruby
 class PostPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
       if user.admin?
         scope.all
@@ -483,7 +481,7 @@ example, associations which might be `nil`.
 
 ```ruby
 class NilClassPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
       raise Pundit::NotDefinedError, "Cannot scope NilClass"
     end
@@ -791,6 +789,37 @@ describe PostPolicy do
   end
 end
 ```
+
+You can customize the description used for the `permit` matcher:
+
+``` ruby
+Pundit::RSpec::Matchers.description =
+  "permit the user"
+```
+
+given the spec
+
+```ruby
+permissions :update?, :show? do
+  it { expect(policy).to permit(user, record) }
+end
+```
+
+will change the output from
+
+```
+update? and show?
+  is expected to permit #<User id: 105> and #<User id: 106>
+```
+
+to
+
+```
+update? and show?
+  is expected to permit the user
+```
+
+which may be desirable when distributing policy specs as documentation.
 
 An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
 [excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/) and implemented in the third party [pundit-matchers](https://github.com/punditcommunity/pundit-matchers) gem.
