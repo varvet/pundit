@@ -116,7 +116,7 @@ and the given record. It then infers from the action name, that it should call
 
 ``` ruby
 unless PostPolicy.new(current_user, @post).update?
-  raise Pundit::NotAuthorizedError, "not allowed to update? this #{@post.inspect}"
+  raise Pundit::NotAuthorizedError, "not allowed to PostPolicy#update? this Post"
 end
 ```
 
