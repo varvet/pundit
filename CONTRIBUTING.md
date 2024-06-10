@@ -28,3 +28,4 @@ Pundit version, OS version and any stack traces you have are very valuable.
 - **Send coherent history**. Make sure each individual commit in your pull
   request is meaningful. If you had to make multiple intermediate commits while
   developing, please squash them before sending them to us.
+- **Update the CHANGELOG.** Don't forget to add your new changes to the CHANGELOG.
