@@ -90,6 +90,22 @@ RSpec.describe Pundit do
       # rubocop:enable Style/MultilineBlockChain
     end
 
+    it "raises an error with the policy, query and the class name when a Class is given" do
+      # rubocop:disable Style/MultilineBlockChain
+      expect do
+        Pundit.authorize(user, Post, :destroy?)
+      end.to raise_error(Pundit::NotAuthorizedError, "not allowed to PostPolicy#destroy? Post") do |error|
+        expect(error.query).to eq :destroy?
+        expect(error.record).to eq Post
+        expect(error.policy).to have_attributes(
+          user: user,
+          record: Post
+        )
+        expect(error.policy).to be_a(PostPolicy)
+      end
+      # rubocop:enable Style/MultilineBlockChain
+    end
+
     it "raises an error with a invalid policy constructor" do
       expect do
         Pundit.authorize(user, wiki, :update?)
