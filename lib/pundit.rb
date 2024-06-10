@@ -36,11 +36,7 @@ module Pundit
         @record = options[:record]
         @policy = options[:policy]
 
-        record_name = if record.is_a?(Class)
-          record.name
-        else
-          "this #{record.class}"
-        end
+        record_name = if record.is_a?(Class) then record.name else "this #{record.class}" end
 
         message = options.fetch(:message) { "not allowed to #{policy.class}##{query} #{record_name}" }
       end

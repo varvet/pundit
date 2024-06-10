@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 
+
 ## 2.3.2 (2024-05-08)
 
 - Refactor: First pass of Pundit::Context (#797)
