@@ -48,7 +48,12 @@ jobs:
       with:
         rubygems: latest
         ruby-version: ${{ matrix.ruby-version }}
-        bundler-cache: true
+        bundler-cache: ${{ !startsWith(matrix.ruby-version, 'jruby') }}
+    - name: Bundler install (JRuby workaround)
+      if: ${{ startsWith(matrix.ruby-version, 'jruby') }}
+      run: |
+        gem install psych
+        bundle install
     - name: Run tests
       run: bundle exec rspec
 
