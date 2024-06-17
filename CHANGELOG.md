@@ -2,8 +2,8 @@
 
 ## Unreleased
 
-- Improve the `NotAuthorizedError` message to include the policy class. (#812)
-Furthermore, in the case where the record passed is a class instead of an instance, the class name is given.
+- Improve the `NotAuthorizedError` message to include the policy class.
+Furthermore, in the case where the record passed is a class instead of an instance, the class name is given. (#812)
 
 ## 2.3.2 (2024-05-08)
 
