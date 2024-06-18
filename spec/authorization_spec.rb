@@ -169,7 +169,7 @@ describe Pundit::Authorization do
       expect(controller.policy_scope(Post)).to eq :published
     end
 
-    it "allows policy scope class to be overriden" do
+    it "allows policy scope class to be overridden" do
       expect(controller.policy_scope(Post, policy_scope_class: PublicationPolicy::Scope)).to eq :published
     end
 
