@@ -189,6 +189,22 @@ describe Pundit::Authorization do
     end
   end
 
+  describe "#permitted_attribute_names" do
+    it "checks policy" do
+      action = "update"
+      expect(Controller.new(user, action, {}).permitted_attribute_names(post)).to eq(
+        %i[title votes]
+      )
+    end
+  end
+
+  describe "#permitted_attribute_names_for_action" do
+    it "is checked if it is defined in the policy" do
+      action = "revise"
+      expect(Controller.new(user, action, {}).permitted_attribute_names(post)).to eq(%i[body])
+    end
+  end
+
   describe "#permitted_attributes" do
     it "checks policy for permitted attributes" do
       params = to_params(
