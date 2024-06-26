@@ -52,7 +52,6 @@ jobs:
     - name: Bundler install (JRuby workaround)
       if: ${{ startsWith(matrix.ruby-version, 'jruby') }}
       run: |
-        gem install psych
         bundle install
     - name: Run tests
       run: bundle exec rspec
