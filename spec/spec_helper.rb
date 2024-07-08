@@ -313,7 +313,7 @@ end
 class ThreadPolicy < BasePolicy
   class Scope < BaseScope
     def resolve
-      # deliberate wrong useage of the method
+      # deliberate wrong usage of the method
       scope.all(:unvalid, :parameters)
     end
   end
