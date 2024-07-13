@@ -821,6 +821,14 @@ PostPolicy
     is expected to permit user with role admin to access record with ID 130
 ```
 
+### Focus Support
+
+If your RSpec config has `filter_run_when_matching :focus`, you may tag the `permissions` helper like so:
+
+```
+permissions :show?, :focus do
+```
+
 ### Scope Specs
 
 Pundit does not provide a DSL for testing scopes. Test them like you would a regular Ruby class!
