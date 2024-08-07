@@ -2,8 +2,8 @@
 
 [![Main](https://github.com/varvet/pundit/actions/workflows/main.yml/badge.svg)](https://github.com/varvet/pundit/actions/workflows/main.yml)
 [![Code Climate](https://api.codeclimate.com/v1/badges/a940030f96c9fb43046a/maintainability)](https://codeclimate.com/github/varvet/pundit/maintainability)
-[![Inline docs](http://inch-ci.org/github/varvet/pundit.svg?branch=main)](http://inch-ci.org/github/varvet/pundit)
-[![Gem Version](https://badge.fury.io/rb/pundit.svg)](http://badge.fury.io/rb/pundit)
+[![Inline docs](https://inch-ci.org/github/varvet/pundit.svg?branch=main)](https://inch-ci.org/github/varvet/pundit)
+[![Gem Version](https://badge.fury.io/rb/pundit.svg)](https://badge.fury.io/rb/pundit)
 
 Pundit provides a set of helpers which guide you in leveraging regular Ruby
 classes and object oriented design patterns to build a straightforward, robust, and
@@ -11,7 +11,7 @@ scalable authorization system.
 
 ## Links:
 
-- [API documentation for the most recent version](http://www.rubydoc.info/gems/pundit)
+- [API documentation for the most recent version](https://www.rubydoc.info/gems/pundit)
 - [Source Code](https://github.com/varvet/pundit)
 - [Contributing](https://github.com/varvet/pundit/blob/main/CONTRIBUTING.md)
 - [Code of Conduct](https://github.com/varvet/pundit/blob/main/CODE_OF_CONDUCT.md)
@@ -496,7 +496,7 @@ end
 ## Rescuing a denied Authorization in Rails
 
 Pundit raises a `Pundit::NotAuthorizedError` you can
-[rescue_from](http://guides.rubyonrails.org/action_controller_overview.html#rescue-from)
+[rescue_from](https://guides.rubyonrails.org/action_controller_overview.html#rescue-from)
 in your `ApplicationController`. You can customize the `user_not_authorized`
 method in every controller.
 
@@ -822,7 +822,7 @@ update? and show?
 which may be desirable when distributing policy specs as documentation.
 
 An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
-[excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/) and implemented in the third party [pundit-matchers](https://github.com/punditcommunity/pundit-matchers) gem.
+[excellent post](https://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/) and implemented in the third party [pundit-matchers](https://github.com/punditcommunity/pundit-matchers) gem.
 
 ### Scope Specs
 
@@ -841,15 +841,15 @@ inherit_gem:
 # External Resources
 
 - [RailsApps Example Application: Pundit and Devise](https://github.com/RailsApps/rails-devise-pundit)
-- [Migrating to Pundit from CanCan](http://blog.carbonfive.com/2013/10/21/migrating-to-pundit-from-cancan/)
-- [Testing Pundit Policies with RSpec](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/)
+- [Migrating to Pundit from CanCan](https://blog.carbonfive.com/2013/10/21/migrating-to-pundit-from-cancan/)
+- [Testing Pundit Policies with RSpec](https://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/)
 - [Testing Pundit with Minitest](https://github.com/varvet/pundit/issues/204#issuecomment-60166450)
 - [Using Pundit outside of a Rails controller](https://github.com/varvet/pundit/pull/136)
-- [Straightforward Rails Authorization with Pundit](http://www.sitepoint.com/straightforward-rails-authorization-with-pundit/)
+- [Straightforward Rails Authorization with Pundit](https://www.sitepoint.com/straightforward-rails-authorization-with-pundit/)
 
 ## Other implementations
 
-- [Flask-Pundit](https://github.com/anurag90x/flask-pundit) (Python) is a [Flask](http://flask.pocoo.org/) extension "heavily inspired by" Pundit
+- [Flask-Pundit](https://github.com/anurag90x/flask-pundit) (Python) is a [Flask](https://flask.pocoo.org/) extension "heavily inspired by" Pundit
 
 # License
 
