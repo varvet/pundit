@@ -761,6 +761,10 @@ end
 
 ### Policy Specs
 
+> [!TIP]
+> An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
+[excellent post](https://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/) and implemented in the third party [pundit-matchers](https://github.com/punditcommunity/pundit-matchers) gem.
+
 Pundit includes a mini-DSL for writing expressive tests for your policies in RSpec.
 Require `pundit/rspec` in your `spec_helper.rb`:
 
@@ -790,39 +794,32 @@ describe PostPolicy do
 end
 ```
 
-You can customize the description used for the `permit` matcher:
+### Custom matcher description
 
-``` ruby
-Pundit::RSpec::Matchers.description =
-  "permit the user"
+By default rspec includes an inspected `user` and `record` in the matcher description, which might become overly verbose:
+
+```
+PostPolicy
+  update? and show?
+    is expected to permit #<User:0x0000000104aefd80> and #<Post:0x0000000104aef8d0 @user=#<User:0x0000000104aefd80>>
 ```
 
-given the spec
+You can override the default description with a static string, or a block:
 
 ```ruby
-permissions :update?, :show? do
-  it { expect(policy).to permit(user, record) }
+# static alternative: Pundit::RSpec::Matchers.description = "permit the user"
+Pundit::RSpec::Matchers.description = ->(user, record) do
+  "permit user with role #{user.role} to access record with ID #{record.id}"
 end
 ```
 
-will change the output from
+Which would make for a less chatty output:
 
 ```
-update? and show?
-  is expected to permit #<User id: 105> and #<User id: 106>
+PostPolicy
+  update? and show?
+    is expected to permit user with role admin to access record with ID 130
 ```
-
-to
-
-```
-update? and show?
-  is expected to permit the user
-```
-
-which may be desirable when distributing policy specs as documentation.
-
-An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
-[excellent post](https://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/) and implemented in the third party [pundit-matchers](https://github.com/punditcommunity/pundit-matchers) gem.
 
 ### Scope Specs
 
