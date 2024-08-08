@@ -69,7 +69,15 @@ module Pundit
 
     module DSL
       def permissions(*list, &block)
-        describe(list.to_sentence, permissions: list, caller: caller) { instance_eval(&block) }
+        metadata = { permissions: list, caller: caller }
+
+        if list.last == :focus
+          list.pop
+          metadata[:focus] = true
+        end
+
+        description = list.to_sentence
+        describe(description, metadata) { instance_eval(&block) }
       end
     end
 

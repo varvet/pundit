@@ -824,6 +824,14 @@ which may be desirable when distributing policy specs as documentation.
 An alternative approach to Pundit policy specs is scoping them to a user context as outlined in this
 [excellent post](http://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/) and implemented in the third party [pundit-matchers](https://github.com/punditcommunity/pundit-matchers) gem.
 
+### Focus Support
+
+If your RSpec config has `filter_run_when_matching :focus`, you may tag the `permissions` helper like so:
+
+```
+permissions :show?, :focus do
+```
+
 ### Scope Specs
 
 Pundit does not provide a DSL for testing scopes. Test them like you would a regular Ruby class!
