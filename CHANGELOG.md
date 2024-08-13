@@ -5,6 +5,7 @@
 - Improve the `NotAuthorizedError` message to include the policy class.
 Furthermore, in the case where the record passed is a class instead of an instance, the class name is given. (#812)
 - Add customizable permit matcher description (#806)
+- Add support for filter_run_when_matching :focus with permissions helper. (#820)
 
 ## 2.3.2 (2024-05-08)
 
