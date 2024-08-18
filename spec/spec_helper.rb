@@ -161,6 +161,10 @@ class PublicationPolicy < BasePolicy
   def create?
     true
   end
+
+  def permitted_attributes
+    [:title]
+  end
 end
 
 class Comment

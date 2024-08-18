@@ -99,6 +99,28 @@ module Pundit
       cached_find(record, &:policy!)
     end
 
+    # Retrieves a set of permitted attributes from the policy by instantiating
+    # the policy class for the given record and calling `permitted_attributes` on
+    # it, or `permitted_attributes_for_{action}` if `action` is defined. It then infers
+    # what key the record should have in the params hash and retrieves the
+    # permitted attributes from the params hash under that key.
+    #
+    # @see https://github.com/varvet/pundit#strong-parameters
+    # @param record [Object] the object we're retrieving permitted attributes for
+    # @param action [Symbol, String] the name of the action being performed on the record (e.g. `:update`).
+    # @param required_params [ActionController::Parameters] the params
+    # @param policy_class [Class] the policy class we want to force use of
+    # @return [Hash{String => Object}] the permitted attributes
+    def permitted_attributes(record, action:, required_params:, policy_class: nil)
+      policy = policy_class ? policy_class.new(user, record) : policy(record)
+      method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
+        "permitted_attributes_for_#{action}"
+      else
+        "permitted_attributes"
+      end
+      required_params.permit(*policy.public_send(method_name))
+    end
+
     private
 
     def cached_find(record)

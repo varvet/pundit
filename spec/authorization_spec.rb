@@ -208,6 +208,20 @@ describe Pundit::Authorization do
       expect(Controller.new(double, action, params).permitted_attributes(post).to_h).to eq("votes" => 5)
     end
 
+    it "checks different policy for permitted attributes" do
+      params = to_params(
+        post: {
+          title: "Hello",
+          votes: 5
+        }
+      )
+
+      action = "update"
+
+      expect(Controller.new(user, action, params)
+        .permitted_attributes(post, policy_class: PublicationPolicy).to_h).to eq("title" => "Hello")
+    end
+
     it "checks policy for permitted attributes for record of a ActiveModel type" do
       customer_post = Customer::Post.new(user)
       params = to_params(
