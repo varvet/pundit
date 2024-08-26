@@ -111,6 +111,25 @@ module Pundit
       pundit.policy!(record)
     end
 
+    # Retrieves a list of permitted attribute names from the policy by instantiating
+    # the policy class for the given record and calling `permitted_attributes` on
+    # it, or `permitted_attributes_for_{action}` if `action` is defined.
+    #
+    # @see https://github.com/varvet/pundit#strong-parameters
+    # @param record [Object] the object we're retrieving permitted attributes for
+    # @param action [Symbol, String] the name of the action being performed on the record (e.g. `:update`).
+    #   If omitted then this defaults to the Rails controller action name.
+    # @return [Array<Symbol>] the names of the permitted attributes
+    def permitted_attribute_names(record, action = action_name)
+      policy = policy(record)
+      method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
+        "permitted_attributes_for_#{action}"
+      else
+        "permitted_attributes"
+      end
+      policy.public_send(method_name)
+    end
+
     # Retrieves a set of permitted attributes from the policy by instantiating
     # the policy class for the given record and calling `permitted_attributes` on
     # it, or `permitted_attributes_for_{action}` if `action` is defined. It then infers
@@ -123,13 +142,8 @@ module Pundit
     #   If omitted then this defaults to the Rails controller action name.
     # @return [Hash{String => Object}] the permitted attributes
     def permitted_attributes(record, action = action_name)
-      policy = policy(record)
-      method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
-        "permitted_attributes_for_#{action}"
-      else
-        "permitted_attributes"
-      end
-      pundit_params_for(record).permit(*policy.public_send(method_name))
+      attribute_names = permitted_attribute_names(record, action)
+      pundit_params_for(record).permit(*attribute_names)
     end
 
     # Retrieves the params for the given record.
