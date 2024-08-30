@@ -121,15 +121,11 @@ module Pundit
     # @param record [Object] the object we're retrieving permitted attributes for
     # @param action [Symbol, String] the name of the action being performed on the record (e.g. `:update`).
     #   If omitted then this defaults to the Rails controller action name.
+    # @param policy_class [Class] the policy class we want to force use of
     # @return [Hash{String => Object}] the permitted attributes
-    def permitted_attributes(record, action = action_name)
-      policy = policy(record)
-      method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
-        "permitted_attributes_for_#{action}"
-      else
-        "permitted_attributes"
-      end
-      pundit_params_for(record).permit(*policy.public_send(method_name))
+    def permitted_attributes(record, action = action_name, policy_class: nil)
+      required_params = pundit_params_for(record)
+      pundit.permitted_attributes(record, action: action, required_params: required_params, policy_class: policy_class)
     end
 
     # Retrieves the params for the given record.
