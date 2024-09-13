@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## Added
+
+- Add `Pundit::Authorization#clear_pundit_context!` hook to clear the context (#830)
+
 ## Changed
 
 - Deprecated `Pundit::SUFFIX`, moved it to `Pundit::PolicyFinder::SUFFIX` (#835)
