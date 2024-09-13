@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## Added
+
+- Add `Pundit::Authorization#clear_pundit_context!` hook to clear the context (#830)
+
 ## 2.4.0 (2024-08-26)
 
 ## Changed
