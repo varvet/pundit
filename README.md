@@ -660,6 +660,24 @@ class ApplicationController
 end
 ```
 
+If you need to change the context for any reason, you will need to clear the caches stored in the context. You can use the hook below to do this.
+
+```ruby
+class ApplicationController
+  include Pundit::Authorization
+  before_action :switch_account, if: :should_switch_account?
+
+  def switch_account
+    set_current_account(Account.find(params[:account_id]))
+    clear_pundit_context!
+  end
+
+  def pundit_user
+    UserContext.new(current_user, current_account)
+  end
+end
+```
+
 ## Strong parameters
 
 In Rails,
