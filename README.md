@@ -660,20 +660,20 @@ class ApplicationController
 end
 ```
 
-If you need to change the context for any reason, you will need to clear the caches stored in the context. You can use the hook below to do this.
+If you need to change the context for any reason, you will need to clear the caches stored in the Pundit. You can use the hook below to do this.
 
 ```ruby
 class ApplicationController
   include Pundit::Authorization
-  before_action :switch_account, if: :should_switch_account?
+  before_action :switch_user, if: :should_switch_user?
 
   def switch_account
-    set_current_account(Account.find(params[:account_id]))
+    set_current_user(User.find(params[:user_id]))
     pundit_reset!
   end
 
   def pundit_user
-    UserContext.new(current_user, current_account)
+    UserContext.new(current_user, request.ip)
   end
 end
 ```
