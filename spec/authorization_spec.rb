@@ -287,19 +287,23 @@ describe Pundit::Authorization do
     end
 
     it "clears the policy cache" do
-      controller.policy(post)
+      controller.authorize(post)
       expect(controller.policies).not_to be_empty
+      expect(controller.pundit_policy_authorized?).to be true
 
       controller.pundit_reset!
       expect(controller.policies).to be_empty
+      expect(controller.pundit_policy_authorized?).to be false
     end
 
     it "clears the policy scope cache" do
       controller.policy_scope(Post)
       expect(controller.policy_scopes).not_to be_empty
+      expect(controller.pundit_policy_scoped?).to be true
 
       controller.pundit_reset!
       expect(controller.policy_scopes).to be_empty
+      expect(controller.pundit_policy_scoped?).to be false
     end
   end
 end

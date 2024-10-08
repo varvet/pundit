@@ -226,6 +226,8 @@ module Pundit
       @pundit = nil
       @_pundit_policies = nil
       @_pundit_policy_scopes = nil
+      @_pundit_policy_authorized = nil
+      @_pundit_policy_scoped = nil
     end
   end
 end
