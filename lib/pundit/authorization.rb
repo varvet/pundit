@@ -222,7 +222,7 @@ module Pundit
     #
     # @see https://github.com/varvet/pundit#additional-context
     # @return [void]
-    def clear_pundit_context!
+    def pundit_reset!
       @pundit = nil
       @_pundit_policies = nil
       @_pundit_policy_scopes = nil

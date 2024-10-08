@@ -4,7 +4,7 @@
 
 ## Added
 
-- Add `Pundit::Authorization#clear_pundit_context!` hook to clear the context (#830)
+- Add `Pundit::Authorization#pundit_reset!` hook to reset the policy and policy scope cache. (#830)
 
 ## Changed
 
