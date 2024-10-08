@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## Added
+
+- Add `Pundit::Authorization#pundit_reset!` hook to reset the policy and policy scope cache. (#830)
+
 ## 2.4.0 (2024-08-26)
 
 ## Changed

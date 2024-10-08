@@ -273,6 +273,7 @@ class Controller
   # rubocop:enable Style/AccessModifierDeclarations
 
   attr_reader :current_user, :action_name, :params
+  attr_writer :current_user
 
   def initialize(current_user, action_name, params)
     @current_user = current_user

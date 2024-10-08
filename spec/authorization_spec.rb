@@ -271,4 +271,38 @@ describe Pundit::Authorization do
       expect(Controller.new(user, action, params).permitted_attributes(post, :revise).to_h).to eq("body" => "blah")
     end
   end
+
+  describe "#pundit_reset!" do
+    let(:new_user) { double }
+
+    it "clears the current user" do
+      expect(controller.pundit.user).to eq controller.current_user
+
+      controller.current_user = new_user
+      expect(controller.pundit.user).not_to eq controller.current_user
+
+      controller.pundit_reset!
+      expect(controller.pundit.user).to eq controller.current_user
+    end
+
+    it "clears the policy cache" do
+      controller.authorize(post)
+      expect(controller.policies).not_to be_empty
+      expect(controller.pundit_policy_authorized?).to be true
+
+      controller.pundit_reset!
+      expect(controller.policies).to be_empty
+      expect(controller.pundit_policy_authorized?).to be false
+    end
+
+    it "clears the policy scope cache" do
+      controller.policy_scope(Post)
+      expect(controller.policy_scopes).not_to be_empty
+      expect(controller.pundit_policy_scoped?).to be true
+
+      controller.pundit_reset!
+      expect(controller.policy_scopes).to be_empty
+      expect(controller.pundit_policy_scoped?).to be false
+    end
+  end
 end

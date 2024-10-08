@@ -167,6 +167,18 @@ module Pundit
       current_user
     end
 
+    # Hook method which allows to clear the Pundit context.
+    #
+    # @see https://github.com/varvet/pundit#additional-context
+    # @return [void]
+    def pundit_reset!
+      @pundit = nil
+      @_pundit_policies = nil
+      @_pundit_policy_scopes = nil
+      @_pundit_policy_authorized = nil
+      @_pundit_policy_scoped = nil
+    end
+
     private
 
     def pundit_policy_scope(scope)
