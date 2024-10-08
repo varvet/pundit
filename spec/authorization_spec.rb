@@ -272,7 +272,7 @@ describe Pundit::Authorization do
     end
   end
 
-  describe "#clear_pundit_context!" do
+  describe "#pundit_reset!" do
     let(:new_user) { double }
 
     it "clears the current user" do
@@ -281,7 +281,7 @@ describe Pundit::Authorization do
       controller.current_user = new_user
       expect(controller.pundit.user).not_to eq controller.current_user
 
-      controller.clear_pundit_context!
+      controller.pundit_reset!
       expect(controller.pundit.user).to eq controller.current_user
     end
 
@@ -289,7 +289,7 @@ describe Pundit::Authorization do
       controller.policy(post)
       expect(controller.policies).not_to be_empty
 
-      controller.clear_pundit_context!
+      controller.pundit_reset!
       expect(controller.policies).to be_empty
     end
 
@@ -297,7 +297,7 @@ describe Pundit::Authorization do
       controller.policy_scope(Post)
       expect(controller.policy_scopes).not_to be_empty
 
-      controller.clear_pundit_context!
+      controller.pundit_reset!
       expect(controller.policy_scopes).to be_empty
     end
   end

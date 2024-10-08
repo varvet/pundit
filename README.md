@@ -669,7 +669,7 @@ class ApplicationController
 
   def switch_account
     set_current_account(Account.find(params[:account_id]))
-    clear_pundit_context!
+    pundit_reset!
   end
 
   def pundit_user
