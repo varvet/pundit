@@ -1,22 +1,52 @@
 # frozen_string_literal: true
 
 module Pundit
+  # {Pundit::Context} is intended to be created once per request and user, and
+  # it is then used to perform authorization checks throughout the request.
+  #
+  # @example Using Sinatra
+  #   helpers do
+  #     def current_user = ...
+  #
+  #     def pundit
+  #       @pundit ||= Pundit::Context.new(user: current_user)
+  #     end
+  #   end
+  #
+  #   get "/posts/:id" do |id|
+  #     pundit.authorize(Post.find(id), query: :show?)
+  #   end
+  #
+  # @example Using [Roda](https://roda.jeremyevans.net/index.html)
+  #   route do |r|
+  #     context = Pundit::Context.new(user:)
+  #
+  #     r.get "posts", Integer do |id|
+  #       context.authorize(Post.find(id), query: :show?)
+  #     end
+  #   end
   class Context
+    # @see Pundit::Authorization#pundit
+    # @param user later passed to policies and scopes
+    # @param policy_cache [#fetch] cache store for policies (see e.g. {CacheStore::NullStore})
     def initialize(user:, policy_cache: CacheStore::NullStore.instance)
       @user = user
       @policy_cache = policy_cache
     end
 
+    # @api public
+    # @see #initialize
     attr_reader :user
 
     # @api private
     attr_reader :policy_cache
 
+    # @!group Policies
+
     # Retrieves the policy for the given record, initializing it with the
     # record and user and finally throwing an error if the user is not
     # authorized to perform the given action.
     #
-    # @param user [Object] the user that initiated the action
     # @param possibly_namespaced_record [Object, Array] the object we're checking permissions of
     # @param query [Symbol, String] the predicate method to check on the policy (e.g. `:show?`)
     # @param policy_class [Class] the policy class we want to force use of
@@ -35,10 +65,34 @@ module Pundit
       record
     end
 
+    # Retrieves the policy for the given record.
+    #
+    # @see https://github.com/varvet/pundit#policies
+    # @param record [Object] the object we're retrieving the policy for
+    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
+    # @return [Object, nil] instance of policy class with query methods
+    def policy(record)
+      cached_find(record, &:policy)
+    end
+
+    # Retrieves the policy for the given record, or raises if not found.
+    #
+    # @see https://github.com/varvet/pundit#policies
+    # @param record [Object] the object we're retrieving the policy for
+    # @raise [NotDefinedError] if the policy cannot be found
+    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
+    # @return [Object] instance of policy class with query methods
+    def policy!(record)
+      cached_find(record, &:policy!)
+    end
+
+    # @!endgroup
+
+    # @!group Scopes
+
     # Retrieves the policy scope for the given record.
     #
     # @see https://github.com/varvet/pundit#scopes
-    # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
@@ -58,7 +112,6 @@ module Pundit
     # Retrieves the policy scope for the given record. Raises if not found.
     #
     # @see https://github.com/varvet/pundit#scopes
-    # @param user [Object] the user that initiated the action
     # @param scope [Object] the object we're retrieving the policy scope for
     # @raise [NotDefinedError] if the policy scope cannot be found
     # @raise [InvalidConstructorError] if the policy constructor called incorrectly
@@ -76,30 +129,11 @@ module Pundit
       policy_scope.resolve
     end
 
-    # Retrieves the policy for the given record.
-    #
-    # @see https://github.com/varvet/pundit#policies
-    # @param user [Object] the user that initiated the action
-    # @param record [Object] the object we're retrieving the policy for
-    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
-    # @return [Object, nil] instance of policy class with query methods
-    def policy(record)
-      cached_find(record, &:policy)
-    end
-
-    # Retrieves the policy for the given record. Raises if not found.
-    #
-    # @see https://github.com/varvet/pundit#policies
-    # @param user [Object] the user that initiated the action
-    # @param record [Object] the object we're retrieving the policy for
-    # @raise [NotDefinedError] if the policy cannot be found
-    # @raise [InvalidConstructorError] if the policy constructor called incorrectly
-    # @return [Object] instance of policy class with query methods
-    def policy!(record)
-      cached_find(record, &:policy!)
-    end
+    # @!endgroup
 
     private
+
+    # @!group Private Helpers
 
     def cached_find(record)
       policy_cache.fetch(user: user, record: record) do

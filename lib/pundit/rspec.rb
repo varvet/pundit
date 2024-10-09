@@ -5,9 +5,20 @@ module Pundit
     module Matchers
       extend ::RSpec::Matchers::DSL
 
+      # @!method description=(description)
       class << self
+        # Used to build a suitable description for the Pundit `permit` matcher.
+        # @api public
+        # @param value [String, Proc]
+        # @example
+        #   Pundit::RSpec::Matchers.description = ->(user, record) do
+        #     "permit user with role #{user.role} to access record with ID #{record.id}"
+        #   end
         attr_writer :description
 
+        # Used to retrieve a suitable description for the Pundit `permit` matcher.
+        # @api private
+        # @private
         def description(user, record)
           return @description.call(user, record) if defined?(@description) && @description.respond_to?(:call)
 
@@ -67,7 +78,24 @@ module Pundit
       # rubocop:enable Metrics/BlockLength
     end
 
+    # Mixed in to all policy example groups to provide a DSL.
     module DSL
+      # @example
+      #   describe PostPolicy do
+      #     permissions :show?, :update? do
+      #       it { is_expected.to permit(user, own_post) }
+      #     end
+      #   end
+      #
+      # @example focused example group
+      #   describe PostPolicy do
+      #     permissions :show?, :update?, :focus do
+      #       it { is_expected.to permit(user, own_post) }
+      #     end
+      #   end
+      #
+      # @param list [Symbol, Array<Symbol>] a permission to describe
+      # @return [void]
       def permissions(*list, &block)
         metadata = { permissions: list, caller: caller }
 
@@ -81,6 +109,9 @@ module Pundit
       end
     end
 
+    # Mixed in to all policy example groups.
+    #
+    # @private not useful
     module PolicyExampleGroup
       include Pundit::RSpec::Matchers
 
