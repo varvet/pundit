@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Array#to_sentence
+require "active_support/core_ext/array/conversions"
+
 module Pundit
   module RSpec
     module Matchers
