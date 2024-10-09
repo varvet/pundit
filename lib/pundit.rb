@@ -19,6 +19,7 @@ module Pundit
   SUFFIX = "Policy"
 
   # @api private
+  # @private
   module Generators; end
 
   # Error that will be raised when authorization has failed
@@ -67,7 +68,7 @@ module Pundit
   end
 
   class << self
-    # @see [Pundit::Context#authorize]
+    # @see Pundit::Context#authorize
     def authorize(user, record, query, policy_class: nil, cache: nil)
       context = if cache
         Context.new(user: user, policy_cache: cache)
@@ -78,22 +79,22 @@ module Pundit
       context.authorize(record, query: query, policy_class: policy_class)
     end
 
-    # @see [Pundit::Context#policy_scope]
+    # @see Pundit::Context#policy_scope
     def policy_scope(user, *args, **kwargs, &block)
       Context.new(user: user).policy_scope(*args, **kwargs, &block)
     end
 
-    # @see [Pundit::Context#policy_scope!]
+    # @see Pundit::Context#policy_scope!
     def policy_scope!(user, *args, **kwargs, &block)
       Context.new(user: user).policy_scope!(*args, **kwargs, &block)
     end
 
-    # @see [Pundit::Context#policy]
+    # @see Pundit::Context#policy
     def policy(user, *args, **kwargs, &block)
       Context.new(user: user).policy(*args, **kwargs, &block)
     end
 
-    # @see [Pundit::Context#policy!]
+    # @see Pundit::Context#policy!
     def policy!(user, *args, **kwargs, &block)
       Context.new(user: user).policy!(*args, **kwargs, &block)
     end
