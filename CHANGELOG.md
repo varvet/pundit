@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Register policies directories for Rails 8 code statistics (#833)
+
 ## 2.4.0 (2024-08-26)
 
 ## Changed
