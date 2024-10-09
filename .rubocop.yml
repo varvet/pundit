@@ -39,6 +39,9 @@ Layout/CaseIndentation:
 Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
