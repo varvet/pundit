@@ -77,11 +77,37 @@ jobs:
         run: bundle exec rspec
         env:
           COVERAGE: 1
+      - name: Upload coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          include-hidden-files: true
+          name: coverage-results
+          path: coverage
+          retention-days: 1
       - name: Upload code coverage to Code Climate
         run: |
           ./cc-test-reporter after-build \
             --coverage-input-type simplecov \
             ./coverage/.resultset.json
+
+  coverage-check:
+    permissions:
+      checks: write
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download coverage results
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-results
+          path: coverage
+      - uses: joshmfrankel/simplecov-check-action@be89e11889202cc59efb14aab2a7091622fa9aad
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          minimum_suite_coverage: 100
+          minimum_file_coverage: 100
+          coverage_json_path: coverage/simplecov-check-action.json
 
   rubocop:
     runs-on: ubuntu-latest

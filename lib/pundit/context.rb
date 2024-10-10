@@ -118,7 +118,6 @@ module Pundit
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     def policy_scope!(scope)
       policy_scope_class = policy_finder(scope).scope!
-      return unless policy_scope_class
 
       begin
         policy_scope = policy_scope_class.new(user, pundit_model(scope))

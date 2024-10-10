@@ -43,15 +43,21 @@ module Pundit
         end
 
         failure_message_proc = lambda do |policy|
-          was_were = @violating_permissions.count > 1 ? "were" : "was"
           "Expected #{policy} to grant #{permissions.to_sentence} on " \
-          "#{record} but #{@violating_permissions.to_sentence} #{was_were} not granted"
+          "#{record} but #{@violating_permissions.to_sentence} #{was_or_were} not granted"
         end
 
         failure_message_when_negated_proc = lambda do |policy|
-          was_were = @violating_permissions.count > 1 ? "were" : "was"
           "Expected #{policy} not to grant #{permissions.to_sentence} on " \
-          "#{record} but #{@violating_permissions.to_sentence} #{was_were} granted"
+          "#{record} but #{@violating_permissions.to_sentence} #{was_or_were} granted"
+        end
+
+        def was_or_were
+          if @violating_permissions.count > 1
+            "were"
+          else
+            "was"
+          end
         end
 
         description do
@@ -64,14 +70,29 @@ module Pundit
           failure_message(&failure_message_proc)
           failure_message_when_negated(&failure_message_when_negated_proc)
         else
+          # :nocov:
+          # Compatibility with RSpec < 3.0, released 2014-06-01.
           match_for_should(&match_proc)
           match_for_should_not(&match_when_negated_proc)
           failure_message_for_should(&failure_message_proc)
           failure_message_for_should_not(&failure_message_when_negated_proc)
+          # :nocov:
+        end
+
+        if ::RSpec.respond_to?(:current_example)
+          def current_example
+            ::RSpec.current_example
+          end
+        else
+          # :nocov:
+          # Compatibility with RSpec < 3.0, released 2014-06-01.
+          def current_example
+            example
+          end
+          # :nocov:
         end
 
         def permissions
-          current_example = ::RSpec.respond_to?(:current_example) ? ::RSpec.current_example : example
           current_example.metadata[:permissions]
         end
       end

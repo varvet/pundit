@@ -12,6 +12,7 @@ class PostPolicy < BasePolicy
   def update?
     post.user == user
   end
+  alias edit? update?
 
   def destroy?
     false
