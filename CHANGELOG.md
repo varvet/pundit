@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Using `permit` matcher without a surrouding `permissions` block now raises a useful error. (#836)
+
 ## 2.4.0 (2024-08-26)
 
 ## Changed
