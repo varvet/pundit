@@ -3,12 +3,19 @@
 require "spec_helper"
 
 RSpec.describe "Pundit RSpec DSL" do
+  include Pundit::RSpec::PolicyExampleGroup
+
   let(:fake_rspec) do
     double = class_double(RSpec::ExampleGroups)
     double.extend(::Pundit::RSpec::DSL)
     double
   end
   let(:block) { proc { "block content" } }
+
+  let(:user) { double }
+  let(:other_user) { double }
+  let(:post) { Post.new(user) }
+  let(:policy) { PostPolicy }
 
   it "calls describe with the correct metadata and without :focus" do
     expected_metadata = { permissions: %i[item1 item2], caller: instance_of(Array) }
@@ -26,5 +33,39 @@ RSpec.describe "Pundit RSpec DSL" do
     end
 
     fake_rspec.permissions(:item1, :item2, :focus, &block)
+  end
+
+  describe "#permit" do
+    permissions :update? do
+      it "succeeds when action is permitted" do
+        expect(policy).to permit(user, post)
+      end
+
+      context "when it fails" do
+        it "fails with a descriptive error message" do
+          expect do
+            expect(policy).to permit(other_user, post)
+          end.to raise_error(RSpec::Expectations::ExpectationNotMetError, <<~MSG.strip)
+            Expected PostPolicy to grant update? on Post but update? was not granted
+          MSG
+        end
+      end
+
+      context "when negated" do
+        it "succeeds when action is not permitted" do
+          expect(policy).not_to permit(other_user, post)
+        end
+
+        context "when it fails" do
+          it "fails with a descriptive error message" do
+            expect do
+              expect(policy).not_to permit(user, post)
+            end.to raise_error(RSpec::Expectations::ExpectationNotMetError, <<~MSG.strip)
+              Expected PostPolicy not to grant update? on Post but update? was granted
+            MSG
+          end
+        end
+      end
+    end
   end
 end
