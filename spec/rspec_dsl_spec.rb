@@ -46,7 +46,7 @@ RSpec.describe "Pundit RSpec DSL" do
       end
     end
 
-    permissions :update? do
+    permissions :edit?, :update? do
       it "succeeds when action is permitted" do
         expect(policy).to permit(user, post)
       end
@@ -56,7 +56,7 @@ RSpec.describe "Pundit RSpec DSL" do
           expect do
             expect(policy).to permit(other_user, post)
           end.to raise_error(RSpec::Expectations::ExpectationNotMetError, <<~MSG.strip)
-            Expected PostPolicy to grant update? on Post but update? was not granted
+            Expected PostPolicy to grant edit? and update? on Post but edit? and update? were not granted
           MSG
         end
       end
@@ -71,7 +71,7 @@ RSpec.describe "Pundit RSpec DSL" do
             expect do
               expect(policy).not_to permit(user, post)
             end.to raise_error(RSpec::Expectations::ExpectationNotMetError, <<~MSG.strip)
-              Expected PostPolicy not to grant update? on Post but update? was granted
+              Expected PostPolicy not to grant edit? and update? on Post but edit? and update? were granted
             MSG
           end
         end
