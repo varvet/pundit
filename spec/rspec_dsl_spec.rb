@@ -36,6 +36,16 @@ RSpec.describe "Pundit RSpec DSL" do
   end
 
   describe "#permit" do
+    context "when not appropriately wrapped in permissions" do
+      it "raises a descriptive error" do
+        expect do
+          expect(policy).to permit(user, post)
+        end.to raise_error(KeyError, <<~MSG.strip)
+          No permissions in example metadata, did you forget to wrap with `permissions :show?, ...`?
+        MSG
+      end
+    end
+
     permissions :edit?, :update? do
       it "succeeds when action is permitted" do
         expect(policy).to permit(user, post)
