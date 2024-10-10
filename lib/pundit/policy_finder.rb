@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# String#safe_constantize, String#demodulize, String#underscore, String#camelize
+require "active_support/core_ext/string/inflections"
+
 module Pundit
   # Finds policy and scope classes for given object.
   # @api public
@@ -10,6 +13,9 @@ module Pundit
   #   finder.scope #=> UserPolicy::Scope
   #
   class PolicyFinder
+    # @api private
+    SUFFIX = "Policy"
+
     attr_reader :object
 
     # @param object [any] the object to find policy and scope classes for
