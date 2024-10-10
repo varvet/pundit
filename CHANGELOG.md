@@ -9,6 +9,7 @@
 ### Changed
 
 - Explicitly require less of `active_support` (#834)
+- Using `permit` matcher without a surrouding `permissions` block now raises a useful error. (#834)
 
 ## 2.4.0 (2024-08-26)
 
