@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## Changed
+
+- Deprecated `Pundit::SUFFIX`, moved it to `Pundit::PolicyFinder::SUFFIX` (#835)
+
 ## 2.4.0 (2024-08-26)
 
 ## Changed
