@@ -36,6 +36,9 @@ Layout/CaseIndentation:
     - end
   IndentOneStep: true
 
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 

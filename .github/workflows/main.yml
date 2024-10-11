@@ -2,9 +2,8 @@ name: Main
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
@@ -28,74 +27,113 @@ jobs:
       fail-fast: false
       matrix:
         ruby-version:
-          - '3.1'
-          - '3.2'
-          - '3.3'
-          - 'jruby-9.3.10' # oldest supported jruby
-          - 'jruby'
+          - "3.1"
+          - "3.2"
+          - "3.3"
+          - "jruby-9.3.10" # oldest supported jruby
+          - "jruby"
         include: # HEAD-versions
-          - ruby-version: 'head'
+          - ruby-version: "head"
             allow-failure: true
-          - ruby-version: 'jruby-head'
+          - ruby-version: "jruby-head"
             allow-failure: true
-          - ruby-version: 'truffleruby-head'
+          - ruby-version: "truffleruby-head"
             allow-failure: true
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        rubygems: latest
-        ruby-version: ${{ matrix.ruby-version }}
-        bundler-cache: ${{ !startsWith(matrix.ruby-version, 'jruby') }}
-    - name: Bundler install (JRuby workaround)
-      if: ${{ startsWith(matrix.ruby-version, 'jruby') }}
-      run: |
-        gem install psych
-        bundle install
-    - name: Run tests
-      run: bundle exec rspec
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          rubygems: latest
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: ${{ !startsWith(matrix.ruby-version, 'jruby') }}
+      - name: Bundler install (JRuby workaround)
+        if: ${{ startsWith(matrix.ruby-version, 'jruby') }}
+        run: |
+          gem install psych
+          bundle install
+      - name: Run tests
+        run: bundle exec rspec
 
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        rubygems: latest
-        ruby-version: 'ruby'
-        bundler-cache: true
-    - name: "Download cc-test-reporter from codeclimate.com"
-      run: |
-        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-        chmod +x ./cc-test-reporter
-    - name: "Report to Code Climate that we will send a coverage report."
-      run: ./cc-test-reporter before-build
-    - name: Run tests
-      run: bundle exec rspec
-      env:
-        COVERAGE: 1
-    - name: Upload code coverage to Code Climate
-      run: |
-        ./cc-test-reporter after-build \
-          --coverage-input-type simplecov \
-          ./coverage/.resultset.json
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          rubygems: latest
+          ruby-version: "ruby"
+          bundler-cache: true
+      - name: "Download cc-test-reporter from codeclimate.com"
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+      - name: "Report to Code Climate that we will send a coverage report."
+        run: ./cc-test-reporter before-build
+      - name: Run tests
+        run: bundle exec rspec
+        env:
+          COVERAGE: 1
+      - name: Upload coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          include-hidden-files: true
+          name: coverage-results
+          path: coverage
+          retention-days: 1
+      - name: Upload code coverage to Code Climate
+        run: |
+          ./cc-test-reporter after-build \
+            --coverage-input-type simplecov \
+            ./coverage/.resultset.json
+
+  coverage-check:
+    permissions:
+      checks: write
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download coverage results
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-results
+          path: coverage
+      - uses: joshmfrankel/simplecov-check-action@be89e11889202cc59efb14aab2a7091622fa9aad
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          minimum_suite_coverage: 100
+          minimum_file_coverage: 100
+          coverage_json_path: coverage/simplecov-check-action.json
 
   rubocop:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        rubygems: default
-        ruby-version: 'ruby'
-        bundler-cache: false
-    - run: bundle install
-    - name: Run RuboCop
-      run: bundle exec rubocop
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          rubygems: default
+          ruby-version: "ruby"
+          bundler-cache: false
+      - run: bundle install
+      - name: Run RuboCop
+        run: bundle exec rubocop
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          rubygems: default
+          ruby-version: "ruby"
+          bundler-cache: false
+      - run: bundle install
+      - run: rake yard
 
   required-checks:
     runs-on: ubuntu-latest
@@ -103,6 +141,7 @@ jobs:
     needs:
       - test
       - matrix-test
+      - docs
       - rubocop
     steps:
       - name: failure

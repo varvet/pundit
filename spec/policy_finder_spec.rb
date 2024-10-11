@@ -2,7 +2,6 @@
 
 require "spec_helper"
 
-class Foo; end
 RSpec.describe Pundit::PolicyFinder do
   let(:user) { double }
   let(:post) { Post.new(user) }
