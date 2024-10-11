@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Using a hash as custom cache in `Pundit.authorize` now works as documented. (#838)
+
 ## 2.4.0 (2024-08-26)
 
 ## Changed

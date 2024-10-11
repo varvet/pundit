@@ -125,6 +125,18 @@ RSpec.describe Pundit do
         expect(Pundit.authorize(user, [:project, comment], :create?, policy_class: PublicationPolicy)).to be_truthy
       end
     end
+
+    context "when passed an explicit cache" do
+      it "uses the hash assignment interface on the cache" do
+        custom_cache = CustomCache.new
+
+        Pundit.authorize(user, post, :update?, cache: custom_cache)
+
+        expect(custom_cache.to_h).to match({
+          post => kind_of(PostPolicy)
+        })
+      end
+    end
   end
 
   describe ".policy_scope" do
