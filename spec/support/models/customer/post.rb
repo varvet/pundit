@@ -2,9 +2,7 @@
 
 module Customer
   class Post < ::Post
-    def model_name
-      OpenStruct.new(param_key: "customer_post")
-    end
+    extend ActiveModel::Naming
 
     def self.policy_class
       PostPolicy

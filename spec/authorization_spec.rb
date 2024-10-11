@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "action_controller/metal/strong_parameters"
 
 describe Pundit::Authorization do
   def to_params(*args, **kwargs, &block)
@@ -157,7 +158,7 @@ describe Pundit::Authorization do
     end
 
     it "allows policy to be injected" do
-      new_policy = OpenStruct.new
+      new_policy = double
       controller.policies[post] = new_policy
 
       expect(controller.policy(post)).to eq new_policy
@@ -182,7 +183,7 @@ describe Pundit::Authorization do
     end
 
     it "allows policy_scope to be injected" do
-      new_scope = OpenStruct.new
+      new_scope = double
       controller.policy_scopes[Post] = new_scope
 
       expect(controller.policy_scope(Post)).to eq new_scope

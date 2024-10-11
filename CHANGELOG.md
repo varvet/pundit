@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Explicitly require less of `active_support` (#837)
+
 ## 2.4.0 (2024-08-26)
 
 ## Changed
