@@ -218,9 +218,15 @@ module Pundit
 
     # @!endgroup
 
-    # Hook method which allows to clear the Pundit context.
+    # Clears the cached Pundit authorization data.
     #
-    # @see https://github.com/varvet/pundit#additional-context
+    # This method should be called when the pundit_user is changed,
+    # such as during user switching, to ensure that stale authorization
+    # data is not used. Pundit caches authorization policies and scopes
+    # for the pundit_user, so calling this method will reset those
+    # caches and ensure that the next authorization checks are performed
+    # with the correct context for the new pundit_user.
+    #
     # @return [void]
     def pundit_reset!
       @pundit = nil
