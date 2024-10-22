@@ -218,6 +218,8 @@ module Pundit
 
     # @!endgroup
 
+    # @!group Customize Pundit user
+
     # Clears the cached Pundit authorization data.
     #
     # This method should be called when the pundit_user is changed,
@@ -235,5 +237,7 @@ module Pundit
       @_pundit_policy_authorized = nil
       @_pundit_policy_scoped = nil
     end
+
+    # @!endgroup
   end
 end
