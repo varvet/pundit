@@ -217,5 +217,27 @@ module Pundit
     end
 
     # @!endgroup
+
+    # @!group Customize Pundit user
+
+    # Clears the cached Pundit authorization data.
+    #
+    # This method should be called when the pundit_user is changed,
+    # such as during user switching, to ensure that stale authorization
+    # data is not used. Pundit caches authorization policies and scopes
+    # for the pundit_user, so calling this method will reset those
+    # caches and ensure that the next authorization checks are performed
+    # with the correct context for the new pundit_user.
+    #
+    # @return [void]
+    def pundit_reset!
+      @pundit = nil
+      @_pundit_policies = nil
+      @_pundit_policy_scopes = nil
+      @_pundit_policy_authorized = nil
+      @_pundit_policy_scoped = nil
+    end
+
+    # @!endgroup
   end
 end
