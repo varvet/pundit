@@ -274,35 +274,46 @@ describe Pundit::Authorization do
   end
 
   describe "#pundit_reset!" do
-    let(:new_user) { double }
-
-    it "clears the current user" do
-      expect(controller.pundit.user).to eq controller.current_user
-
-      controller.current_user = new_user
-      expect(controller.pundit.user).not_to eq controller.current_user
-
+    it "allows authorize to react to a user change" do
+      expect(controller.authorize(post)).to be_truthy
+      controller.current_user = double
       controller.pundit_reset!
-      expect(controller.pundit.user).to eq controller.current_user
+      expect { controller.authorize(post) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
-    it "clears the policy cache" do
-      controller.authorize(post)
-      expect(controller.policies).not_to be_empty
+    it "allows policy scope to react to a user change" do
+      expect(controller.policy_scope(Post)).to eq :published
+      expect { controller.verify_policy_scoped }.not_to raise_error
+      controller.current_user = double
+      controller.pundit_reset!
+      expect { controller.verify_policy_scoped }.to raise_error(Pundit::PolicyScopingNotPerformedError)
+    end
+
+    it "clears the pundit context user" do
+      expect(controller.pundit.user).to be(user)
+
+      new_user = double
+      controller.current_user = new_user
+      expect { controller.pundit_reset! }.to change { controller.pundit.user }.from(user).to(new_user)
+    end
+
+    it "clears pundit_policy_authorized? flag" do
+      expect(controller.pundit_policy_authorized?).to be false
+
+      controller.skip_authorization
       expect(controller.pundit_policy_authorized?).to be true
 
       controller.pundit_reset!
-      expect(controller.policies).to be_empty
       expect(controller.pundit_policy_authorized?).to be false
     end
 
-    it "clears the policy scope cache" do
-      controller.policy_scope(Post)
-      expect(controller.policy_scopes).not_to be_empty
+    it "clears pundit_policy_scoped? flag" do
+      expect(controller.pundit_policy_scoped?).to be false
+
+      controller.skip_policy_scope
       expect(controller.pundit_policy_scoped?).to be true
 
       controller.pundit_reset!
-      expect(controller.policy_scopes).to be_empty
       expect(controller.pundit_policy_scoped?).to be false
     end
   end
