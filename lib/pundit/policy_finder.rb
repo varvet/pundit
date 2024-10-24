@@ -10,6 +10,9 @@ module Pundit
   #   finder.scope #=> UserPolicy::Scope
   #
   class PolicyFinder
+    # @api private
+    SUFFIX = "Policy"
+
     attr_reader :object
 
     # @param object [any] the object to find policy and scope classes for

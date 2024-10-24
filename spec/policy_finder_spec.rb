@@ -8,6 +8,11 @@ RSpec.describe Pundit::PolicyFinder do
   let(:comment) { CommentFourFiveSix.new }
   let(:article) { Article.new }
 
+  describe "SUFFIX" do
+    specify { expect(described_class::SUFFIX).to eq "Policy" }
+    specify { expect(Pundit::SUFFIX).to eq(described_class::SUFFIX) }
+  end
+
   describe "#scope" do
     subject { described_class.new(post) }
 

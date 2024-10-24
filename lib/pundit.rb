@@ -19,7 +19,9 @@ class Pundit::Error < StandardError; end # rubocop:disable Style/ClassAndModuleC
 
 # @api public
 module Pundit
-  SUFFIX = "Policy"
+  # @api private
+  # @deprecated See {Pundit::PolicyFinder}
+  SUFFIX = Pundit::PolicyFinder::SUFFIX
 
   # @api private
   # @private
