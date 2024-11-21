@@ -73,7 +73,8 @@ module Pundit
     # @see Pundit::Context#authorize
     def authorize(user, record, query, policy_class: nil, cache: nil)
       context = if cache
-        Context.new(user: user, policy_cache: cache)
+        policy_cache = CacheStore::LegacyStore.new(cache)
+        Context.new(user: user, policy_cache: policy_cache)
       else
         Context.new(user: user)
       end
