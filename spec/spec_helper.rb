@@ -20,14 +20,7 @@ end
 
 require "pundit"
 require "pundit/rspec"
-
-require "rack"
-require "rack/test"
-require "pry"
-require "active_support"
-require "active_support/core_ext"
 require "active_model/naming"
-require "action_controller/metal/strong_parameters"
 
 # Load all supporting files: models, policies, etc.
 require "zeitwerk"

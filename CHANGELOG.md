@@ -5,6 +5,7 @@
 ## Changed
 
 - Deprecated `Pundit::SUFFIX`, moved it to `Pundit::PolicyFinder::SUFFIX` (#835)
+- Explicitly require less of `active_support` (#837)
 
 ## 2.4.0 (2024-08-26)
 
