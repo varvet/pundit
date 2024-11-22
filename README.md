@@ -591,11 +591,11 @@ To handle user switching, you can use the following pattern in your controller:
 ```ruby
 class ApplicationController
   include Pundit::Authorization
-  before_action :switch_user, if: :should_switch_user?
 
-  def switch_user
-    current_user = User.find(params[:user_id])
-    pundit_reset!  # Ensure that the Pundit context is reset for the new user
+  def switch_user_to(user)
+    terminate_session if authenticated?
+    start_new_session_for user
+    pundit_reset!
   end
 end
 ```
