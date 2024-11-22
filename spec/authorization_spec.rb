@@ -9,7 +9,7 @@ describe Pundit::Authorization do
   end
 
   let(:controller) { Controller.new(user, "update", to_params({})) }
-  let(:user) { double }
+  let(:user) { double("user") }
   let(:post) { Post.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
@@ -276,20 +276,31 @@ describe Pundit::Authorization do
   describe "#pundit_reset!" do
     it "allows authorize to react to a user change" do
       expect(controller.authorize(post)).to be_truthy
+
       controller.current_user = double
       controller.pundit_reset!
       expect { controller.authorize(post) }.to raise_error(Pundit::NotAuthorizedError)
     end
 
-    it "allows policy scope to react to a user change" do
-      expect(controller.policy_scope(Post)).to eq :published
-      expect { controller.verify_policy_scoped }.not_to raise_error
-      controller.current_user = double
+    it "allows policy to react to a user change" do
+      expect(controller.policy(DummyCurrentUser).user).to be user
+
+      new_user = double("new user")
+      controller.current_user = new_user
       controller.pundit_reset!
-      expect { controller.verify_policy_scoped }.to raise_error(Pundit::PolicyScopingNotPerformedError)
+      expect(controller.policy(DummyCurrentUser).user).to be new_user
     end
 
-    it "clears the pundit context user" do
+    it "allows policy scope to react to a user change" do
+      expect(controller.policy_scope(DummyCurrentUser)).to be user
+
+      new_user = double("new user")
+      controller.current_user = new_user
+      controller.pundit_reset!
+      expect(controller.policy_scope(DummyCurrentUser)).to be new_user
+    end
+
+    it "resets the pundit context" do
       expect(controller.pundit.user).to be(user)
 
       new_user = double
