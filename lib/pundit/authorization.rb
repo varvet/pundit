@@ -40,10 +40,31 @@ module Pundit
     # Hook method which allows customizing which user is passed to policies and
     # scopes initialized by {#authorize}, {#policy} and {#policy_scope}.
     #
+    # @note Make sure to call `pundit_reset!` if this changes during a request.
     # @see https://github.com/varvet/pundit#customize-pundit-user
+    # @see #pundit
+    # @see #pundit_reset!
     # @return [Object] the user object to be used with pundit
     def pundit_user
       current_user
+    end
+
+    # Clears the cached Pundit authorization data.
+    #
+    # This method should be called when the pundit_user is changed,
+    # such as during user switching, to ensure that stale authorization
+    # data is not used. Pundit caches authorization policies and scopes
+    # for the pundit_user, so calling this method will reset those
+    # caches and ensure that the next authorization checks are performed
+    # with the correct context for the new pundit_user.
+    #
+    # @return [void]
+    def pundit_reset!
+      @pundit = nil
+      @_pundit_policies = nil
+      @_pundit_policy_scopes = nil
+      @_pundit_policy_authorized = nil
+      @_pundit_policy_scoped = nil
     end
 
     # @!group Policies

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## Added
+
+- Add `Pundit::Authorization#pundit_reset!` hook to reset the policy and policy scope cache. (#830)
+
 ## Changed
 
 - Deprecated `Pundit::SUFFIX`, moved it to `Pundit::PolicyFinder::SUFFIX` (#835)

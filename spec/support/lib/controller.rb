@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Controller
-  attr_reader :current_user, :action_name, :params
+  attr_accessor :current_user
+  attr_reader :action_name, :params
 
   class View
     def initialize(controller)
