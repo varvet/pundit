@@ -39,6 +39,7 @@ module Pundit
     attr_reader :user
 
     # @api private
+    # @see #initialize
     attr_reader :policy_cache
 
     # @!group Policies
@@ -134,6 +135,15 @@ module Pundit
 
     # @!group Private Helpers
 
+    # Finds a cached policy for the given record, or yields to find one.
+    #
+    # @api private
+    # @param record [Object] the object we're retrieving the policy for
+    # @yield a policy finder if no policy was cached
+    # @yieldparam [PolicyFinder] policy_finder
+    # @yieldreturn [#new(user, model)]
+    # @return [Policy, nil] an instantiated policy
+    # @raise [InvalidConstructorError] if policy can't be instantated
     def cached_find(record)
       policy_cache.fetch(user: user, record: record) do
         klass = yield policy_finder(record)
@@ -149,10 +159,17 @@ module Pundit
       end
     end
 
+    # Return a policy finder for the given record.
+    #
+    # @api private
+    # @return [PolicyFinder]
     def policy_finder(record)
       PolicyFinder.new(record)
     end
 
+    # Given a possibly namespaced record, return the actual record.
+    #
+    # @api private
     def pundit_model(record)
       record.is_a?(Array) ? record.last : record
     end

@@ -16,6 +16,9 @@ module Pundit
         attr_reader :instance
       end
 
+      # Always yields, does not cache anything.
+      # @yield
+      # @return [any] whatever the block returns.
       def fetch(*, **)
         yield
       end
