@@ -196,6 +196,15 @@ module Pundit
 
     # rubocop:enable Naming/MemoizedInstanceVariableName
 
+    # This was added to allow calling `policy_scope!` without flipping the
+    # `pundit_policy_scoped?` flag.
+    #
+    # It's used internally by `policy_scope`, as well as from the views
+    # when they call `policy_scope`. It works because views get their helper
+    # from {Pundit::Helper}.
+    #
+    # @note This also memoizes the instance with `scope` as the key.
+    # @see Pundit::Helper#policy_scope
     # @api private
     def pundit_policy_scope(scope)
       policy_scopes[scope] ||= pundit.policy_scope!(scope)

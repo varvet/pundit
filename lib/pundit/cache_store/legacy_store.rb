@@ -12,6 +12,9 @@ module Pundit
         @store = hash
       end
 
+      # A cache store that uses only the record as a cache key, and ignores the user.
+      #
+      # @note `nil` results are not cached.
       def fetch(user:, record:)
         _ = user
         @store[record] ||= yield

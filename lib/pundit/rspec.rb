@@ -4,7 +4,9 @@
 require "active_support/core_ext/array/conversions"
 
 module Pundit
+  # Namespace for Pundit's RSpec integration.
   module RSpec
+    # Namespace for Pundit's RSpec matchers.
     module Matchers
       extend ::RSpec::Matchers::DSL
 

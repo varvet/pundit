@@ -6,6 +6,7 @@ require "pundit/version"
 require "pundit/policy_finder"
 require "pundit/authorization"
 require "pundit/context"
+require "pundit/cache_store"
 require "pundit/cache_store/null_store"
 require "pundit/cache_store/legacy_store"
 
@@ -14,6 +15,8 @@ require "pundit/cache_store/legacy_store"
 # keep it here with compact class style definition.
 class Pundit::Error < StandardError; end # rubocop:disable Style/ClassAndModuleChildren
 
+# Hello? Yes, this is Pundit.
+#
 # @api public
 module Pundit
   # @api private
@@ -26,8 +29,24 @@ module Pundit
 
   # Error that will be raised when authorization has failed
   class NotAuthorizedError < Error
-    attr_reader :query, :record, :policy
+    # @see #initialize
+    attr_reader :query
+    # @see #initialize
+    attr_reader :record
+    # @see #initialize
+    attr_reader :policy
 
+    # @overload initialize(message)
+    #   Create an error with a simple error message.
+    #   @param [String] message A simple error message string.
+    #
+    # @overload initialize(options)
+    #   Create an error with the specified attributes.
+    #   @param [Hash] options The error options.
+    #   @option options [String] :message Optional custom error message. Will default to a generalized message.
+    #   @option options [Symbol] :query The name of the policy method that was checked.
+    #   @option options [Object] :record The object that was being checked with the policy.
+    #   @option options [Class] :policy The class of policy that was used for the check.
     def initialize(options = {})
       if options.is_a? String
         message = options
@@ -103,8 +122,12 @@ module Pundit
     end
   end
 
+  # Rails view helpers, to allow a slightly different view-specific
+  # implementation of the methods in {Pundit::Authorization}.
+  #
   # @api private
   module Helper
+    # @see Pundit::Authorization#pundit_policy_scope
     def policy_scope(scope)
       pundit_policy_scope(scope)
     end
