@@ -1,4 +1,4 @@
-Copyright (c) 2019 Jonas Nicklas, Varvet AB
+Copyright (c) 2025 Jonas Nicklas, Varvet AB
 
 MIT License
 
