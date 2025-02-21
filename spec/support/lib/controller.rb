@@ -28,9 +28,7 @@ class Controller
 
   include Pundit::Authorization
   # Mark protected methods public so they may be called in test
-  # rubocop:disable Style/AccessModifierDeclarations
   public(*Pundit::Authorization.protected_instance_methods)
-  # rubocop:enable Style/AccessModifierDeclarations
 
   def initialize(current_user, action_name, params)
     @current_user = current_user
