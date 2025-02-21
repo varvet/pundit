@@ -18,6 +18,9 @@ if ENV["COVERAGE"]
   end
 end
 
+# @see https://github.com/rails/rails/issues/54260
+require "logger" if RUBY_ENGINE == "jruby" && RUBY_ENGINE_VERSION.start_with?("9.3")
+
 require "pundit"
 require "pundit/rspec"
 require "active_model/naming"
