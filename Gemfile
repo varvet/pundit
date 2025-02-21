@@ -4,5 +4,7 @@ source "https://rubygems.org"
 
 gemspec
 
-# https://github.com/ruby/psych/issues/655
-gem "psych", "!= 5.1.1", platforms: %i[jruby]
+# Affects us on JRuby 9.3.15.
+#
+# @see https://github.com/rails/rails/issues/54260
+gem "logger"
