@@ -1,0 +1,7 @@
+# This is here so we can keep YAML syntax highlight in the main file.
+AllCops:
+  Exclude:
+    - "lib/generators/**/templates/**/*"
+    <% `git status --ignored --porcelain`.lines.grep(/^!! /).each do |path| %>
+    - <%= path.sub(/^!! /, '').sub(/\/$/, '/**/*') %>
+    <% end %>

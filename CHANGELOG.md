@@ -5,6 +5,7 @@
 ## Added
 
 - Add `Pundit::Authorization#pundit_reset!` hook to reset the policy and policy scope cache. (#830)
+- Add links to gemspec. (#845)
 
 ## Changed
 

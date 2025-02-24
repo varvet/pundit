@@ -86,6 +86,7 @@ jobs:
 
   coverage-check:
     permissions:
+      contents: read
       checks: write
     needs: test
     runs-on: ubuntu-latest
