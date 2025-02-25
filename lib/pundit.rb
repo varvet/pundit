@@ -9,6 +9,7 @@ require "pundit/context"
 require "pundit/cache_store"
 require "pundit/cache_store/null_store"
 require "pundit/cache_store/legacy_store"
+require "pundit/railtie" if defined?(Rails)
 
 # @api private
 # To avoid name clashes with common Error naming when mixing in Pundit,
