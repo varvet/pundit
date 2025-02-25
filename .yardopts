@@ -1,1 +1,1 @@
---api public --hide-void-return --markup markdown
+--no-private --private --protected --hide-void-return --markup markdown --fail-on-warning

@@ -43,15 +43,6 @@ RSpec.describe Pundit do
       expect(Pundit.authorize(user, Post, :show?)).to eq(Post)
     end
 
-    it "can be given a different policy class" do
-      expect(Pundit.authorize(user, post, :create?, policy_class: PublicationPolicy)).to be_truthy
-    end
-
-    it "can be given a different policy class using namespaces" do
-      expect(PublicationPolicy).to receive(:new).with(user, comment).and_call_original
-      expect(Pundit.authorize(user, [:project, comment], :create?, policy_class: PublicationPolicy)).to be_truthy
-    end
-
     it "works with anonymous class policies" do
       expect(Pundit.authorize(user, article_tag, :show?)).to be_truthy
       expect { Pundit.authorize(user, article_tag, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
@@ -111,6 +102,41 @@ RSpec.describe Pundit do
         Pundit.authorize(user, wiki, :update?)
       end.to raise_error(Pundit::InvalidConstructorError, "Invalid #<WikiPolicy> constructor is called")
     end
+
+    context "when passed a policy class" do
+      it "uses the passed policy class" do
+        expect(Pundit.authorize(user, post, :create?, policy_class: PublicationPolicy)).to be_truthy
+      end
+
+      # This is documenting past behaviour.
+      it "doesn't cache the policy class" do
+        cache = {}
+
+        expect do
+          Pundit.authorize(user, post, :create?, policy_class: PublicationPolicy, cache: cache)
+          Pundit.authorize(user, post, :create?, policy_class: PublicationPolicy, cache: cache)
+        end.to change { PublicationPolicy.instances }.by(2)
+      end
+    end
+
+    context "when passed a policy class while simultaenously passing a namespace" do
+      it "uses the passed policy class" do
+        expect(PublicationPolicy).to receive(:new).with(user, comment).and_call_original
+        expect(Pundit.authorize(user, [:project, comment], :create?, policy_class: PublicationPolicy)).to be_truthy
+      end
+    end
+
+    context "when passed an explicit cache" do
+      it "uses the hash assignment interface on the cache" do
+        custom_cache = CustomCache.new
+
+        Pundit.authorize(user, post, :update?, cache: custom_cache)
+
+        expect(custom_cache.to_h).to match({
+          post => kind_of(PostPolicy)
+        })
+      end
+    end
   end
 
   describe ".policy_scope" do
@@ -154,8 +180,8 @@ RSpec.describe Pundit do
 
     it "raises an original error with a policy scope that contains error" do
       expect do
-        Pundit.policy_scope(user, Thread)
-      end.to raise_error(ArgumentError)
+        Pundit.policy_scope(user, DefaultScopeContainsError)
+      end.to raise_error(RuntimeError, "This is an arbitrary error that should bubble up")
     end
   end
 

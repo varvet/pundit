@@ -16,20 +16,16 @@ Gem::Specification.new do |gem|
 
   gem.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.metadata      = { "rubygems_mfa_required" => "true" }
+  gem.metadata      = {
+    "rubygems_mfa_required" => "true",
+    "bug_tracker_uri" => "https://github.com/varvet/pundit/issues",
+    "changelog_uri" => "https://github.com/varvet/pundit/blob/main/CHANGELOG.md",
+    "documentation_uri" => "https://github.com/varvet/pundit/blob/main/README.md",
+    "homepage_uri" => "https://github.com/varvet/pundit",
+    "source_code_uri" => "https://github.com/varvet/pundit"
+  }
 
   gem.add_dependency "activesupport", ">= 3.0.0"
-  gem.add_development_dependency "actionpack", ">= 3.0.0"
-  gem.add_development_dependency "activemodel", ">= 3.0.0"
-  gem.add_development_dependency "bundler"
-  gem.add_development_dependency "pry"
-  gem.add_development_dependency "railties", ">= 3.0.0"
-  gem.add_development_dependency "rake"
-  gem.add_development_dependency "rspec", ">= 3.0.0"
-  gem.add_development_dependency "rubocop"
-  gem.add_development_dependency "simplecov", ">= 0.17.0"
-  gem.add_development_dependency "yard"
 end

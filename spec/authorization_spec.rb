@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "action_controller/metal/strong_parameters"
 
 describe Pundit::Authorization do
   def to_params(*args, **kwargs, &block)
@@ -8,7 +9,7 @@ describe Pundit::Authorization do
   end
 
   let(:controller) { Controller.new(user, "update", to_params({})) }
-  let(:user) { double }
+  let(:user) { double("user") }
   let(:post) { Post.new(user) }
   let(:comment) { Comment.new }
   let(:article) { Article.new }
@@ -157,7 +158,7 @@ describe Pundit::Authorization do
     end
 
     it "allows policy to be injected" do
-      new_policy = OpenStruct.new
+      new_policy = double
       controller.policies[post] = new_policy
 
       expect(controller.policy(post)).to eq new_policy
@@ -182,7 +183,7 @@ describe Pundit::Authorization do
     end
 
     it "allows policy_scope to be injected" do
-      new_scope = OpenStruct.new
+      new_scope = double
       controller.policy_scopes[Post] = new_scope
 
       expect(controller.policy_scope(Post)).to eq new_scope
@@ -269,6 +270,62 @@ describe Pundit::Authorization do
 
       action = "update"
       expect(Controller.new(user, action, params).permitted_attributes(post, :revise).to_h).to eq("body" => "blah")
+    end
+  end
+
+  describe "#pundit_reset!" do
+    it "allows authorize to react to a user change" do
+      expect(controller.authorize(post)).to be_truthy
+
+      controller.current_user = double
+      controller.pundit_reset!
+      expect { controller.authorize(post) }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    it "allows policy to react to a user change" do
+      expect(controller.policy(DummyCurrentUser).user).to be user
+
+      new_user = double("new user")
+      controller.current_user = new_user
+      controller.pundit_reset!
+      expect(controller.policy(DummyCurrentUser).user).to be new_user
+    end
+
+    it "allows policy scope to react to a user change" do
+      expect(controller.policy_scope(DummyCurrentUser)).to be user
+
+      new_user = double("new user")
+      controller.current_user = new_user
+      controller.pundit_reset!
+      expect(controller.policy_scope(DummyCurrentUser)).to be new_user
+    end
+
+    it "resets the pundit context" do
+      expect(controller.pundit.user).to be(user)
+
+      new_user = double
+      controller.current_user = new_user
+      expect { controller.pundit_reset! }.to change { controller.pundit.user }.from(user).to(new_user)
+    end
+
+    it "clears pundit_policy_authorized? flag" do
+      expect(controller.pundit_policy_authorized?).to be false
+
+      controller.skip_authorization
+      expect(controller.pundit_policy_authorized?).to be true
+
+      controller.pundit_reset!
+      expect(controller.pundit_policy_authorized?).to be false
+    end
+
+    it "clears pundit_policy_scoped? flag" do
+      expect(controller.pundit_policy_scoped?).to be false
+
+      controller.skip_policy_scope
+      expect(controller.pundit_policy_scoped?).to be true
+
+      controller.pundit_reset!
+      expect(controller.pundit_policy_scoped?).to be false
     end
   end
 end

@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 module Pundit
+  # Pundit DSL to include in your controllers to provide authorization helpers.
+  #
+  # @example
+  #   class ApplicationController < ActionController::Base
+  #     include Pundit::Authorization
+  #   end
+  # @see #pundit
+  # @api public
   module Authorization
     extend ActiveSupport::Concern
 
@@ -15,7 +23,13 @@ module Pundit
 
     protected
 
-    # @return [Pundit::Context] a new instance of {Pundit::Context} with the current user
+    # An instance of {Pundit::Context} initialized with the current user.
+    #
+    # @note this method is memoized and will return the same instance during the request.
+    # @api public
+    # @return [Pundit::Context]
+    # @see #pundit_user
+    # @see #policies
     def pundit
       @pundit ||= Pundit::Context.new(
         user: pundit_user,
@@ -23,39 +37,37 @@ module Pundit
       )
     end
 
-    # @return [Boolean] whether authorization has been performed, i.e. whether
-    #                   one {#authorize} or {#skip_authorization} has been called
-    def pundit_policy_authorized?
-      !!@_pundit_policy_authorized
-    end
-
-    # @return [Boolean] whether policy scoping has been performed, i.e. whether
-    #                   one {#policy_scope} or {#skip_policy_scope} has been called
-    def pundit_policy_scoped?
-      !!@_pundit_policy_scoped
-    end
-
-    # Raises an error if authorization has not been performed, usually used as an
-    # `after_action` filter to prevent programmer error in forgetting to call
-    # {#authorize} or {#skip_authorization}.
+    # Hook method which allows customizing which user is passed to policies and
+    # scopes initialized by {#authorize}, {#policy} and {#policy_scope}.
     #
-    # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
-    # @raise [AuthorizationNotPerformedError] if authorization has not been performed
-    # @return [void]
-    def verify_authorized
-      raise AuthorizationNotPerformedError, self.class unless pundit_policy_authorized?
+    # @note Make sure to call `pundit_reset!` if this changes during a request.
+    # @see https://github.com/varvet/pundit#customize-pundit-user
+    # @see #pundit
+    # @see #pundit_reset!
+    # @return [Object] the user object to be used with pundit
+    def pundit_user
+      current_user
     end
 
-    # Raises an error if policy scoping has not been performed, usually used as an
-    # `after_action` filter to prevent programmer error in forgetting to call
-    # {#policy_scope} or {#skip_policy_scope} in index actions.
+    # Clears the cached Pundit authorization data.
     #
-    # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
-    # @raise [AuthorizationNotPerformedError] if policy scoping has not been performed
+    # This method should be called when the pundit_user is changed,
+    # such as during user switching, to ensure that stale authorization
+    # data is not used. Pundit caches authorization policies and scopes
+    # for the pundit_user, so calling this method will reset those
+    # caches and ensure that the next authorization checks are performed
+    # with the correct context for the new pundit_user.
+    #
     # @return [void]
-    def verify_policy_scoped
-      raise PolicyScopingNotPerformedError, self.class unless pundit_policy_scoped?
+    def pundit_reset!
+      @pundit = nil
+      @_pundit_policies = nil
+      @_pundit_policy_scopes = nil
+      @_pundit_policy_authorized = nil
+      @_pundit_policy_scoped = nil
     end
+
+    # @!group Policies
 
     # Retrieves the policy for the given record, initializing it with the record
     # and current user and finally throwing an error if the user is not
@@ -66,7 +78,9 @@ module Pundit
     #   If omitted then this defaults to the Rails controller action name.
     # @param policy_class [Class] the policy class we want to force use of
     # @raise [NotAuthorizedError] if the given query method returned false
-    # @return [Object] Always returns the passed object record
+    # @return [record] Always returns the passed object record
+    # @see Pundit::Context#authorize
+    # @see #verify_authorized
     def authorize(record, query = nil, policy_class: nil)
       query ||= "#{action_name}?"
 
@@ -79,28 +93,44 @@ module Pundit
     #
     # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
     # @return [void]
+    # @see #verify_authorized
     def skip_authorization
       @_pundit_policy_authorized = :skipped
     end
 
-    # Allow this action not to perform policy scoping.
-    #
-    # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
-    # @return [void]
-    def skip_policy_scope
-      @_pundit_policy_scoped = :skipped
+    # @return [Boolean] wether or not authorization has been performed
+    # @see #authorize
+    # @see #skip_authorization
+    def pundit_policy_authorized?
+      !!@_pundit_policy_authorized
     end
 
-    # Retrieves the policy scope for the given record.
+    # Raises an error if authorization has not been performed.
     #
-    # @see https://github.com/varvet/pundit#scopes
-    # @param scope [Object] the object we're retrieving the policy scope for
-    # @param policy_scope_class [Class] the policy scope class we want to force use of
-    # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
-    def policy_scope(scope, policy_scope_class: nil)
-      @_pundit_policy_scoped = true
-      policy_scope_class ? policy_scope_class.new(pundit_user, scope).resolve : pundit_policy_scope(scope)
+    # Usually used as an `after_action` filter to prevent programmer error in
+    # forgetting to call {#authorize} or {#skip_authorization}.
+    #
+    # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
+    # @raise [AuthorizationNotPerformedError] if authorization has not been performed
+    # @return [void]
+    # @see #authorize
+    # @see #skip_authorization
+    def verify_authorized
+      raise AuthorizationNotPerformedError, self.class unless pundit_policy_authorized?
     end
+
+    # rubocop:disable Naming/MemoizedInstanceVariableName
+
+    # Cache of policies. You should not rely on this method.
+    #
+    # @api private
+    def policies
+      @_pundit_policies ||= {}
+    end
+
+    # rubocop:enable Naming/MemoizedInstanceVariableName
+
+    # @!endgroup
 
     # Retrieves the policy for the given record.
     #
@@ -111,11 +141,87 @@ module Pundit
       pundit.policy!(record)
     end
 
-    # Retrieves a set of permitted attributes from the policy by instantiating
-    # the policy class for the given record and calling `permitted_attributes` on
-    # it, or `permitted_attributes_for_{action}` if `action` is defined. It then infers
-    # what key the record should have in the params hash and retrieves the
-    # permitted attributes from the params hash under that key.
+    # @!group Policy Scopes
+
+    # Retrieves the policy scope for the given record.
+    #
+    # @see https://github.com/varvet/pundit#scopes
+    # @param scope [Object] the object we're retrieving the policy scope for
+    # @param policy_scope_class [#resolve] the policy scope class we want to force use of
+    # @return [#resolve, nil] instance of scope class which can resolve to a scope
+    def policy_scope(scope, policy_scope_class: nil)
+      @_pundit_policy_scoped = true
+      policy_scope_class ? policy_scope_class.new(pundit_user, scope).resolve : pundit_policy_scope(scope)
+    end
+
+    # Allow this action not to perform policy scoping.
+    #
+    # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
+    # @return [void]
+    # @see #verify_policy_scoped
+    def skip_policy_scope
+      @_pundit_policy_scoped = :skipped
+    end
+
+    # @return [Boolean] wether or not policy scoping has been performed
+    # @see #policy_scope
+    # @see #skip_policy_scope
+    def pundit_policy_scoped?
+      !!@_pundit_policy_scoped
+    end
+
+    # Raises an error if policy scoping has not been performed.
+    #
+    # Usually used as an `after_action` filter to prevent programmer error in
+    # forgetting to call {#policy_scope} or {#skip_policy_scope} in index
+    # actions.
+    #
+    # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
+    # @raise [AuthorizationNotPerformedError] if policy scoping has not been performed
+    # @return [void]
+    # @see #policy_scope
+    # @see #skip_policy_scope
+    def verify_policy_scoped
+      raise PolicyScopingNotPerformedError, self.class unless pundit_policy_scoped?
+    end
+
+    # rubocop:disable Naming/MemoizedInstanceVariableName
+
+    # Cache of policy scope. You should not rely on this method.
+    #
+    # @api private
+    def policy_scopes
+      @_pundit_policy_scopes ||= {}
+    end
+
+    # rubocop:enable Naming/MemoizedInstanceVariableName
+
+    # This was added to allow calling `policy_scope!` without flipping the
+    # `pundit_policy_scoped?` flag.
+    #
+    # It's used internally by `policy_scope`, as well as from the views
+    # when they call `policy_scope`. It works because views get their helper
+    # from {Pundit::Helper}.
+    #
+    # @note This also memoizes the instance with `scope` as the key.
+    # @see Pundit::Helper#policy_scope
+    # @api private
+    def pundit_policy_scope(scope)
+      policy_scopes[scope] ||= pundit.policy_scope!(scope)
+    end
+    private :pundit_policy_scope
+
+    # @!endgroup
+
+    # @!group Strong Parameters
+
+    # Retrieves a set of permitted attributes from the policy.
+    #
+    # Done by instantiating the policy class for the given record and calling
+    # `permitted_attributes` on it, or `permitted_attributes_for_{action}` if
+    # `action` is defined. It then infers what key the record should have in the
+    # params hash and retrieves the permitted attributes from the params hash
+    # under that key.
     #
     # @see https://github.com/varvet/pundit#strong-parameters
     # @param record [Object] the object we're retrieving permitted attributes for
@@ -140,37 +246,6 @@ module Pundit
       params.require(PolicyFinder.new(record).param_key)
     end
 
-    # Cache of policies. You should not rely on this method.
-    #
-    # @api private
-    # rubocop:disable Naming/MemoizedInstanceVariableName
-    def policies
-      @_pundit_policies ||= {}
-    end
-    # rubocop:enable Naming/MemoizedInstanceVariableName
-
-    # Cache of policy scope. You should not rely on this method.
-    #
-    # @api private
-    # rubocop:disable Naming/MemoizedInstanceVariableName
-    def policy_scopes
-      @_pundit_policy_scopes ||= {}
-    end
-    # rubocop:enable Naming/MemoizedInstanceVariableName
-
-    # Hook method which allows customizing which user is passed to policies and
-    # scopes initialized by {#authorize}, {#policy} and {#policy_scope}.
-    #
-    # @see https://github.com/varvet/pundit#customize-pundit-user
-    # @return [Object] the user object to be used with pundit
-    def pundit_user
-      current_user
-    end
-
-    private
-
-    def pundit_policy_scope(scope)
-      policy_scopes[scope] ||= pundit.policy_scope!(scope)
-    end
+    # @!endgroup
   end
 end

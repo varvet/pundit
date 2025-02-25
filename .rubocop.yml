@@ -1,16 +1,20 @@
+inherit_from: .rubocop_ignore_git.yml
+
 AllCops:
   TargetRubyVersion: 3.1
-  Exclude:
-    - "lib/generators/**/templates/**/*"
-    <% `git status --ignored --porcelain`.lines.grep(/^!! /).each do |path| %>
-    - <%= path.sub(/^!! /, '').sub(/\/$/, '/**/*') %>
-    <% end %>
   SuggestExtensions: false
   NewCops: disable
+
+Gemspec/DeprecatedAttributeAssignment:
+  Enabled: true
+
+Gemspec/DevelopmentDependencies:
+  Enabled: true
 
 Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
+    - pundit.gemspec
 
 Metrics/MethodLength:
   Max: 40
@@ -24,7 +28,7 @@ Layout/LineLength:
   Max: 120
 
 Gemspec/RequiredRubyVersion:
- Enabled: false
+  Enabled: false
 
 Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
@@ -36,13 +40,19 @@ Layout/CaseIndentation:
     - end
   IndentOneStep: true
 
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
-    '%w': "[]"
-    '%W': "[]"
+    "%w": "[]"
+    "%W": "[]"
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

@@ -582,6 +582,25 @@ def pundit_user
   User.find_by_other_means
 end
 ```
+### Handling User Switching in Pundit
+
+When switching users in your application, it's important to reset the Pundit user context to ensure that authorization policies are applied correctly for the new user. Pundit caches the user context, so failing to reset it could result in incorrect permissions being applied.
+
+To handle user switching, you can use the following pattern in your controller:
+
+```ruby
+class ApplicationController
+  include Pundit::Authorization
+
+  def switch_user_to(user)
+    terminate_session if authenticated?
+    start_new_session_for user
+    pundit_reset!
+  end
+end
+```
+
+Make sure to invoke `pundit_reset!` whenever changing the user. This ensures the cached authorization context is reset, preventing any incorrect permissions from being applied.
 
 ## Policy Namespacing
 In some cases it might be helpful to have multiple policies that serve different contexts for a

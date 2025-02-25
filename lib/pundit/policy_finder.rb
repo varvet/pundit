@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# String#safe_constantize, String#demodulize, String#underscore, String#camelize
+require "active_support/core_ext/string/inflections"
+
 module Pundit
   # Finds policy and scope classes for given object.
   # @api public
@@ -10,10 +13,15 @@ module Pundit
   #   finder.scope #=> UserPolicy::Scope
   #
   class PolicyFinder
+    # A constant applied to the end of the class name to find the policy class.
+    #
+    # @api private
+    SUFFIX = "Policy"
+
+    # @see #initialize
     attr_reader :object
 
     # @param object [any] the object to find policy and scope classes for
-    #
     def initialize(object)
       @object = object
     end
@@ -70,6 +78,11 @@ module Pundit
 
     private
 
+    # Given an object, find the policy class name.
+    #
+    # Uses recursion to handle namespaces.
+    #
+    # @return [String, Class] the policy class, or its name.
     def find(subject)
       if subject.is_a?(Array)
         modules = subject.dup
@@ -86,6 +99,14 @@ module Pundit
       end
     end
 
+    # Given an object, find its' class name.
+    #
+    # - Supports ActiveModel.
+    # - Supports regular classes.
+    # - Supports symbols.
+    # - Supports object instances.
+    #
+    # @return [String, Class] the class, or its name.
     def find_class_name(subject)
       if subject.respond_to?(:model_name)
         subject.model_name

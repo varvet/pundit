@@ -2,9 +2,21 @@
 
 ## Unreleased
 
-### Added
+## Added
 
+- Add `Pundit::Authorization#pundit_reset!` hook to reset the policy and policy scope cache. (#830)
+- Add links to gemspec. (#845)
 - Register policies directories for Rails 8 code statistics (#833)
+
+## Changed
+
+- Deprecated `Pundit::SUFFIX`, moved it to `Pundit::PolicyFinder::SUFFIX` (#835)
+- Explicitly require less of `active_support` (#837)
+- Using `permit` matcher without a surrouding `permissions` block now raises a useful error. (#836)
+
+### Fixed
+
+- Using a hash as custom cache in `Pundit.authorize` now works as documented. (#838)
 
 ## 2.4.0 (2024-08-26)
 
