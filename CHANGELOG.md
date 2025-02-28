@@ -7,6 +7,7 @@
 - Add `Pundit::Authorization#pundit_reset!` hook to reset the policy and policy scope cache. (#830)
 - Add links to gemspec. (#845)
 - Register policies directories for Rails 8 code statistics (#833)
+- Added an example for how to use pundit with Rails 8 authentication generator (#850)
 
 ## Changed
 
