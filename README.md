@@ -583,9 +583,9 @@ def pundit_user
 end
 ```
 
-For instance, Rails 8 comes with its built in [authentication generator](https://github.com/rails/rails/tree/8-0-stable/railties/lib/rails/generators/rails/authentication). If you opt to use that means of authentication, currently logged in user is now accessed with `Current.user` instead of `current_user`.
+For instance, Rails 8 includes a built-in [authentication generator](https://github.com/rails/rails/tree/8-0-stable/railties/lib/rails/generators/rails/authentication). If you choose to use it, the currently logged-in user is accessed via `Current.user` instead of `current_user`.
 
-Therefore, you should define a method named `pundit_user` like below in your `application_controller.rb` or somewhere suitable.
+To ensure compatibility with Pundit, define a `pundit_user` method in `application_controller.rb` (or another suitable location) as follows:
 
 ```ruby
 def pundit_user
