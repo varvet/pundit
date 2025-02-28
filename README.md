@@ -582,6 +582,17 @@ def pundit_user
   User.find_by_other_means
 end
 ```
+
+For instance, Rails 8 comes with its built in [authentication generator](https://github.com/rails/rails/tree/8-0-stable/railties/lib/rails/generators/rails/authentication). If you opt to use that means of authentication, currently logged in user is now accessed with `Current.user` instead of `current_user`.
+
+Therefore, you should define a method named `pundit_user` like below in your `application_controller.rb` or somewhere suitable.
+
+```ruby
+def pundit_user
+  Current.user
+end
+```
+
 ### Handling User Switching in Pundit
 
 When switching users in your application, it's important to reset the Pundit user context to ensure that authorization policies are applied correctly for the new user. Pundit caches the user context, so failing to reset it could result in incorrect permissions being applied.
