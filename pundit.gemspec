@@ -14,11 +14,14 @@ Gem::Specification.new do |gem|
   gem.homepage      = "https://github.com/varvet/pundit"
   gem.license       = "MIT"
 
-  gem.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
-  gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
+  gem.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
+    ls.readlines("\x0", chomp: true).select do |f|
+      f.start_with?("lib/", "README", "SECURITY", "LICENSE", "CHANGELOG")
+    end
+  end
   gem.require_paths = ["lib"]
 
-  gem.metadata      = {
+  gem.metadata = {
     "rubygems_mfa_required" => "true",
     "bug_tracker_uri" => "https://github.com/varvet/pundit/issues",
     "changelog_uri" => "https://github.com/varvet/pundit/blob/main/CHANGELOG.md",
