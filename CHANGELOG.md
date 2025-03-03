@@ -2,14 +2,16 @@
 
 ## Unreleased
 
-## Added
+## 2.5.0 (2025-03-03)
+
+### Added
 
 - Add `Pundit::Authorization#pundit_reset!` hook to reset the policy and policy scope cache. [#830](https://github.com/varvet/pundit/issues/830)
 - Add links to gemspec. [#845](https://github.com/varvet/pundit/issues/845)
 - Register policies directories for Rails 8 code statistics [#833](https://github.com/varvet/pundit/issues/833)
 - Added an example for how to use pundit with Rails 8 authentication generator [#850](https://github.com/varvet/pundit/issues/850)
 
-## Changed
+### Changed
 
 - Deprecated `Pundit::SUFFIX`, moved it to `Pundit::PolicyFinder::SUFFIX` [#835](https://github.com/varvet/pundit/issues/835)
 - Explicitly require less of `active_support` [#837](https://github.com/varvet/pundit/issues/837)
@@ -21,12 +23,12 @@
 
 ## 2.4.0 (2024-08-26)
 
-## Changed
+### Changed
 
 - Improve the `NotAuthorizedError` message to include the policy class.
   Furthermore, in the case where the record passed is a class instead of an instance, the class name is given. [#812](https://github.com/varvet/pundit/issues/812)
 
-## Added
+### Added
 
 - Add customizable permit matcher description [#806](https://github.com/varvet/pundit/issues/806)
 - Add support for filter_run_when_matching :focus with permissions helper. [#820](https://github.com/varvet/pundit/issues/820)
@@ -35,7 +37,7 @@
 
 - Refactor: First pass of Pundit::Context [#797](https://github.com/varvet/pundit/issues/797)
 
-## Changed
+### Changed
 
 - Update `ApplicationPolicy` generator to qualify the `Scope` class name [#792](https://github.com/varvet/pundit/issues/792)
 - Policy generator uses `NoMethodError` to indicate `#resolve` is not implemented [#776](https://github.com/varvet/pundit/issues/776)
