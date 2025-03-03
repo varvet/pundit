@@ -14,8 +14,8 @@ Gem::Specification.new do |gem|
   gem.homepage      = "https://github.com/varvet/pundit"
   gem.license       = "MIT"
 
-  gem.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
-    ls.readlines("\x0", chomp: true).select do |f|
+  Dir.chdir(__dir__) do
+    gem.files = `git ls-files -z`.split("\x0").select do |f|
       f.start_with?("lib/", "README", "SECURITY", "LICENSE", "CHANGELOG")
     end
   end
