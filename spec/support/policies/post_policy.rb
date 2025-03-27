@@ -33,4 +33,16 @@ class PostPolicy < BasePolicy
   def permitted_attributes_for_revise
     [:body]
   end
+
+  def expected_attributes
+    if post.user == user
+      %i[title votes]
+    else
+      [:votes]
+    end
+  end
+
+  def expected_attributes_for_revise
+    [:body]
+  end
 end
