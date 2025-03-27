@@ -255,6 +255,29 @@ module Pundit
       pundit_params_for(record).permit(*policy.public_send(method_name))
     end
 
+    # Retrieves a set of expected attributes from the policy.
+    #
+    # Done by instantiating the policy class for the given record and calling
+    # `expected_attributes` on it, or `expected_attributes_for_{action}` if
+    # `action` is defined. It then infers what key the record should have in the
+    # params hash and retrieves the expected attributes from the params hash
+    # under that key.
+    #
+    # @see https://github.com/varvet/pundit#strong-parameters
+    # @param record [Object] the object we're retrieving expected attributes for
+    # @param action [Symbol, String] the name of the action being performed on the record (e.g. `:update`).
+    #   If omitted then this defaults to the Rails controller action name.
+    # @return [Hash{String => Object}] the expected attributes
+    def expected_attributes(record, action = action_name)
+      policy = policy(record)
+      method_name = if policy.respond_to?("expected_attributes_for_#{action}")
+        "expected_attributes_for_#{action}"
+      else
+        "expected_attributes"
+      end
+      params.expect(PolicyFinder.new(record).param_key => policy.public_send(method_name))
+    end
+
     # Retrieves the params for the given record.
     #
     # @param record [Object] the object we're retrieving params for
