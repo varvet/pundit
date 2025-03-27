@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "action_controller/metal/strong_parameters"
+require "action_controller"
 
 describe Pundit::Authorization do
   def to_params(*args, **kwargs, &block)
@@ -273,86 +273,88 @@ describe Pundit::Authorization do
     end
   end
 
-  describe "#expected_attributes" do
-    it "checks policy for expected attributes" do
-      params = to_params(
-        post: {
-          title: "Hello",
-          votes: 5,
-          admin: true
-        }
-      )
+  if Gem::Version.new(ActionPack::VERSION::STRING) >= Gem::Version.new("8.0.0")
+    describe "#expected_attributes" do
+      it "checks policy for expected attributes" do
+        params = to_params(
+          post: {
+            title: "Hello",
+            votes: 5,
+            admin: true
+          }
+        )
 
-      action = "update"
+        action = "update"
 
-      expect(Controller.new(user, action, params).expected_attributes(post).to_h).to eq(
-        "title" => "Hello",
-        "votes" => 5
-      )
-      expect(Controller.new(double, action, params).expected_attributes(post).to_h).to eq("votes" => 5)
+        expect(Controller.new(user, action, params).expected_attributes(post).to_h).to eq(
+          "title" => "Hello",
+          "votes" => 5
+        )
+        expect(Controller.new(double, action, params).expected_attributes(post).to_h).to eq("votes" => 5)
+      end
+
+      it "checks policy for expected attributes for record of a ActiveModel type" do
+        customer_post = Customer::Post.new(user)
+        params = to_params(
+          customer_post: {
+            title: "Hello",
+            votes: 5,
+            admin: true
+          }
+        )
+
+        action = "update"
+
+        expect(Controller.new(user, action, params).expected_attributes(customer_post).to_h).to eq(
+          "title" => "Hello",
+          "votes" => 5
+        )
+        expect(Controller.new(double, action, params).expected_attributes(customer_post).to_h).to eq(
+          "votes" => 5
+        )
+      end
+
+      it "goes through the policy cache" do
+        params = to_params(post: { title: "Hello" })
+        user = double
+        post = Post.new(user)
+        controller = Controller.new(user, "update", params)
+
+        expect do
+          expect(controller.expected_attributes(post)).to be_truthy
+          expect(controller.expected_attributes(post)).to be_truthy
+        end.to change { PostPolicy.instances }.by(1)
+      end
     end
 
-    it "checks policy for expected attributes for record of a ActiveModel type" do
-      customer_post = Customer::Post.new(user)
-      params = to_params(
-        customer_post: {
-          title: "Hello",
-          votes: 5,
-          admin: true
-        }
-      )
+    describe "#expected_attributes_for_action" do
+      it "is checked if it is defined in the policy" do
+        params = to_params(
+          post: {
+            title: "Hello",
+            body: "blah",
+            votes: 5,
+            admin: true
+          }
+        )
 
-      action = "update"
+        action = "revise"
+        expect(Controller.new(user, action, params).expected_attributes(post).to_h).to eq("body" => "blah")
+      end
 
-      expect(Controller.new(user, action, params).expected_attributes(customer_post).to_h).to eq(
-        "title" => "Hello",
-        "votes" => 5
-      )
-      expect(Controller.new(double, action, params).expected_attributes(customer_post).to_h).to eq(
-        "votes" => 5
-      )
-    end
+      it "can be explicitly set" do
+        params = to_params(
+          post: {
+            title: "Hello",
+            body: "blah",
+            votes: 5,
+            admin: true
+          }
+        )
 
-    it "goes through the policy cache" do
-      params = to_params(post: { title: "Hello" })
-      user = double
-      post = Post.new(user)
-      controller = Controller.new(user, "update", params)
-
-      expect do
-        expect(controller.expected_attributes(post)).to be_truthy
-        expect(controller.expected_attributes(post)).to be_truthy
-      end.to change { PostPolicy.instances }.by(1)
-    end
-  end
-
-  describe "#expected_attributes_for_action" do
-    it "is checked if it is defined in the policy" do
-      params = to_params(
-        post: {
-          title: "Hello",
-          body: "blah",
-          votes: 5,
-          admin: true
-        }
-      )
-
-      action = "revise"
-      expect(Controller.new(user, action, params).expected_attributes(post).to_h).to eq("body" => "blah")
-    end
-
-    it "can be explicitly set" do
-      params = to_params(
-        post: {
-          title: "Hello",
-          body: "blah",
-          votes: 5,
-          admin: true
-        }
-      )
-
-      action = "update"
-      expect(Controller.new(user, action, params).expected_attributes(post, :revise).to_h).to eq("body" => "blah")
+        action = "update"
+        expect(Controller.new(user, action, params).expected_attributes(post, :revise).to_h).to eq("body" => "blah")
+      end
     end
   end
 
