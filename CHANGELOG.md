@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Fixed
+- Requiring only `pundit/rspec` can raise an error in Active Support (#857)
+
 ## 2.5.0 (2025-03-03)
 
 ### Added
