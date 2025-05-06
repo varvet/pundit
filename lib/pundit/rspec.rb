@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "pundit"
 # Array#to_sentence
 require "active_support/core_ext/array/conversions"
 
