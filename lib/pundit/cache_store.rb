@@ -5,12 +5,14 @@ module Pundit
   #
   # Cache stores are used to cache policy lookups, so you get the same policy
   # instance for the same record.
+  # @since v2.3.2
   module CacheStore
     # @!group Cache Store Interface
 
     # @!method fetch(user:, record:, &block)
     #   Looks up a stored policy or generate a new one.
     #
+    #   @since v2.3.2
     #   @note This is a method template, but the method does not exist in this module.
     #   @param user [Object]  the user that initiated the action
     #   @param record [Object] the object being accessed
