@@ -881,6 +881,7 @@ inherit_gem:
 - [Testing Pundit with Minitest](https://github.com/varvet/pundit/issues/204#issuecomment-60166450)
 - [Using Pundit outside of a Rails controller](https://github.com/varvet/pundit/pull/136)
 - [Straightforward Rails Authorization with Pundit](https://www.sitepoint.com/straightforward-rails-authorization-with-pundit/)
+- [Namespaced Pundit Policies Without the Repetition Racket](https://alec-c4.com/posts/2025-06-24-pundit-namespaced-policies)
 
 ## Other implementations
 
