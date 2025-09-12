@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+- Add support for `params.expect` [#855](https://github.com/varvet/pundit/pull/855)
+
 ## 2.5.1 (2025-09-12)
 
 ### Fixed
