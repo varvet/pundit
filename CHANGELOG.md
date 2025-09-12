@@ -2,8 +2,10 @@
 
 ## Unreleased
 
+## 2.5.1 (2025-09-12)
+
 ### Fixed
-- Requiring only `pundit/rspec` can raise an error in Active Support (#857)
+- Requiring only `pundit/rspec` no longer raises an error in Active Support [#857](https://github.com/varvet/pundit/issues/857)
 
 ## 2.5.0 (2025-03-03)
 
