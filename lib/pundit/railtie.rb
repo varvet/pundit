@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Pundit
+  # @since v2.5.0
   class Railtie < Rails::Railtie
     if Rails.version.to_f >= 8.0
       initializer "pundit.stats_directories" do

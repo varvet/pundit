@@ -2,7 +2,11 @@
 
 ## Unreleased
 
-- Add support for `params.expect` using `expected_parameters` and `expected_parameters_for`. [#855](https://github.com/varvet/pundit/pull/855)
+## Added
+- Add support for `params.expect` [#855](https://github.com/varvet/pundit/pull/855)
+
+### Fixed
+- Requiring only `pundit/rspec` can raise an error in Active Support (#857)
 
 ## 2.5.0 (2025-03-03)
 

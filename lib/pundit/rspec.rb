@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+require "pundit"
 # Array#to_sentence
 require "active_support/core_ext/array/conversions"
 
 module Pundit
   # Namespace for Pundit's RSpec integration.
+  # @since v0.1.0
   module RSpec
     # Namespace for Pundit's RSpec matchers.
     module Matchers

@@ -9,6 +9,7 @@ module Pundit
   #   end
   # @see #pundit
   # @api public
+  # @since v2.2.0
   module Authorization
     extend ActiveSupport::Concern
 
@@ -30,6 +31,7 @@ module Pundit
     # @return [Pundit::Context]
     # @see #pundit_user
     # @see #policies
+    # @since v2.3.2
     def pundit
       @pundit ||= Pundit::Context.new(
         user: pundit_user,
@@ -45,6 +47,7 @@ module Pundit
     # @see #pundit
     # @see #pundit_reset!
     # @return [Object] the user object to be used with pundit
+    # @since v0.2.2
     def pundit_user
       current_user
     end
@@ -59,6 +62,7 @@ module Pundit
     # with the correct context for the new pundit_user.
     #
     # @return [void]
+    # @since v2.5.0
     def pundit_reset!
       @pundit = nil
       @_pundit_policies = nil
@@ -81,6 +85,7 @@ module Pundit
     # @return [record] Always returns the passed object record
     # @see Pundit::Context#authorize
     # @see #verify_authorized
+    # @since v0.1.0
     def authorize(record, query = nil, policy_class: nil)
       query ||= "#{action_name}?"
 
@@ -94,6 +99,7 @@ module Pundit
     # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
     # @return [void]
     # @see #verify_authorized
+    # @since v1.0.0
     def skip_authorization
       @_pundit_policy_authorized = :skipped
     end
@@ -101,6 +107,7 @@ module Pundit
     # @return [Boolean] wether or not authorization has been performed
     # @see #authorize
     # @see #skip_authorization
+    # @since v1.0.0
     def pundit_policy_authorized?
       !!@_pundit_policy_authorized
     end
@@ -115,6 +122,7 @@ module Pundit
     # @return [void]
     # @see #authorize
     # @see #skip_authorization
+    # @since v0.1.0
     def verify_authorized
       raise AuthorizationNotPerformedError, self.class unless pundit_policy_authorized?
     end
@@ -124,6 +132,7 @@ module Pundit
     # Cache of policies. You should not rely on this method.
     #
     # @api private
+    # @since v1.0.0
     def policies
       @_pundit_policies ||= {}
     end
@@ -137,6 +146,7 @@ module Pundit
     # @see https://github.com/varvet/pundit#policies
     # @param record [Object] the object we're retrieving the policy for
     # @return [Object] instance of policy class with query methods
+    # @since v0.1.0
     def policy(record)
       pundit.policy!(record)
     end
@@ -149,6 +159,7 @@ module Pundit
     # @param scope [Object] the object we're retrieving the policy scope for
     # @param policy_scope_class [#resolve] the policy scope class we want to force use of
     # @return [#resolve, nil] instance of scope class which can resolve to a scope
+    # @since v0.1.0
     def policy_scope(scope, policy_scope_class: nil)
       @_pundit_policy_scoped = true
       policy_scope_class ? policy_scope_class.new(pundit_user, scope).resolve : pundit_policy_scope(scope)
@@ -159,6 +170,7 @@ module Pundit
     # @see https://github.com/varvet/pundit#ensuring-policies-and-scopes-are-used
     # @return [void]
     # @see #verify_policy_scoped
+    # @since v1.0.0
     def skip_policy_scope
       @_pundit_policy_scoped = :skipped
     end
@@ -166,6 +178,7 @@ module Pundit
     # @return [Boolean] wether or not policy scoping has been performed
     # @see #policy_scope
     # @see #skip_policy_scope
+    # @since v1.0.0
     def pundit_policy_scoped?
       !!@_pundit_policy_scoped
     end
@@ -181,6 +194,7 @@ module Pundit
     # @return [void]
     # @see #policy_scope
     # @see #skip_policy_scope
+    # @since v0.2.1
     def verify_policy_scoped
       raise PolicyScopingNotPerformedError, self.class unless pundit_policy_scoped?
     end
@@ -190,6 +204,7 @@ module Pundit
     # Cache of policy scope. You should not rely on this method.
     #
     # @api private
+    # @since v1.0.0
     def policy_scopes
       @_pundit_policy_scopes ||= {}
     end
@@ -206,6 +221,7 @@ module Pundit
     # @note This also memoizes the instance with `scope` as the key.
     # @see Pundit::Helper#policy_scope
     # @api private
+    # @since v1.0.0
     def pundit_policy_scope(scope)
       policy_scopes[scope] ||= pundit.policy_scope!(scope)
     end
@@ -228,6 +244,7 @@ module Pundit
     # @param action [Symbol, String] the name of the action being performed on the record (e.g. `:update`).
     #   If omitted then this defaults to the Rails controller action name.
     # @return [Hash{String => Object}] the permitted attributes
+    # @since v1.0.0
     def permitted_attributes(record, action = action_name)
       policy = policy(record)
       method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
@@ -265,6 +282,7 @@ module Pundit
     #
     # @param record [Object] the object we're retrieving params for
     # @return [ActionController::Parameters] the params
+    # @since v2.0.0
     def pundit_params_for(record)
       params.require(PolicyFinder.new(record).param_key)
     end
