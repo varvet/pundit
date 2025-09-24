@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
 
   Dir.chdir(__dir__) do
     gem.files = `git ls-files -z`.split("\x0").select do |f|
-      f.start_with?("lib/", "README", "SECURITY", "LICENSE", "CHANGELOG")
+      f.start_with?("lib/", "README", "SECURITY", "LICENSE", "CHANGELOG", "CONTRIBUTING", "config/rubocop-rspec.yml")
     end
   end
   gem.require_paths = ["lib"]
