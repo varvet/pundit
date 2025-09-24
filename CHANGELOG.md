@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.5.2 (2025-09-24)
+
 ### Fixed
 - Added `config/rubocop-rspec.yml` back from accidentally being excluded [#866](https://github.com/varvet/pundit/issues/866)
 
