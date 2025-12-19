@@ -31,10 +31,12 @@ module Pundit
     # @see Pundit::Authorization#pundit
     # @param user later passed to policies and scopes
     # @param policy_cache [#fetch] cache store for policies (see e.g. {CacheStore::NullStore})
+    # @param namespace [Module, nil] optional namespace for policy lookups
     # @since v2.3.2
-    def initialize(user:, policy_cache: CacheStore::NullStore.instance)
+    def initialize(user:, policy_cache: CacheStore::NullStore.instance, namespace: nil)
       @user = user
       @policy_cache = policy_cache
+      @namespace = namespace
     end
 
     # @api public
@@ -46,6 +48,24 @@ module Pundit
     # @see #initialize
     # @since v2.3.2
     attr_reader :policy_cache
+
+    # @api private
+    # @see #initialize
+    # @since v2.3.2
+    attr_reader :namespace
+
+    # Creates a new context with the specified namespace.
+    #
+    # @param namespace [Module, nil] namespace for policy lookups
+    # @return [Context] new context instance with namespace applied
+    # @since v2.5.2
+    def with_namespace(namespace)
+      self.class.new(
+        user: @user,
+        policy_cache: @policy_cache,
+        namespace: namespace
+      )
+    end
 
     # @!group Policies
 
@@ -64,7 +84,7 @@ module Pundit
       policy = if policy_class
         policy_class.new(user, record)
       else
-        policy!(possibly_namespaced_record)
+        policy!(apply_namespace(possibly_namespaced_record))
       end
 
       raise NotAuthorizedError, query: query, record: record, policy: policy unless policy.public_send(query)
@@ -80,7 +100,7 @@ module Pundit
     # @return [Object, nil] instance of policy class with query methods
     # @since v2.3.2
     def policy(record)
-      cached_find(record, &:policy)
+      cached_find(apply_namespace(record), &:policy)
     end
 
     # Retrieves the policy for the given record, or raises if not found.
@@ -92,7 +112,7 @@ module Pundit
     # @return [Object] instance of policy class with query methods
     # @since v2.3.2
     def policy!(record)
-      cached_find(record, &:policy!)
+      cached_find(apply_namespace(record), &:policy!)
     end
 
     # @!endgroup
@@ -107,7 +127,7 @@ module Pundit
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
     # @since v2.3.2
     def policy_scope(scope)
-      policy_scope_class = policy_finder(scope).scope
+      policy_scope_class = policy_finder(apply_namespace(scope)).scope
       return unless policy_scope_class
 
       begin
@@ -128,7 +148,7 @@ module Pundit
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     # @since v2.3.2
     def policy_scope!(scope)
-      policy_scope_class = policy_finder(scope).scope!
+      policy_scope_class = policy_finder(apply_namespace(scope)).scope!
 
       begin
         policy_scope = policy_scope_class.new(user, pundit_model(scope))
@@ -144,6 +164,16 @@ module Pundit
     private
 
     # @!group Private Helpers
+
+    # Apply namespace to record if one is configured.
+    #
+    # @api private
+    # @param record [Object] the record to potentially namespace
+    # @return [Object, Array] the record, potentially wrapped in namespace array
+    # @since v2.5.2
+    def apply_namespace(record)
+      @namespace ? [@namespace, record] : record
+    end
 
     # Finds a cached policy for the given record, or yields to find one.
     #
