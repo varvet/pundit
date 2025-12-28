@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add support for `params.expect` using `expected_parameters` and `expected_parameters_for`. [#855](https://github.com/varvet/pundit/pull/855)
+
 ## 2.5.2 (2025-09-24)
 
 ### Fixed
