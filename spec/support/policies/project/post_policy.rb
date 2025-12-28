@@ -8,6 +8,6 @@ module Project
       end
     end
 
-    alias post record
+    alias_method :post, :record
   end
 end

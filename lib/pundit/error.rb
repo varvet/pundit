@@ -37,7 +37,7 @@ module Pundit
       if options.is_a? String
         message = options
       else
-        @query  = options[:query]
+        @query = options[:query]
         @record = options[:record]
         @policy = options[:policy]
 

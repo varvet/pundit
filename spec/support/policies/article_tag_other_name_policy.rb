@@ -9,5 +9,5 @@ class ArticleTagOtherNamePolicy < BasePolicy
     false
   end
 
-  alias tag record
+  alias_method :tag, :record
 end

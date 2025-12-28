@@ -12,6 +12,6 @@ module Project
       true
     end
 
-    alias comment record
+    alias_method :comment, :record
   end
 end

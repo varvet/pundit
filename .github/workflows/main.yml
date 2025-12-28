@@ -64,7 +64,7 @@ jobs:
           path: coverage
           retention-days: 1
 
-  rubocop:
+  linting:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -75,8 +75,8 @@ jobs:
           ruby-version: "ruby"
           bundler-cache: false
       - run: bundle install
-      - name: Run RuboCop
-        run: bundle exec rubocop
+      - name: Run standard
+        run: bundle exec standardrb
 
   docs:
     runs-on: ubuntu-latest
@@ -98,7 +98,7 @@ jobs:
       - test
       - matrix-test
       - docs
-      - rubocop
+      - linting
     steps:
       - name: failure
         if: ${{ failure() || contains(needs.*.result, 'failure') }}

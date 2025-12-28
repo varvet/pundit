@@ -3,6 +3,7 @@
 class WikiPolicy
   class Scope
     # deliberate typo method
-    def initalize; end
+    def initalize
+    end
   end
 end
