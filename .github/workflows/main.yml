@@ -9,14 +9,6 @@ on:
 permissions:
   contents: read
 
-env:
-  # `github.ref` points to the *merge commit* when running tests on a pull request, which will be a commit
-  # that doesn't exists in our code base. Since this workflow triggers from a PR, we use the HEAD SHA instead.
-  #
-  # NOTE: These both used to be used by Code Climate (cc-test-reporter), superseded by qlty.sh
-  GIT_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
-  GIT_BRANCH: ${{ github.head_ref }}
-
 jobs:
   matrix-test:
     runs-on: ubuntu-latest
@@ -71,25 +63,6 @@ jobs:
           name: coverage-results
           path: coverage
           retention-days: 1
-
-  coverage-upload:
-    permissions:
-      id-token: write # Required for OIDC
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download coverage results
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-results
-          path: coverage
-      - name: Upload code coverage to qlty.sh
-        uses: qltysh/qlty-action/coverage@v2
-        with:
-          oidc: true
-          format: simplecov
-          files: coverage/.resultset.json
 
   rubocop:
     runs-on: ubuntu-latest

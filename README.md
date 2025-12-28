@@ -1,7 +1,6 @@
 # Pundit
 
 [![Main](https://github.com/varvet/pundit/actions/workflows/main.yml/badge.svg)](https://github.com/varvet/pundit/actions/workflows/main.yml)
-[![Maintainability](https://qlty.sh/gh/varvet/projects/pundit/maintainability.svg)](https://qlty.sh/gh/varvet/projects/pundit)
 [![Inline docs](https://inch-ci.org/github/varvet/pundit.svg?branch=main)](https://inch-ci.org/github/varvet/pundit)
 [![Gem Version](https://badge.fury.io/rb/pundit.svg)](https://badge.fury.io/rb/pundit)
 
