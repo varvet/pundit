@@ -15,6 +15,6 @@ module InstanceTracking
 
   def initialize(*args, **kwargs, &block)
     self.class.instances += 1
-    super(*args, **kwargs, &block)
+    super
   end
 end

@@ -3,14 +3,14 @@
 require_relative "lib/pundit/version"
 
 Gem::Specification.new do |gem|
-  gem.name          = "pundit"
-  gem.version       = Pundit::VERSION
-  gem.authors       = ["Jonas Nicklas", "Varvet AB"]
-  gem.email         = ["jonas.nicklas@gmail.com", "info@varvet.com"]
-  gem.description   = "Object oriented authorization for Rails applications"
-  gem.summary       = "OO authorization for Rails"
-  gem.homepage      = "https://github.com/varvet/pundit"
-  gem.license       = "MIT"
+  gem.name = "pundit"
+  gem.version = Pundit::VERSION
+  gem.authors = ["Jonas Nicklas", "Varvet AB"]
+  gem.email = ["jonas.nicklas@gmail.com", "info@varvet.com"]
+  gem.description = "Object oriented authorization for Rails applications"
+  gem.summary = "OO authorization for Rails"
+  gem.homepage = "https://github.com/varvet/pundit"
+  gem.license = "MIT"
 
   Dir.chdir(__dir__) do
     gem.files = `git ls-files -z`.split("\x0").select do |f|

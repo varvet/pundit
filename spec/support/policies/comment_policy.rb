@@ -7,5 +7,5 @@ class CommentPolicy < BasePolicy
     end
   end
 
-  alias comment record
+  alias_method :comment, :record
 end

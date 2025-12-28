@@ -231,7 +231,7 @@ describe Pundit::Authorization do
     end
 
     it "goes through the policy cache" do
-      params = to_params(post: { title: "Hello" })
+      params = to_params(post: {title: "Hello"})
       user = double
       post = Post.new(user)
       controller = Controller.new(user, "update", params)

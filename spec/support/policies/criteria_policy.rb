@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class CriteriaPolicy < BasePolicy
-  alias criteria record
+  alias_method :criteria, :record
 end
