@@ -691,15 +691,12 @@ end
 
 ## Strong parameters
 
-In Rails,
-mass-assignment protection is handled in the controller. With Pundit you can
-control which attributes a user has access to update via your policies. You can
-set up an `expected_attributes` method in your policy like this:
+In Rails, [mass-assignment protection is handled in the controller](https://guides.rubyonrails.org/action_controller_overview.html#strong-parameters). With Pundit you can control which attributes a user has access to update via your policies. You can set up an `expected_attributes_for_action(action_name)` method in your policy like this:
 
 ```ruby
 # app/policies/post_policy.rb
 class PostPolicy < ApplicationPolicy
-  def expected_attributes
+  def expected_attributes_for_action(_action_name)
     if user.admin? || user.owner_of?(post)
       [:title, :body, :tag_list]
     else
@@ -731,7 +728,7 @@ class PostsController < ApplicationController
 end
 ```
 
-However, this is a bit cumbersome, so Pundit provides a convenient helper method:
+However, this is a bit cumbersome, so Pundit provides a convenient helper method with `#expected_attributes`:
 
 ```ruby
 # app/controllers/posts_controller.rb
@@ -747,24 +744,7 @@ class PostsController < ApplicationController
 end
 ```
 
-If you want to permit different attributes based on the current action, you can define an `expected_attributes_for_#{action}` method on your policy:
-
-```ruby
-# app/policies/post_policy.rb
-class PostPolicy < ApplicationPolicy
-  def expected_attributes_for_create
-    [:title, :body]
-  end
-
-  def expected_attributes_for_edit
-    [:body]
-  end
-end
-```
-
-If you have defined an action-specific method on your policy for the current action, the `expected_attributes` helper will call it instead of calling `expected_attributes` on your controller.
-
-Pundit still support the old `params.require.permit()` style of permitting attributes, although `params.expect()` is preferred. If you want to use the old style, define methods called `permitted_attributes` and `permitted_attributes_for_*` instead.
+Pundit still support the old `params.require.permit()` style of permitting attributes, although `params.expect()` is preferred.
 
 If you need to fetch parameters based on namespaces different from the suggested one, override the below method, in your controller, and return an instance of `ActionController::Parameters`.
 

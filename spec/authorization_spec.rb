@@ -273,7 +273,7 @@ describe Pundit::Authorization do
     end
   end
 
-  if Gem::Version.new(ActionPack::VERSION::STRING) >= Gem::Version.new("8.0.0")
+  if ActionController::Parameters.method_defined?(:expect)
     describe "#expected_attributes" do
       it "checks policy for expected attributes" do
         params = to_params(
@@ -327,7 +327,7 @@ describe Pundit::Authorization do
       end
     end
 
-    describe "#expected_attributes_for_action" do
+    context "action-specific expected attributes" do
       it "is checked if it is defined in the policy" do
         params = to_params(
           post: {
@@ -353,8 +353,17 @@ describe Pundit::Authorization do
         )
 
         action = "update"
-        expect(Controller.new(user, action, params).expected_attributes(post, :revise).to_h).to eq("body" => "blah")
+        controller = Controller.new(user, action, params)
+        expect(controller.expected_attributes(post, action: :revise).to_h).to eq("body" => "blah")
       end
+    end
+
+    it "can be retrieved with an explicit param key" do
+      params = to_params(admin_post: { title: "Hello" })
+
+      action = "update"
+      controller = Controller.new(user, action, params)
+      expect(controller.expected_attributes(post, param_key: "admin_post").to_h).to eq("title" => "Hello")
     end
   end
 
