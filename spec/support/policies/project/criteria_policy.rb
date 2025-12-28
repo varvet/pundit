@@ -2,6 +2,6 @@
 
 module Project
   class CriteriaPolicy < BasePolicy
-    alias criteria record
+    alias_method :criteria, :record
   end
 end

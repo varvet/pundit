@@ -11,7 +11,10 @@ require "pundit/helper"
 require "pundit/cache_store"
 require "pundit/cache_store/null_store"
 require "pundit/cache_store/legacy_store"
+
+# :nocov:
 require "pundit/railtie" if defined?(Rails)
+# :nocov:
 
 # Hello? Yes, this is Pundit.
 #

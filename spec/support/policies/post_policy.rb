@@ -7,12 +7,12 @@ class PostPolicy < BasePolicy
     end
   end
 
-  alias post record
+  alias_method :post, :record
 
   def update?
     post.user == user
   end
-  alias edit? update?
+  alias_method :edit?, :update?
 
   def destroy?
     false

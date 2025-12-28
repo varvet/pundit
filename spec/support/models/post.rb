@@ -18,8 +18,4 @@ class Post
   def to_s
     "Post"
   end
-
-  def inspect
-    "#<Post>"
-  end
 end

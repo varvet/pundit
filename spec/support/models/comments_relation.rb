@@ -5,10 +5,6 @@ class CommentsRelation
     @empty = empty
   end
 
-  def blank?
-    @empty
-  end
-
   def self.model_name
     Comment.model_name
   end

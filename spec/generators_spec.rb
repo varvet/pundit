@@ -12,8 +12,8 @@ RSpec.describe "generators" do
     @tmpdir = Dir.mktmpdir
 
     Dir.chdir(@tmpdir) do
-      Pundit::Generators::InstallGenerator.new([], { quiet: true }).invoke_all
-      Pundit::Generators::PolicyGenerator.new(%w[Widget], { quiet: true }).invoke_all
+      Pundit::Generators::InstallGenerator.new([], {quiet: true}).invoke_all
+      Pundit::Generators::PolicyGenerator.new(%w[Widget], {quiet: true}).invoke_all
 
       require "./app/policies/application_policy"
       require "./app/policies/widget_policy"

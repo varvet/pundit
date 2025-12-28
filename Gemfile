@@ -16,9 +16,7 @@ gem "simplecov", ">= 0.17.0"
 # Development tools
 gem "bundler"
 gem "rake"
-gem "rubocop"
-gem "rubocop-performance"
-gem "rubocop-rspec"
+gem "standard"
 gem "yard"
 gem "zeitwerk"
 
