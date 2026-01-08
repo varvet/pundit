@@ -231,6 +231,36 @@ module Pundit
 
     # @!group Strong Parameters
 
+    # Retrieves a set of expected attributes from the policy.
+    #
+    # @example
+    #   if @post.update(expected_attributes(@post))
+    #     redirect_to @post
+    #   else
+    #     render :edit
+    #   end
+    #
+    # @see https://github.com/varvet/pundit#strong-parameters
+    # @see https://guides.rubyonrails.org/action_controller_overview.html#expect
+    # @param record [Object] the object we're retrieving expected attributes for
+    # @param action [Symbol, String] the name of the action being performed on the record (e.g. `update`).
+    #   If omitted then this defaults to the Rails controller action name.
+    # @param param_key [String] the key that the record would have in the params hash
+    # @return [Hash{String => Object}] the expected attributes
+    # @since v2.6.0
+    def expected_attributes(record, action: action_name, param_key: pundit_param_key(record))
+      policy = policy(record)
+      params.expect(param_key => policy.expected_attributes_for_action(action))
+    end
+
+    # @note This is provided as a hook for overrides.
+    # @param record [Object]
+    # @return [String] the key that the record would have in the params hash
+    # @since v2.6.0
+    def pundit_param_key(record)
+      PolicyFinder.new(record).param_key
+    end
+
     # Retrieves a set of permitted attributes from the policy.
     #
     # Done by instantiating the policy class for the given record and calling
@@ -241,7 +271,7 @@ module Pundit
     #
     # @see https://github.com/varvet/pundit#strong-parameters
     # @param record [Object] the object we're retrieving permitted attributes for
-    # @param action [Symbol, String] the name of the action being performed on the record (e.g. `:update`).
+    # @param action [Symbol, String] the name of the action being performed on the record (e.g. `update`).
     #   If omitted then this defaults to the Rails controller action name.
     # @return [Hash{String => Object}] the permitted attributes
     # @since v1.0.0
@@ -261,7 +291,7 @@ module Pundit
     # @return [ActionController::Parameters] the params
     # @since v2.0.0
     def pundit_params_for(record)
-      params.require(PolicyFinder.new(record).param_key)
+      params.require(pundit_param_key(record))
     end
 
     # @!endgroup
