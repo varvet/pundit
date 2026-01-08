@@ -36,14 +36,14 @@ class PostPolicy < BasePolicy
 
   def expected_attributes_for_action(action_name)
     case action_name.to_sym
-      when :revise
-        [:body]
+    when :revise
+      [:body]
+    else
+      if post.user == user
+        %i[title votes]
       else
-        if post.user == user
-          %i[title votes]
-        else
-          [:votes]
-        end
+        [:votes]
+      end
     end
   end
 end

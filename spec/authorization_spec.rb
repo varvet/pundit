@@ -315,7 +315,7 @@ describe Pundit::Authorization do
       end
 
       it "goes through the policy cache" do
-        params = to_params(post: { title: "Hello" })
+        params = to_params(post: {title: "Hello"})
         user = double
         post = Post.new(user)
         controller = Controller.new(user, "update", params)
@@ -359,7 +359,7 @@ describe Pundit::Authorization do
     end
 
     it "can be retrieved with an explicit param key" do
-      params = to_params(admin_post: { title: "Hello" })
+      params = to_params(admin_post: {title: "Hello"})
 
       action = "update"
       controller = Controller.new(user, action, params)
