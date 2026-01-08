@@ -3,19 +3,18 @@
 if ENV["COVERAGE"]
   require "simplecov"
   require "simplecov_json_formatter"
-  require_relative "simple_cov_check_action_formatter"
+
   SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
     SimpleCov::Formatter::HTMLFormatter,
-    SimpleCov::Formatter::JSONFormatter,
-    SimpleCovCheckActionFormatter.with_options(
-      output_filename: "simplecov-check-action.json"
-    )
+    SimpleCov::Formatter::JSONFormatter
   ])
+
   SimpleCov.start do
-    add_filter "/spec/"
     enable_coverage :branch
     primary_coverage :branch
   end
+
+  SimpleCov.minimum_coverage_by_file line: 100, branch: 100
 end
 
 # @see https://github.com/rails/rails/issues/54260

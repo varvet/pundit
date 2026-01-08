@@ -9,14 +9,6 @@ on:
 permissions:
   contents: read
 
-env:
-  # `github.ref` points to the *merge commit* when running tests on a pull request, which will be a commit
-  # that doesn't exists in our code base. Since this workflow triggers from a PR, we use the HEAD SHA instead.
-  #
-  # NOTE: These both used to be used by Code Climate (cc-test-reporter), superseded by qlty.sh
-  GIT_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
-  GIT_BRANCH: ${{ github.head_ref }}
-
 jobs:
   matrix-test:
     runs-on: ubuntu-latest
@@ -29,7 +21,7 @@ jobs:
           - "3.3"
           - "3.4"
           - "4.0"
-          - "jruby-9.3.15"
+          - "jruby-9.4"
           - "jruby"
         include: # HEAD-versions
           - ruby-version: "head"
@@ -72,46 +64,7 @@ jobs:
           path: coverage
           retention-days: 1
 
-  coverage-upload:
-    permissions:
-      id-token: write # Required for OIDC
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download coverage results
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-results
-          path: coverage
-      - name: Upload code coverage to qlty.sh
-        uses: qltysh/qlty-action/coverage@v2
-        with:
-          oidc: true
-          format: simplecov
-          files: coverage/.resultset.json
-
-  coverage-check:
-    permissions:
-      contents: read
-      checks: write
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download coverage results
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-results
-          path: coverage
-      - uses: joshmfrankel/simplecov-check-action@be89e11889202cc59efb14aab2a7091622fa9aad
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_suite_coverage: 100
-          minimum_file_coverage: 100
-          coverage_json_path: coverage/simplecov-check-action.json
-
-  rubocop:
+  linting:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -122,8 +75,8 @@ jobs:
           ruby-version: "ruby"
           bundler-cache: false
       - run: bundle install
-      - name: Run RuboCop
-        run: bundle exec rubocop
+      - name: Run standard
+        run: bundle exec standardrb
 
   docs:
     runs-on: ubuntu-latest
@@ -145,7 +98,7 @@ jobs:
       - test
       - matrix-test
       - docs
-      - rubocop
+      - linting
     steps:
       - name: failure
         if: ${{ failure() || contains(needs.*.result, 'failure') }}

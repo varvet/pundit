@@ -18,7 +18,7 @@ RSpec.describe "Pundit RSpec DSL" do
   let(:policy) { PostPolicy }
 
   it "calls describe with the correct metadata and without :focus" do
-    expected_metadata = { permissions: %i[item1 item2], caller: instance_of(Array) }
+    expected_metadata = {permissions: %i[item1 item2], caller: instance_of(Array)}
     expect(fake_rspec).to receive(:describe).with("item1 and item2", match(expected_metadata)) do |&block|
       expect(block.call).to eq("block content")
     end
@@ -27,7 +27,7 @@ RSpec.describe "Pundit RSpec DSL" do
   end
 
   it "calls describe with the correct metadata and with :focus" do
-    expected_metadata = { permissions: %i[item1 item2], caller: instance_of(Array), focus: true }
+    expected_metadata = {permissions: %i[item1 item2], caller: instance_of(Array), focus: true}
     expect(fake_rspec).to receive(:describe).with("item1 and item2", match(expected_metadata)) do |&block|
       expect(block.call).to eq("block content")
     end

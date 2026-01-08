@@ -129,7 +129,7 @@ module Pundit
       # @param list [Symbol, Array<Symbol>] a permission to describe
       # @return [void]
       def permissions(*list, &block)
-        metadata = { permissions: list, caller: caller }
+        metadata = {permissions: list, caller: caller}
 
         if list.last == :focus
           list.pop

@@ -1,0 +1,5 @@
+parallel: true
+ruby_version: 3.2
+
+extend_config:
+  - .rubocop_ignore_git.yml

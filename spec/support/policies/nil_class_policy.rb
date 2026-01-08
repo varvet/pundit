@@ -7,10 +7,6 @@ class NilClassPolicy < BasePolicy
     end
   end
 
-  def show?
-    false
-  end
-
   def destroy?
     false
   end

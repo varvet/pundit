@@ -69,7 +69,7 @@ RSpec.describe Pundit do
       expect do
         Pundit.authorize(user, [:project, :admin, comment], :destroy?)
       end.to raise_error(Pundit::NotAuthorizedError,
-                         "not allowed to Project::Admin::CommentPolicy#destroy? this Comment") do |error|
+        "not allowed to Project::Admin::CommentPolicy#destroy? this Comment") do |error|
         expect(error.query).to eq :destroy?
         expect(error.record).to eq comment
         expect(error.policy).to have_attributes(
