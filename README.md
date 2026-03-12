@@ -723,7 +723,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.expect(policy(@post).expected_attributes)
+    params.expect(policy(@post).expected_attributes_for_action(action_name))
   end
 end
 ```
@@ -744,13 +744,15 @@ class PostsController < ApplicationController
 end
 ```
 
+### Permitted Parameters
+
 Pundit still support the old `params.require.permit()` style of permitting attributes, although `params.expect()` is preferred.
 
 If you need to fetch parameters based on namespaces different from the suggested one, override the below method, in your controller, and return an instance of `ActionController::Parameters`.
 
 ```ruby
 def pundit_params_for(record)
-  params.require(PolicyFinder.new(record).param_key)
+  params.require(pundit_param_key(record))
 end
 ```
 
@@ -759,7 +761,7 @@ For example:
 ```ruby
 # If you don't want to use require
 def pundit_params_for(record)
-  params.fetch(PolicyFinder.new(record).param_key, {})
+  params.fetch(pundit_param_key(record), {})
 end
 
 # If you are using something like the JSON API spec
