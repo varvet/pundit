@@ -2,11 +2,9 @@
 
 require "spec_helper"
 
-RSpec.describe "Pundit RSpec DSL" do
-  include Pundit::RSpec::PolicyExampleGroup
-
+RSpec.describe "Pundit RSpec DSL", type: :policy do
   let(:fake_rspec) do
-    double = class_double(RSpec::ExampleGroups)
+    double = class_double(RSpec::Core::ExampleGroup)
     double.extend(::Pundit::RSpec::DSL)
     double
   end

@@ -9,9 +9,7 @@ require "rubocop/rake_task"
 RuboCop::RakeTask.new
 
 desc "Run all examples"
-RSpec::Core::RakeTask.new(:spec) do |t|
-  t.rspec_opts = %w[--color]
-end
+RSpec::Core::RakeTask.new(:spec)
 
 YARD::Rake::YardocTask.new do |t|
   t.files = ["lib/**/*.rb"]

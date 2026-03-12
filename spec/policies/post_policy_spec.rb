@@ -10,12 +10,12 @@ RSpec.describe PostPolicy do
 
   permissions :update?, :show? do
     it "is successful when all permissions match" do
-      should permit(user, own_post)
+      is_expected.to permit(user, own_post)
     end
 
     it "fails when any permissions do not match" do
       expect do
-        should permit(user, other_post)
+        is_expected.to permit(user, other_post)
       end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
 

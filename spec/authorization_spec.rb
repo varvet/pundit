@@ -3,7 +3,7 @@
 require "spec_helper"
 require "action_controller"
 
-describe Pundit::Authorization do
+RSpec.describe Pundit::Authorization do
   def to_params(*args, **kwargs, &block)
     ActionController::Parameters.new(*args, **kwargs, &block)
   end
