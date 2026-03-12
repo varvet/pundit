@@ -4,6 +4,9 @@
 
 - Add support for `params.expect` using `expected_parameters` and `expected_parameters_for`. [#855](https://github.com/varvet/pundit/pull/855)
 
+### Fixed
+- Update for rspec 4 breaking changes [#873](https://github.com/varvet/pundit/issues/873)
+
 ## 2.5.2 (2025-09-24)
 
 ### Fixed
