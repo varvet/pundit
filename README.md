@@ -170,11 +170,6 @@ Controller:
 def show
   @user = authorize User.find(params[:id])
 end
-
-# return the record even for namespaced policies
-def show
-  @user = authorize [:admin, User.find(params[:id])]
-end
 ```
 
 You can easily get a hold of an instance of the policy through the `policy`
@@ -613,9 +608,8 @@ end
 Make sure to invoke `pundit_reset!` whenever changing the user. This ensures the cached authorization context is reset, preventing any incorrect permissions from being applied.
 
 ## Policy Namespacing
-In some cases it might be helpful to have multiple policies that serve different contexts for a
-resource. A prime example of this is the case where User policies differ from Admin policies. To
-authorize with a namespaced policy, pass the namespace into the `authorize` helper in an array:
+
+In some cases it might be helpful to have multiple policies that serve different contexts for a resource. A prime example of this is the case where User policies differ from Admin policies. To authorize with a namespaced policy, pass the namespace into the `authorize` helper in an array:
 
 ```ruby
 authorize(post)                   # => will look for a PostPolicy
@@ -627,19 +621,25 @@ policy_scope([:admin, Post])      # => will look for an Admin::PostPolicy::Scope
 policy_scope([:foo, :bar, Post])  # => will look for a Foo::Bar::PostPolicy::Scope
 ```
 
-If you are using namespaced policies for something like Admin views, it can be useful to
-override the `policy_scope` and `authorize` helpers in your `AdminController` to automatically
-apply the namespacing:
+If you are using namespaced policies for something like Admin areas, we recommend defining a `pundit_namespace` hook in your `ApplicationController` and overriding it in namespaced controllers:
 
 ```ruby
-class AdminController < ApplicationController
-  def policy_scope(scope)
-    super([:admin, scope])
-  end
+class ApplicationController < ActionController::Base
+  include Pundit::Authorization
 
-  def authorize(record, query = nil)
-    super([:admin, record], query)
-  end
+  private
+
+  def pundit_namespace(record) = record
+
+  def authorize(record, ...) = super(pundit_namespace(record), ...)
+  def policy_scope(scope, ...) = super(pundit_namespace(scope), ...)
+end
+
+class AdminController < ApplicationController
+  private
+
+  # Override the pundit namespace in Admin.
+  def pundit_namespace(record) = [:admin, record]
 end
 
 class Admin::PostController < AdminController
@@ -671,21 +671,13 @@ on IP address in addition to the authenticated user. In that case, one option is
 create a special class which wraps up both user and IP and passes it to the policy.
 
 ``` ruby
-class UserContext
-  attr_reader :user, :ip
-
-  def initialize(user, ip)
-    @user = user
-    @ip   = ip
-  end
+class UserContext < Data.define(:user, :ip)
 end
 
 class ApplicationController
   include Pundit::Authorization
 
-  def pundit_user
-    UserContext.new(current_user, request.ip)
-  end
+  def pundit_user = UserContext.new(current_user, request.ip)
 end
 ```
 
