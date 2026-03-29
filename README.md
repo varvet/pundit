@@ -851,7 +851,6 @@ inherit_gem:
 # External Resources
 
 - [RailsApps Example Application: Pundit and Devise](https://github.com/RailsApps/rails-devise-pundit)
-- [Migrating to Pundit from CanCan](https://blog.carbonfive.com/2013/10/21/migrating-to-pundit-from-cancan/)
 - [Testing Pundit Policies with RSpec](https://thunderboltlabs.com/blog/2013/03/27/testing-pundit-policies-with-rspec/)
 - [Testing Pundit with Minitest](https://github.com/varvet/pundit/issues/204#issuecomment-60166450)
 - [Using Pundit outside of a Rails controller](https://github.com/varvet/pundit/pull/136)
