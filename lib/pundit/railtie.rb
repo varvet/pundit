@@ -3,6 +3,11 @@
 module Pundit
   # @since v2.5.0
   class Railtie < Rails::Railtie
+    generators do
+      require "pundit/scaffold_hook"
+      Pundit::ScaffoldHook.install
+    end
+
     if Rails.version.to_f >= 8.0
       initializer "pundit.stats_directories" do
         require "rails/code_statistics"

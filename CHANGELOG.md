@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Hook into scaffold generator to auto-generate policy files. [#876](https://github.com/varvet/pundit/pull/876)
+
 - Add support for `params.expect` using `expected_parameters` and `expected_parameters_for`. [#855](https://github.com/varvet/pundit/pull/855)
 
 ### Fixed

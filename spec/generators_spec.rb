@@ -40,4 +40,43 @@ RSpec.describe "generators" do
       end
     end
   end
+
+  describe "scaffold controller hook" do
+    before(:all) do
+      require "pundit/scaffold_hook"
+      Pundit::ScaffoldHook.install
+    end
+
+    it "adds --policy option to scaffold controller generator" do
+      expect(Rails::Generators::ScaffoldControllerGenerator.class_options).to have_key(:policy)
+    end
+
+    it "defaults to generating a policy" do
+      expect(Rails::Generators::ScaffoldControllerGenerator.class_options[:policy].default).to be true
+    end
+
+    it "generates policy when scaffold runs" do
+      Dir.mktmpdir do |tmpdir|
+        Dir.chdir(tmpdir) do
+          Pundit::Generators::InstallGenerator.new([], {quiet: true}).invoke_all
+
+          generator = Rails::Generators::ScaffoldControllerGenerator.new(%w[Article], {quiet: true, policy: true, orm: false, template_engine: false, helper: false, test_framework: false, resource_route: false})
+          generator.generate_pundit_policy
+
+          expect(File.exist?("app/policies/article_policy.rb")).to be true
+        end
+      end
+    end
+
+    it "skips policy generation with --no-policy" do
+      Dir.mktmpdir do |tmpdir|
+        Dir.chdir(tmpdir) do
+          generator = Rails::Generators::ScaffoldControllerGenerator.new(%w[Article], {quiet: true, policy: false, orm: false, template_engine: false, helper: false, test_framework: false, resource_route: false})
+          generator.generate_pundit_policy
+
+          expect(File.exist?("app/policies/article_policy.rb")).to be false
+        end
+      end
+    end
+  end
 end
