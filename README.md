@@ -838,6 +838,8 @@ permissions :show?, :focus do
 
 Pundit does not provide a DSL for testing scopes. Test them like you would a regular Ruby class!
 
+## Rubocop
+
 ### Linting with RuboCop RSpec
 
 When you lint your RSpec spec files with `rubocop-rspec`, it will fail to properly detect RSpec constructs that Pundit defines, `permissions`.
@@ -846,6 +848,19 @@ Make sure to use `rubocop-rspec` 2.0 or newer and add the following to your `.ru
 ```yaml
 inherit_gem:
   pundit: config/rubocop-rspec.yml
+```
+
+### Linting with Rubocop Rails
+
+When you lint your policy files with `rubocop-rails`, with a little configuration you can use the
+[`Rails/ActionOrder`](https://docs.rubocop.org/rubocop-rails/latest/cops_rails.html#railsactionorder) 
+cop to enforce consistent ordering of the standard Rails RESTful controller actions.
+
+You can add the following to your `.rubocop.yml` to have this done for you:
+
+```yaml
+inherit_gem:
+  pundit: config/rubocop-rails.yml
 ```
 
 # External Resources
