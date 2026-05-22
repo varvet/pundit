@@ -1,0 +1,19 @@
+Rails/ActionOrder:
+  ExpectedOrder:
+    - index
+    - index?
+    - show
+    - show?
+    - new
+    - new?
+    - edit
+    - edit?
+    - create
+    - create?
+    - update
+    - update?
+    - destroy
+    - destroy?
+  Include:
+    - '**/app/controllers/**'
+    - '**/app/policies/**'
