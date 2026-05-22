@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Add support for `params.expect` using `expected_parameters` and `expected_parameters_for`. [#855](https://github.com/varvet/pundit/pull/855)
+- Add Rubocop configuration for `rubocop-rails`. [#879](https://github.com/varvet/pundit/pull/879)
 
 ### Fixed
 - Update for rspec 4 breaking changes [#873](https://github.com/varvet/pundit/issues/873)
