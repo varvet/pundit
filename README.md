@@ -15,7 +15,20 @@ scalable authorization system.
 - [Contributing](https://github.com/varvet/pundit/blob/main/CONTRIBUTING.md)
 - [Code of Conduct](https://github.com/varvet/pundit/blob/main/CODE_OF_CONDUCT.md)
 
-<strong>Sponsored by:</strong> <a href="https://www.varvet.com">Varvet<br><br><img src="https://github.com/varvet/pundit/assets/99166/aa9efa0a-6903-4037-abee-1824edc57f1a" alt="Varvet logo" height="120"></div>
+## Maintained by Varvet
+
+Pundit is built and maintained by [Varvet](https://varvet.com), a digital
+product studio in Sweden. Jonas Nicklas first released it in 2012, and
+[Varvet](https://varvet.com) has kept it small and sharp ever since: one tool
+that does one thing well. Over 100 million downloads, used by 38,000+
+repositories on GitHub.
+
+It started as a pattern we wrote up in [Simple authorization in Ruby on Rails
+apps](https://www.varvet.com/blog/simple-authorization-in-ruby-on-rails-apps/).
+We build Ruby on Rails products from our studio in Sweden. If you want the team
+behind Pundit in the room, we're at [varvet.com](https://varvet.com).
+
+<a href="https://www.varvet.com"><img src="https://github.com/varvet/pundit/assets/99166/aa9efa0a-6903-4037-abee-1824edc57f1a" alt="Varvet logo" height="120"></a>
 
 ## Installation
 
