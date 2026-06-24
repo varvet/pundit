@@ -30,12 +30,12 @@ module Pundit
     # @api public
     # @return [Pundit::Context]
     # @see #pundit_user
-    # @see #policies
+    # @see #pundit_policies
     # @since v2.3.2
     def pundit
       @pundit ||= Pundit::Context.new(
         user: pundit_user,
-        policy_cache: Pundit::CacheStore::LegacyStore.new(policies)
+        policy_cache: Pundit::CacheStore::LegacyStore.new(pundit_policies)
       )
     end
 
@@ -132,12 +132,25 @@ module Pundit
     # Cache of policies. You should not rely on this method.
     #
     # @api private
-    # @since v1.0.0
-    def policies
+    # @since v2.6.0
+    def pundit_policies
       @_pundit_policies ||= {}
     end
 
     # rubocop:enable Naming/MemoizedInstanceVariableName
+
+    # Cache of policies. You should not rely on this method.
+    #
+    # @api private
+    # @deprecated Use {#pundit_policies} instead.
+    # @since v1.0.0
+    def policies
+      warn <<~WARNING
+        Pundit::Authorization#policies is deprecated. Please use #pundit_policies instead.
+         (called from #{caller_locations(1, 1).first})
+      WARNING
+      pundit_policies
+    end
 
     # @!endgroup
 
