@@ -35,7 +35,7 @@ module Pundit
     def pundit
       @pundit ||= Pundit::Context.new(
         user: pundit_user,
-        policy_cache: Pundit::CacheStore::LegacyStore.new(policies)
+        policy_cache: Pundit::CacheStore::LegacyStore.new(pundit_policies)
       )
     end
 
@@ -132,9 +132,14 @@ module Pundit
     # Cache of policies. You should not rely on this method.
     #
     # @api private
+    def pundit_policies
+      @_pundit_policies ||= {}
+    end
+
+    # @api private
     # @since v1.0.0
     def policies
-      @_pundit_policies ||= {}
+      pundit_policies
     end
 
     # rubocop:enable Naming/MemoizedInstanceVariableName

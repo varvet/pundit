@@ -6,6 +6,7 @@
 
 ### Fixed
 - Update for rspec 4 breaking changes [#873](https://github.com/varvet/pundit/issues/873)
+- Allow controllers to define a `policies` action without interfering with Pundit's policy cache. [#878](https://github.com/varvet/pundit/issues/878)
 
 ## 2.5.2 (2025-09-24)
 

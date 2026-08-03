@@ -113,6 +113,20 @@ RSpec.describe Pundit::Authorization do
       expect(controller.policies[post]).not_to be_nil
     end
 
+    context "when the controller has an action named policies" do
+      let(:controller) do
+        Class.new(Controller) do
+          def policies
+            :policies_action
+          end
+        end.new(user, "update", to_params({}))
+      end
+
+      it "does not use the action as its policy cache" do
+        expect(controller.authorize(post)).to be_truthy
+      end
+    end
+
     it "raises an error when the given record is nil" do
       expect { controller.authorize(nil, :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
     end
