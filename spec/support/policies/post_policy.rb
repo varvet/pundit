@@ -34,10 +34,16 @@ class PostPolicy < BasePolicy
     [:body]
   end
 
+  def permitted_attributes_for_tag
+    [:title, {tags: []}, {metadata: {}}]
+  end
+
   def expected_attributes_for_action(action_name)
     case action_name.to_sym
     when :revise
       [:body]
+    when :tag
+      [:title, {tags: []}, {metadata: {}}]
     else
       if post.user == user
         %i[title votes]

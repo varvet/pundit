@@ -696,16 +696,16 @@ end
 
 ## Strong parameters
 
-In Rails, [mass-assignment protection is handled in the controller](https://guides.rubyonrails.org/action_controller_overview.html#strong-parameters). With Pundit you can control which attributes a user has access to update via your policies. You can set up an `expected_attributes_for_action(action_name)` method in your policy like this:
+In Rails, [mass-assignment protection is handled in the controller](https://guides.rubyonrails.org/action_controller_overview.html#strong-parameters). With Pundit you can control which attributes a user has access to update via your policies. You can set up an `expected_attributes_for_action(action_name)` method in your policy like this, using the same filters you would pass to `params.expect`, including hashes for arrays and nested attributes:
 
 ```ruby
 # app/policies/post_policy.rb
 class PostPolicy < ApplicationPolicy
   def expected_attributes_for_action(_action_name)
     if user.admin? || user.owner_of?(post)
-      [:title, :body, :tag_list]
+      [:title, :body, {tags: []}]
     else
-      [:tag_list]
+      [{tags: []}]
     end
   end
 end
