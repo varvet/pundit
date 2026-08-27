@@ -90,4 +90,74 @@ RSpec.describe Pundit::Context do
       expect(store).to eq({post => policy})
     end
   end
+
+  context "namespacing" do
+    describe "namespace injection" do
+      it "wraps records through it before lookup" do
+        namespace = double(wrap: [:project, comment])
+        context = described_class.new(user: user, namespace: namespace)
+
+        expect(context.policy(comment)).to be_a(Project::CommentPolicy)
+        expect(namespace).to have_received(:wrap).with(comment)
+      end
+    end
+
+    describe "#with_namespace" do
+      let(:context) { described_class.new(user: user).with_namespace(:project) }
+
+      it "returns a new context looking up under the namespace" do
+        expect(context).to be_a(described_class)
+        expect(context.policy(comment)).to be_a(Project::CommentPolicy)
+      end
+
+      it "keeps the user and policy cache" do
+        user = double
+        cache = double
+        context = described_class.new(user: user, policy_cache: cache).with_namespace(:project)
+
+        expect(context.user).to be(user)
+        expect(context.policy_cache).to be(cache)
+      end
+    end
+
+    context "with a namespace" do
+      let(:context) { described_class.new(user: user, namespace: Pundit::Namespace.new(:project)) }
+
+      it "looks up policies under the namespace" do
+        expect(context.policy(comment)).to be_a(Project::CommentPolicy)
+        expect(context.policy!(comment)).to be_a(Project::CommentPolicy)
+      end
+
+      it "looks up policy scopes under the namespace" do
+        expect(context.policy_scope(Post)).to eq(:read)
+        expect(context.policy_scope!(Post)).to eq(:read)
+      end
+
+      it "authorizes under the namespace" do
+        expect(authorize(comment, query: :update?)).to be(comment)
+      end
+
+      it "namespaces explicitly namespaced records too" do
+        expect(context.policy([:admin, comment])).to be_a(Project::Admin::CommentPolicy)
+        expect { authorize([:admin, comment], query: :destroy?) }.to raise_error(Pundit::NotAuthorizedError)
+      end
+
+      it "is bypassed by an explicit policy class" do
+        expect(authorize(comment, query: :create?, policy_class: PublicationPolicy)).to be(comment)
+      end
+
+      it "caches by the namespaced record" do
+        store = {}
+        context = described_class.new(
+          user: user,
+          policy_cache: Pundit::CacheStore::LegacyStore.new(store),
+          namespace: Pundit::Namespace.new(:project)
+        )
+
+        policy = context.policy(comment)
+
+        expect(store).to eq({[:project, comment] => policy})
+      end
+    end
+  end
 end
