@@ -258,6 +258,25 @@ RSpec.describe Pundit::Authorization do
         expect(controller.permitted_attributes(post)).to be_truthy
       end.to change { PostPolicy.instances }.by(1)
     end
+
+    it "permits arrays and hashes given as hash filters" do
+      params = to_params(
+        post: {
+          title: "Hello",
+          tags: %w[ruby rails],
+          metadata: {source: "rss", priority: 1},
+          admin: true
+        }
+      )
+
+      action = "tag"
+
+      expect(Controller.new(user, action, params).permitted_attributes(post).to_h).to eq(
+        "title" => "Hello",
+        "tags" => %w[ruby rails],
+        "metadata" => {"source" => "rss", "priority" => 1}
+      )
+    end
   end
 
   describe "#permitted_attributes_for_action" do
@@ -341,6 +360,25 @@ RSpec.describe Pundit::Authorization do
           expect(controller.expected_attributes(post)).to be_truthy
           expect(controller.expected_attributes(post)).to be_truthy
         end.to change { PostPolicy.instances }.by(1)
+      end
+
+      it "permits arrays and hashes given as hash filters" do
+        params = to_params(
+          post: {
+            title: "Hello",
+            tags: %w[ruby rails],
+            metadata: {source: "rss", priority: 1},
+            admin: true
+          }
+        )
+
+        action = "tag"
+
+        expect(Controller.new(user, action, params).expected_attributes(post).to_h).to eq(
+          "title" => "Hello",
+          "tags" => %w[ruby rails],
+          "metadata" => {"source" => "rss", "priority" => 1}
+        )
       end
     end
 
