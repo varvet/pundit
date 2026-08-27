@@ -108,9 +108,9 @@ RSpec.describe Pundit::Authorization do
     end
 
     it "caches the policy" do
-      expect(controller.policies[post]).to be_nil
+      expect(controller.pundit_policies[post]).to be_nil
       controller.authorize(post)
-      expect(controller.policies[post]).not_to be_nil
+      expect(controller.pundit_policies[post]).not_to be_nil
     end
 
     it "raises an error when the given record is nil" do
@@ -159,9 +159,26 @@ RSpec.describe Pundit::Authorization do
 
     it "allows policy to be injected" do
       new_policy = double
-      controller.policies[post] = new_policy
+      controller.pundit_policies[post] = new_policy
 
       expect(controller.policy(post)).to eq new_policy
+    end
+  end
+
+  describe "#pundit_policies" do
+    it "returns the cache of policies" do
+      expect(controller.pundit_policies).to eq({})
+      controller.authorize(post)
+      expect(controller.pundit_policies[post]).not_to be_nil
+    end
+  end
+
+  describe "#policies" do
+    it "is a deprecated alias for #pundit_policies" do
+      allow(controller).to receive(:warn)
+
+      expect(controller.policies).to be(controller.pundit_policies)
+      expect(controller).to have_received(:warn).with(/deprecated/)
     end
   end
 
