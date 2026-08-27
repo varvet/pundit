@@ -2,6 +2,8 @@
 
 # String#safe_constantize, String#demodulize, String#underscore, String#camelize
 require "active_support/core_ext/string/inflections"
+# String#blank?, used by the inflections above
+require "active_support/core_ext/object/blank"
 
 module Pundit
   # Finds policy and scope classes for given object.
