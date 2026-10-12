@@ -3,6 +3,13 @@
 ## Unreleased
 
 - Add support for `params.expect` using `expected_parameters` and `expected_parameters_for`. [#855](https://github.com/varvet/pundit/pull/855)
+- Add `Pundit::Finder` and `Pundit::Context#with`, so a controller can change how policies are looked up with `def pundit = super.with(finder: MyFinder.new)`.
+
+### Changed
+- `Pundit::Context#policy!` and `#policy_scope!` raise `NotDefinedError` themselves when a lookup misses, so error messages no longer name the missing policy class.
+
+### Removed
+- Remove the private `Pundit::Context#policy_finder` method; inject a `Pundit::Finder` with `Pundit::Context#with` instead.
 
 ### Deprecated
 - Rename `Pundit::Authorization#policies` to `#pundit_policies` to avoid clashing with controller actions named `policies`. The old `#policies` method is now deprecated. [#878](https://github.com/varvet/pundit/issues/878)
