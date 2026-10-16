@@ -100,11 +100,19 @@ module Pundit
         end
 
         def permissions
-          current_example.metadata.fetch(:permissions) do
+          list = current_example.metadata.fetch(:permissions) do
             raise KeyError, <<~ERROR.strip
               No permissions in example metadata, did you forget to wrap with `permissions :show?, ...`?
             ERROR
           end
+
+          if list.empty?
+            raise KeyError, <<~ERROR.strip
+              Empty permissions in example metadata, `permissions` must name at least one permission, e.g. `permissions :show?, ...`
+            ERROR
+          end
+
+          list
         end
       end
       # rubocop:enable Metrics/BlockLength

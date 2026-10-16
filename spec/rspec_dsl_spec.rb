@@ -44,6 +44,28 @@ RSpec.describe "Pundit RSpec DSL", type: :policy do
       end
     end
 
+    context "when the permissions wrapper names no permissions" do
+      permissions do
+        it "raises a descriptive error" do
+          expect do
+            expect(policy).to permit(user, post)
+          end.to raise_error(KeyError, <<~MSG.strip)
+            Empty permissions in example metadata, `permissions` must name at least one permission, e.g. `permissions :show?, ...`
+          MSG
+        end
+
+        context "when negated" do
+          it "raises a descriptive error" do
+            expect do
+              expect(policy).not_to permit(user, post)
+            end.to raise_error(KeyError, <<~MSG.strip)
+              Empty permissions in example metadata, `permissions` must name at least one permission, e.g. `permissions :show?, ...`
+            MSG
+          end
+        end
+      end
+    end
+
     permissions :edit?, :update? do
       it "succeeds when action is permitted" do
         expect(policy).to permit(user, post)
