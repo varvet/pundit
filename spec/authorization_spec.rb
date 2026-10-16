@@ -277,6 +277,26 @@ RSpec.describe Pundit::Authorization do
         "metadata" => {"source" => "rss", "priority" => 1}
       )
     end
+
+    it "uses the symbol name as the params key for headless policies" do
+      params = to_params(
+        publication: {
+          title: "Hello",
+          body: "World",
+          admin: true
+        },
+        symbol: {
+          title: "Wrong key"
+        }
+      )
+
+      action = "create"
+
+      expect(Controller.new(user, action, params).permitted_attributes(:publication).to_h).to eq(
+        "title" => "Hello",
+        "body" => "World"
+      )
+    end
   end
 
   describe "#permitted_attributes_for_action" do

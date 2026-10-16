@@ -82,6 +82,8 @@ module Pundit
         model.model_name.param_key.to_s
       elsif model.is_a?(Class)
         model.to_s.demodulize.underscore
+      elsif model.is_a?(Symbol)
+        model.to_s
       else
         model.class.to_s.demodulize.underscore
       end
