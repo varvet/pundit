@@ -8,6 +8,7 @@
 - Rename `Pundit::Authorization#policies` to `#pundit_policies` to avoid clashing with controller actions named `policies`. The old `#policies` method is now deprecated. [#878](https://github.com/varvet/pundit/issues/878)
 
 ### Fixed
+- `PolicyFinder#param_key` returns the symbol name for headless Symbol records (and arrays ending in a Symbol), instead of `"symbol"`.
 - Update for rspec 4 breaking changes [#873](https://github.com/varvet/pundit/issues/873)
 - `Pundit::PolicyFinder` no longer depends on `action_controller` having loaded `String#blank?` [#884](https://github.com/varvet/pundit/pull/884)
 

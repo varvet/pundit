@@ -187,5 +187,21 @@ RSpec.describe Pundit::PolicyFinder do
         expect(subject.param_key).to eq "article"
       end
     end
+
+    context "object is a symbol (headless policy)" do
+      subject { described_class.new(:publication) }
+
+      it "returns the symbol name as the param_key" do
+        expect(subject.param_key).to eq "publication"
+      end
+    end
+
+    context "object is an array ending with a symbol" do
+      subject { described_class.new([:project, :post]) }
+
+      it "returns the last symbol's name as the param_key" do
+        expect(subject.param_key).to eq "post"
+      end
+    end
   end
 end

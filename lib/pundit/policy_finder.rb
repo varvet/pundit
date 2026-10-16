@@ -82,6 +82,10 @@ module Pundit
         model.model_name.param_key.to_s
       elsif model.is_a?(Class)
         model.to_s.demodulize.underscore
+      elsif model.is_a?(Symbol)
+        # Headless policies authorize with a Symbol (e.g. :publication); the params
+        # key should be the symbol's name, not "symbol".
+        model.to_s
       else
         model.class.to_s.demodulize.underscore
       end
