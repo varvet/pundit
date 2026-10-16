@@ -10,4 +10,8 @@ class PublicationPolicy < BasePolicy
   def create?
     true
   end
+
+  def permitted_attributes
+    %i[title body]
+  end
 end
