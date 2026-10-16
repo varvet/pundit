@@ -31,10 +31,13 @@ module Pundit
     # @see Pundit::Authorization#pundit
     # @param user later passed to policies and scopes
     # @param policy_cache [#fetch] cache store for policies (see e.g. {CacheStore::NullStore})
+    # @param finder [#policy, #scope] finds policy and scope classes
+    #   for records (see {Pundit::Finder})
     # @since v2.3.2
-    def initialize(user:, policy_cache: CacheStore::NullStore.instance)
+    def initialize(user:, policy_cache: CacheStore::NullStore.instance, finder: Finder.new)
       @user = user
       @policy_cache = policy_cache
+      @finder = finder
     end
 
     # @api public
@@ -46,6 +49,26 @@ module Pundit
     # @see #initialize
     # @since v2.3.2
     attr_reader :policy_cache
+
+    # @api private
+    # @see #initialize
+    # @since v2.6.0
+    attr_reader :finder
+
+    # Returns a context like this one, with the given collaborators swapped.
+    #
+    # @example Using one policy for all posts in a controller
+    #   class Admin::PostsController < ApplicationController
+    #     def pundit = super.with(finder: SpecialFinder.new)
+    #   end
+    #
+    # @api public
+    # @param (see #initialize)
+    # @return [Pundit::Context]
+    # @since v2.6.0
+    def with(**overrides)
+      self.class.new(user: user, policy_cache: policy_cache, finder: finder, **overrides)
+    end
 
     # @!group Policies
 
@@ -80,7 +103,7 @@ module Pundit
     # @return [Object, nil] instance of policy class with query methods
     # @since v2.3.2
     def policy(record)
-      cached_find(record, &:policy)
+      cached_find(record) { finder.policy(record) }
     end
 
     # Retrieves the policy for the given record, or raises if not found.
@@ -92,7 +115,7 @@ module Pundit
     # @return [Object] instance of policy class with query methods
     # @since v2.3.2
     def policy!(record)
-      cached_find(record, &:policy!)
+      policy(record) or raise NotDefinedError, "unable to find policy for `#{record.inspect}`"
     end
 
     # @!endgroup
@@ -107,7 +130,7 @@ module Pundit
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
     # @since v2.3.2
     def policy_scope(scope)
-      policy_scope_class = policy_finder(scope).scope
+      policy_scope_class = finder.scope(scope)
       return unless policy_scope_class
 
       begin
@@ -128,15 +151,7 @@ module Pundit
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     # @since v2.3.2
     def policy_scope!(scope)
-      policy_scope_class = policy_finder(scope).scope!
-
-      begin
-        policy_scope = policy_scope_class.new(user, pundit_model(scope))
-      rescue ArgumentError
-        raise InvalidConstructorError, "Invalid #<#{policy_scope_class}> constructor is called"
-      end
-
-      policy_scope.resolve
+      policy_scope(scope) or raise NotDefinedError, "unable to find scope for `#{scope.inspect}`"
     end
 
     # @!endgroup
@@ -149,15 +164,14 @@ module Pundit
     #
     # @api private
     # @param record [Object] the object we're retrieving the policy for
-    # @yield a policy finder if no policy was cached
-    # @yieldparam [PolicyFinder] policy_finder
+    # @yield if no policy was cached
     # @yieldreturn [#new(user, model)]
     # @return [Policy, nil] an instantiated policy
     # @raise [InvalidConstructorError] if policy can't be instantated
     # @since v2.3.2
     def cached_find(record)
       policy_cache.fetch(user: user, record: record) do
-        klass = yield policy_finder(record)
+        klass = yield
         next unless klass
 
         model = pundit_model(record)
@@ -168,15 +182,6 @@ module Pundit
           raise InvalidConstructorError, "Invalid #<#{klass}> constructor is called"
         end
       end
-    end
-
-    # Return a policy finder for the given record.
-    #
-    # @api private
-    # @return [PolicyFinder]
-    # @since v2.3.2
-    def policy_finder(record)
-      PolicyFinder.new(record)
     end
 
     # Given a possibly namespaced record, return the actual record.
