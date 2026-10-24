@@ -22,7 +22,7 @@ module Pundit
       # @yield
       # @return [any] whatever the block returns.
       # @since v2.3.2
-      def fetch(*, **)
+      def fetch(user:, record:)
         yield
       end
     end

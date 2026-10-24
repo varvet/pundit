@@ -55,26 +55,26 @@ module Pundit
 
     # @see Pundit::Context#policy_scope
     # @since v0.1.0
-    def policy_scope(user, *args, **kwargs, &block)
-      Context.new(user: user).policy_scope(*args, **kwargs, &block)
+    def policy_scope(user, scope)
+      Context.new(user: user).policy_scope(scope)
     end
 
     # @see Pundit::Context#policy_scope!
     # @since v0.1.0
-    def policy_scope!(user, *args, **kwargs, &block)
-      Context.new(user: user).policy_scope!(*args, **kwargs, &block)
+    def policy_scope!(user, scope)
+      Context.new(user: user).policy_scope!(scope)
     end
 
     # @see Pundit::Context#policy
     # @since v0.1.0
-    def policy(user, *args, **kwargs, &block)
-      Context.new(user: user).policy(*args, **kwargs, &block)
+    def policy(user, record)
+      Context.new(user: user).policy(record)
     end
 
     # @see Pundit::Context#policy!
     # @since v0.1.0
-    def policy!(user, *args, **kwargs, &block)
-      Context.new(user: user).policy!(*args, **kwargs, &block)
+    def policy!(user, record)
+      Context.new(user: user).policy!(record)
     end
   end
 end

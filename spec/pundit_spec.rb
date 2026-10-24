@@ -446,6 +446,43 @@ RSpec.describe Pundit do
     end
   end
 
+  describe "allocations", if: RUBY_ENGINE == "ruby" do
+    # The first run is discarded: Ruby allocates call caches the first time a call site runs.
+    def allocated_objects
+      counts = Array.new(2) do
+        before = GC.stat(:total_allocated_objects)
+        yield
+        GC.stat(:total_allocated_objects) - before
+      end
+      counts.last
+    end
+
+    it "allocates no more in .policy and .policy! than Pundit::Context does" do
+      user = Object.new
+      post = Post.new(user)
+      context_allocations = allocated_objects { Pundit::Context.new(user: user).policy(post) }
+
+      expect(allocated_objects { Pundit.policy(user, post) }).to eq(context_allocations)
+      expect(allocated_objects { Pundit.policy!(user, post) }).to eq(context_allocations)
+    end
+
+    it "allocates no more in .policy_scope and .policy_scope! than Pundit::Context does" do
+      user = Object.new
+      context_allocations = allocated_objects { Pundit::Context.new(user: user).policy_scope(Post) }
+
+      expect(allocated_objects { Pundit.policy_scope(user, Post) }).to eq(context_allocations)
+      expect(allocated_objects { Pundit.policy_scope!(user, Post) }).to eq(context_allocations)
+    end
+
+    it "allocates nothing when fetching through the null cache store" do
+      user = Object.new
+      post = Post.new(user)
+      store = Pundit::CacheStore::NullStore.instance
+
+      expect(allocated_objects { store.fetch(user: user, record: post) { nil } }).to eq(0)
+    end
+  end
+
   describe ".included" do
     it "includes Authorization module" do
       klass = Class.new
