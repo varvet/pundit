@@ -5,7 +5,7 @@
 - Add support for `params.expect` using `expected_parameters` and `expected_parameters_for`. [#855](https://github.com/varvet/pundit/pull/855)
 
 ### Changed
-- `Pundit.policy`, `Pundit.policy!`, `Pundit.policy_scope` and `Pundit.policy_scope!` allocate two to three fewer objects per call, by naming their arguments instead of forwarding `*args, **kwargs, &block` (and `CacheStore::NullStore#fetch` its keywords).
+- `Pundit.policy`, `Pundit.policy!`, `Pundit.policy_scope` and `Pundit.policy_scope!` allocate two to three fewer objects per call, by naming their arguments instead of forwarding `*args, **kwargs, &block`. [#890](https://github.com/varvet/pundit/pull/890)
 
 ### Deprecated
 - Rename `Pundit::Authorization#policies` to `#pundit_policies` to avoid clashing with controller actions named `policies`. The old `#policies` method is now deprecated. [#878](https://github.com/varvet/pundit/issues/878)
