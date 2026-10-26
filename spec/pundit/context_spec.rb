@@ -90,4 +90,47 @@ RSpec.describe Pundit::Context do
       expect(store).to eq({post => policy})
     end
   end
+
+  describe "#with" do
+    it "returns a new context with the given collaborators swapped and the rest kept" do
+      user = double
+      cache = double
+      finder = double
+      context = described_class.new(user: user, policy_cache: cache).with(finder: finder)
+
+      expect(context).to be_a(described_class)
+      expect(context.user).to be(user)
+      expect(context.policy_cache).to be(cache)
+      expect(context.finder).to be(finder)
+    end
+  end
+
+  context "finding" do
+    describe "finder injection" do
+      it "finds policies through it" do
+        finder = double(policy: PublicationPolicy)
+        context = described_class.new(user: user, finder: finder)
+
+        expect(context.policy(post)).to be_a(PublicationPolicy)
+        expect(context.policy!(post)).to be_a(PublicationPolicy)
+        expect(finder).to have_received(:policy).with(post).twice
+      end
+
+      it "raises when the finder finds no policy" do
+        finder = double(policy: nil)
+        context = described_class.new(user: user, finder: finder)
+
+        expect { context.policy!(post) }.to raise_error(Pundit::NotDefinedError, "unable to find policy for `#{post.inspect}`")
+      end
+
+      it "finds scopes through it" do
+        finder = double(scope: PublicationPolicy::Scope)
+        context = described_class.new(user: user, finder: finder)
+
+        expect(context.policy_scope(Post)).to eq(:published)
+        expect(context.policy_scope!(Post)).to eq(:published)
+        expect(finder).to have_received(:scope).with(Post).twice
+      end
+    end
+  end
 end

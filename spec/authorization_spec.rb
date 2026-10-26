@@ -142,6 +142,23 @@ RSpec.describe Pundit::Authorization do
     end
   end
 
+  describe "#pundit" do
+    it "is the seam through which all lookups go" do
+      finder = Class.new(Pundit::Finder) do
+        def policy(record) = record.is_a?(Post) ? PublicationPolicy : super
+      end.new
+      controller_class = Class.new(Controller) do
+        define_method(:pundit) { super().with(finder: finder) }
+      end
+      controller = controller_class.new(user, "create", to_params({}))
+      view = Controller::View.new(controller)
+
+      expect(controller.authorize(post)).to be(post)
+      expect(controller.policy(post)).to be_a(PublicationPolicy)
+      expect(view.policy(post)).to be_a(PublicationPolicy)
+    end
+  end
+
   describe "#policy" do
     it "returns an instantiated policy" do
       policy = controller.policy(post)
