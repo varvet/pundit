@@ -634,25 +634,13 @@ policy_scope([:admin, Post])      # => will look for an Admin::PostPolicy::Scope
 policy_scope([:foo, :bar, Post])  # => will look for a Foo::Bar::PostPolicy::Scope
 ```
 
-If you are using namespaced policies for something like Admin areas, we recommend defining a `pundit_namespace` hook in your `ApplicationController` and overriding it in namespaced controllers:
+If you are using namespaced policies for something like Admin areas, you can namespace the whole controller instead. `authorize`, `policy`, `policy_scope` and `permitted_attributes` (and the view helpers) all go through `pundit`, so overriding it namespaces every lookup at once:
 
 ```ruby
-class ApplicationController < ActionController::Base
-  include Pundit::Authorization
-
-  private
-
-  def pundit_namespace(record) = record
-
-  def authorize(record, ...) = super(pundit_namespace(record), ...)
-  def policy_scope(scope, ...) = super(pundit_namespace(scope), ...)
-end
-
 class AdminController < ApplicationController
   private
 
-  # Override the pundit namespace in Admin.
-  def pundit_namespace(record) = [:admin, record]
+  def pundit = super.with_namespace(:admin)
 end
 
 class Admin::PostController < AdminController

@@ -28,13 +28,20 @@ module Pundit
   #
   # @since v2.3.2
   class Context
+    # @example Namespacing all lookups
+    #   context = Pundit::Context.new(user: current_user, namespace: Pundit::Namespace.new(:admin))
+    #   context.policy(post) # => #<Admin::PostPolicy>
+    #
     # @see Pundit::Authorization#pundit
     # @param user later passed to policies and scopes
     # @param policy_cache [#fetch] cache store for policies (see e.g. {CacheStore::NullStore})
+    # @param namespace [#wrap, #for] given every record before its policy or scope is looked up,
+    #   and returns the record to look up instead, e.g. `[:admin, record]` (see {Pundit::Namespace})
     # @since v2.3.2
-    def initialize(user:, policy_cache: CacheStore::NullStore.instance)
+    def initialize(user:, policy_cache: CacheStore::NullStore.instance, namespace: Namespace.new)
       @user = user
       @policy_cache = policy_cache
+      @namespace = namespace
     end
 
     # @api public
@@ -46,6 +53,30 @@ module Pundit
     # @see #initialize
     # @since v2.3.2
     attr_reader :policy_cache
+
+    # @api private
+    # @see #initialize
+    # @since v2.6.0
+    attr_reader :namespace
+
+    # Returns a context like this one, but with all policy and scope lookups
+    # placed under the given namespace.
+    #
+    # @example Namespacing an entire controller
+    #   class Admin::PostsController < ApplicationController
+    #     def pundit = super.with_namespace(:admin)          # Admin::PostPolicy
+    #   end
+    #
+    #   class Admin::Reports::PostsController < ApplicationController
+    #     def pundit = super.with_namespace(:admin, :reports) # Admin::Reports::PostPolicy
+    #   end
+    #
+    # @param (see Pundit::Namespace#initialize)
+    # @return [Pundit::Context]
+    # @since v2.6.0
+    def with_namespace(...)
+      self.class.new(user: user, policy_cache: policy_cache, namespace: namespace.for(...))
+    end
 
     # @!group Policies
 
@@ -107,7 +138,7 @@ module Pundit
     # @return [Scope{#resolve}, nil] instance of scope class which can resolve to a scope
     # @since v2.3.2
     def policy_scope(scope)
-      policy_scope_class = policy_finder(scope).scope
+      policy_scope_class = policy_finder(namespaced(scope)).scope
       return unless policy_scope_class
 
       begin
@@ -128,7 +159,7 @@ module Pundit
     # @return [Scope{#resolve}] instance of scope class which can resolve to a scope
     # @since v2.3.2
     def policy_scope!(scope)
-      policy_scope_class = policy_finder(scope).scope!
+      policy_scope_class = policy_finder(namespaced(scope)).scope!
 
       begin
         policy_scope = policy_scope_class.new(user, pundit_model(scope))
@@ -156,6 +187,8 @@ module Pundit
     # @raise [InvalidConstructorError] if policy can't be instantated
     # @since v2.3.2
     def cached_find(record)
+      record = namespaced(record)
+
       policy_cache.fetch(user: user, record: record) do
         klass = yield policy_finder(record)
         next unless klass
@@ -177,6 +210,14 @@ module Pundit
     # @since v2.3.2
     def policy_finder(record)
       PolicyFinder.new(record)
+    end
+
+    # Hand the record to this context's namespace.
+    #
+    # @api private
+    # @since v2.6.0
+    def namespaced(record)
+      namespace.wrap(record)
     end
 
     # Given a possibly namespaced record, return the actual record.

@@ -142,6 +142,22 @@ RSpec.describe Pundit::Authorization do
     end
   end
 
+  describe "#pundit" do
+    it "is the seam through which all lookups go" do
+      controller_class = Class.new(Controller) do
+        def pundit = super.with_namespace(:project)
+      end
+      controller = controller_class.new(user, "update", to_params({}))
+      view = Controller::View.new(controller)
+
+      expect(controller.authorize(comment)).to be(comment)
+      expect(controller.policy(comment)).to be_a(Project::CommentPolicy)
+      expect(controller.policy_scope(Post)).to eq(:read)
+      expect(view.policy(comment)).to be_a(Project::CommentPolicy)
+      expect(view.policy_scope(Post)).to eq(:read)
+    end
+  end
+
   describe "#policy" do
     it "returns an instantiated policy" do
       policy = controller.policy(post)
