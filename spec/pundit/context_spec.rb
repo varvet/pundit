@@ -77,6 +77,17 @@ RSpec.describe Pundit::Context do
     it "raises when the scope cannot be found" do
       expect { context.policy_scope!(Article) }.to raise_error(Pundit::NotDefinedError)
     end
+
+    it "does not fall back to a top-level Scope constant" do
+      top_level_scope = Struct.new(:user, :scope) do
+        def resolve
+          :top_level
+        end
+      end
+      stub_const("Scope", top_level_scope)
+
+      expect { context.policy_scope!(Article) }.to raise_error(Pundit::NotDefinedError)
+    end
   end
 
   describe "policy cache" do

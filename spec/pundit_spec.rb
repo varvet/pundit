@@ -168,6 +168,17 @@ RSpec.describe Pundit do
       expect(Pundit.policy_scope(user, Article)).to be_nil
     end
 
+    it "does not fall back to a top-level Scope constant" do
+      top_level_scope = Struct.new(:user, :scope) do
+        def resolve
+          :top_level
+        end
+      end
+      stub_const("Scope", top_level_scope)
+
+      expect(Pundit.policy_scope(user, Article)).to be_nil
+    end
+
     it "raises an exception if nil object given" do
       expect { Pundit.policy_scope(user, nil) }.to raise_error(Pundit::NotDefinedError)
     end

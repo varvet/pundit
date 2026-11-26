@@ -195,6 +195,17 @@ RSpec.describe Pundit::Authorization do
       expect { controller.policy_scope(Article) }.to raise_error(Pundit::NotDefinedError)
     end
 
+    it "does not fall back to a top-level Scope constant" do
+      top_level_scope = Struct.new(:user, :scope) do
+        def resolve
+          :top_level
+        end
+      end
+      stub_const("Scope", top_level_scope)
+
+      expect { controller.policy_scope(Article) }.to raise_error(Pundit::NotDefinedError)
+    end
+
     it "raises an error with a invalid policy scope constructor" do
       expect { controller.policy_scope(Wiki) }.to raise_error(Pundit::InvalidConstructorError)
     end

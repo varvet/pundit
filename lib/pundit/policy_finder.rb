@@ -40,7 +40,8 @@ module Pundit
     #
     # @since v0.1.0
     def scope
-      "#{policy}::Scope".safe_constantize
+      klass = policy
+      "#{klass}::Scope".safe_constantize if klass
     end
 
     # @return [nil, Class] policy class with query methods

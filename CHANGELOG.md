@@ -12,6 +12,7 @@
 - Update for rspec 4 breaking changes [#873](https://github.com/varvet/pundit/issues/873)
 - `Pundit::PolicyFinder` no longer depends on `action_controller` having loaded `String#blank?` [#884](https://github.com/varvet/pundit/pull/884)
 - Raising a descriptive error when a `permissions` group names no permissions [#888](https://github.com/varvet/pundit/pull/888)
+- `PolicyFinder#scope` returns `nil` when no policy is found, instead of resolving a top-level `Scope` constant [#893](https://github.com/varvet/pundit/pull/893)
 
 ## 2.5.2 (2025-09-24)
 
