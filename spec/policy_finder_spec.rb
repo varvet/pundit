@@ -26,6 +26,22 @@ RSpec.describe Pundit::PolicyFinder do
         expect(subject.scope).to eq nil
       end
     end
+
+    context "with a top-level Scope constant" do
+      before { stub_const("Scope", Class.new) }
+
+      it "returns nil when the policy cannot be found" do
+        expect(described_class.new(article).scope).to be_nil
+      end
+
+      it "returns nil when the policy has no scope" do
+        expect(described_class.new(ArticleTag).scope).to be_nil
+      end
+
+      it "returns the policy scope when one is defined" do
+        expect(described_class.new(post).scope).to eq PostPolicy::Scope
+      end
+    end
   end
 
   describe "#policy" do
@@ -140,6 +156,16 @@ RSpec.describe Pundit::PolicyFinder do
 
       it "returns the scope" do
         expect(subject.scope!).to eq PostPolicy::Scope
+      end
+    end
+
+    context "with a top-level Scope constant" do
+      before { stub_const("Scope", Class.new) }
+
+      it "raises when the policy cannot be found" do
+        expect { described_class.new(article).scope! }.to raise_error(
+          Pundit::NotDefinedError, "unable to find scope `ArticlePolicy::Scope` for `#{article.inspect}`"
+        )
       end
     end
   end
