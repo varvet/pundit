@@ -4,6 +4,8 @@
 
 - Add support for `params.expect` using `expected_parameters` and `expected_parameters_for`. [#855](https://github.com/varvet/pundit/pull/855)
 
+- Generate a policy (and its test) when running `rails generate scaffold` or `scaffold_controller`. Pass `--no-policy` to skip. [#735](https://github.com/varvet/pundit/issues/735)
+
 ### Deprecated
 - Rename `Pundit::Authorization#policies` to `#pundit_policies` to avoid clashing with controller actions named `policies`. The old `#policies` method is now deprecated. [#878](https://github.com/varvet/pundit/issues/878)
 
